@@ -10,9 +10,14 @@ export type QuizResult = {
 export type PathwayAnswers = {
   ageBracket?: '16-66' | '67plus'
   schoolSamhall?: 'yes' | 'no' | 'unsure'
+  /** Studerar SFI (språkspår), påverkar inte undantag för samhällskunskap. */
   sfiPath?: 'yes' | 'no'
+  /** SFI D eller annat Migrationsverket-dokumenterat sätt att visa samhällskunskap. */
+  sfiKnowledgeAlternate?: 'yes' | 'no' | 'unsure'
   komvuxFolk?: 'yes' | 'no' | 'unsure'
 }
+
+export type PathwayOutcome = 'maybe-exempt' | 'likely-needed' | 'unclear'
 
 export type ProgressState = {
   visitedChapters: string[]
@@ -82,6 +87,28 @@ export function getPathwayAnswers(): PathwayAnswers {
 
 export function getProgressState(): ProgressState {
   return readState()
+}
+
+export function derivePathwayOutcome(answers: PathwayAnswers): PathwayOutcome {
+  if (answers.ageBracket === '67plus') return 'maybe-exempt'
+  if (
+    answers.schoolSamhall === 'yes' ||
+    answers.komvuxFolk === 'yes' ||
+    answers.sfiKnowledgeAlternate === 'yes'
+  ) {
+    return 'maybe-exempt'
+  }
+  if (
+    answers.schoolSamhall === 'unsure' ||
+    answers.komvuxFolk === 'unsure' ||
+    answers.sfiKnowledgeAlternate === 'unsure'
+  ) {
+    return 'unclear'
+  }
+  if (answers.ageBracket === '16-66' && answers.schoolSamhall === 'no' && answers.komvuxFolk === 'no') {
+    return 'likely-needed'
+  }
+  return 'unclear'
 }
 
 /** Test helper */

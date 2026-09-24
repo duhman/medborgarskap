@@ -1,18 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { officialLinks } from '../config/status'
-import { getPathwayAnswers, savePathwayAnswers, type PathwayAnswers } from '../lib/progress'
-
-type Outcome = 'maybe-exempt' | 'likely-needed' | 'unclear'
-
-function deriveOutcome(answers: PathwayAnswers): Outcome {
-  if (answers.ageBracket === '67plus') return 'maybe-exempt'
-  if (answers.schoolSamhall === 'yes' || answers.komvuxFolk === 'yes') return 'maybe-exempt'
-  if (answers.ageBracket === '16-66' && answers.schoolSamhall === 'no' && answers.komvuxFolk === 'no') {
-    return 'likely-needed'
-  }
-  return 'unclear'
-}
+import {
+  derivePathwayOutcome,
+  getPathwayAnswers,
+  savePathwayAnswers,
+  type PathwayAnswers,
+} from '../lib/progress'
 
 export function BehoverJag() {
   const [answers, setAnswers] = useState<PathwayAnswers>(() => getPathwayAnswers())
@@ -21,7 +15,7 @@ export function BehoverJag() {
     savePathwayAnswers(answers)
   }, [answers])
 
-  const outcome = useMemo(() => deriveOutcome(answers), [answers])
+  const outcome = useMemo(() => derivePathwayOutcome(answers), [answers])
 
   return (
     <article className="space-y-8">
@@ -91,10 +85,33 @@ export function BehoverJag() {
         </fieldset>
 
         <fieldset className="space-y-3 rounded-xl border border-paper-muted bg-white/50 p-5">
+          <legend className="px-1 font-medium">
+            Kan du visa samhällskunskap via SFI kurs D, motsvarande, eller annat sätt som
+            Migrationsverket dokumenterar?
+          </legend>
+          <p className="text-sm text-ink/70">
+            Det här gäller kunskapskravet, inte språkkravet. Migrationsverket avgör om din
+            dokumentation räcker.
+          </p>
+          {(['yes', 'no', 'unsure'] as const).map((v) => (
+            <label key={v} className="flex min-h-11 items-center gap-3">
+              <input
+                type="radio"
+                name="sfiKnowledge"
+                checked={answers.sfiKnowledgeAlternate === v}
+                onChange={() => setAnswers((a) => ({ ...a, sfiKnowledgeAlternate: v }))}
+              />
+              {v === 'yes' ? 'Ja' : v === 'no' ? 'Nej' : 'Osäker'}
+            </label>
+          ))}
+        </fieldset>
+
+        <fieldset className="space-y-3 rounded-xl border border-paper-muted bg-white/50 p-5">
           <legend className="px-1 font-medium">Studerar du SFI just nu?</legend>
           <p className="text-sm text-ink/70">
             SFI handlar om svenska språket. Språkkrav och samhällskunskap är separata spår i
-            medborgarskapsprocessen.
+            medborgarskapsprocessen. Att studera SFI språk ger inte automatiskt undantag från
+            medborgarskapsprovet.
           </p>
           <label className="flex min-h-11 items-center gap-3">
             <input
@@ -130,8 +147,8 @@ export function BehoverJag() {
         )}
         {outcome === 'maybe-exempt' && (
           <p className="mt-2">
-            Du kan kanske visa kunskap på annat sätt (betyg, utbildning eller ålder). Kontrollera
-            alltid mot Migrationsverkets aktuella regler.
+            Du kan kanske visa kunskap på annat sätt (betyg, utbildning, SFI D eller motsvarande,
+            eller ålder). Kontrollera alltid mot Migrationsverkets aktuella regler.
           </p>
         )}
         {outcome === 'unclear' && (

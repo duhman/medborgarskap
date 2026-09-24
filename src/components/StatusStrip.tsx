@@ -18,8 +18,7 @@ export function StatusStrip() {
       </div>
       <p className="mx-auto mt-2 max-w-3xl text-ink/75">{uhrStatus.notes}</p>
       <p className="mx-auto mt-1 max-w-3xl text-xs text-ink/60">
-        Uppdatera status i{' '}
-        <code className="rounded bg-paper px-1">src/config/status.ts</code>. Mer på{' '}
+        Bekräfta alltid datum och anmälan på{' '}
         <a
           href={officialLinks.medborgarskapsprov}
           className="text-accent underline-offset-2 hover:underline"
@@ -27,8 +26,8 @@ export function StatusStrip() {
           rel="noreferrer"
         >
           uhr.se
-        </a>{' '}
-        och{' '}
+        </a>
+        . Läs mer om statusremsan på{' '}
         <Link to="/om" className="text-accent underline-offset-2 hover:underline">
           Om sidan
         </Link>
