@@ -12,7 +12,8 @@ export function Home() {
         </h1>
         <p className="max-w-2xl text-lg text-ink/85">
           Lyssna på UHR:s ljudfiler, läs kapitlen i den officiella PDF:en och öva med egna
-          flervalsfrågor som anger källhänvisning. Ingen betalvägg, ingen fejk-examen.
+          flervalsfrågor som anger källhänvisning. Gratis att använda, med UHR:s material i fokus
+          - en lugn studiekompanjon, inte en provsimulering.
         </p>
       </header>
 

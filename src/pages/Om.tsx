@@ -17,8 +17,15 @@ export function Om() {
       <header className="space-y-3">
         <h1 className="font-serif text-3xl font-semibold">Om Medborgarskap</h1>
         <p className="text-ink/85">
-          Personlig, fristående studiehjälp av Adrian Martén. Gratis att använda. Planerad adress:{' '}
-          <span className="whitespace-nowrap">medborgarskap.adrianmarten.net</span>
+          Personlig, fristående studiehjälp av Adrian Martén. Gratis att använda. Sidan finns live
+          på{' '}
+          <a
+            href="https://medborgarskap.adrianmarten.net"
+            className="text-accent hover:underline"
+          >
+            medborgarskap.adrianmarten.net
+          </a>
+          .
         </p>
       </header>
 
@@ -58,8 +65,17 @@ export function Om() {
         </p>
         <p>{uhrStatus.notes}</p>
         <p className="text-ink/70">
-          Redigera <code className="rounded bg-paper px-1">src/config/status.ts</code> när UHR
-          uppdaterar information. Låt bli att gissa datum.
+          Status hålls uppdaterad av sidans ägare utifrån UHR:s publicerade information. Vi
+          anger inte datum som UHR inte publicerat. Bekräfta alltid på{' '}
+          <a
+            href={officialLinks.medborgarskapsprov}
+            className="text-accent hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            uhr.se
+          </a>
+          .
         </p>
       </section>
 

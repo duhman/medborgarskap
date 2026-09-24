@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom'
 import { getAllChapters, inledningMp3Url, sverigeIFokusPdfUrl } from '../content/chapters/meta'
 import { officialLinks } from '../config/status'
-import { getQuizResult } from '../lib/progress'
+import { getProgressState, getQuizResult } from '../lib/progress'
 
 export function KapitelIndex() {
   const chapters = getAllChapters()
+  const { visitedChapters, quizResults } = getProgressState()
+  const chapterSlugs = new Set(chapters.map((c) => c.slug))
+  const visitedCount = visitedChapters.filter((slug) => chapterSlugs.has(slug)).length
+  const quizCount = quizResults.filter((r) => chapterSlugs.has(r.slug)).length
+  const totalChapters = chapters.length
 
   return (
     <article className="space-y-8">
@@ -14,6 +19,12 @@ export function KapitelIndex() {
           Alla kapitel och ljudfiler kommer från UHR. Vi länkar till PDF och MP3, vi speglar inte
           PDF:en här.
         </p>
+        {(visitedCount > 0 || quizCount > 0) && (
+          <p className="text-sm text-ink/65">
+            {visitedCount}/{totalChapters} kapitel besökta
+            {quizCount > 0 ? ` · ${quizCount} quiz genomförda` : ''}
+          </p>
+        )}
         <p className="flex flex-wrap gap-3 text-sm">
           <a href={sverigeIFokusPdfUrl} className="text-accent hover:underline" target="_blank" rel="noreferrer">
             Hela PDF (UHR)
