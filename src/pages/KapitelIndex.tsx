@@ -14,7 +14,7 @@ export function KapitelIndex() {
   return (
     <article className="space-y-8">
       <header className="space-y-3">
-        <h1 className="font-serif text-3xl font-semibold">Kapitel i Sverige i fokus</h1>
+        <h1 className="text-3xl font-semibold">Kapitel i Sverige i fokus</h1>
         <p className="text-ink/85">
           Alla kapitel och ljudfiler kommer från UHR. Vi länkar till PDF och MP3, vi speglar inte
           PDF:en här.
@@ -38,17 +38,17 @@ export function KapitelIndex() {
         </p>
       </header>
 
-      <ul className="divide-y divide-paper-muted rounded-xl border border-paper-muted bg-white/50">
+      <ul className="surface-raised divide-y divide-line-strong">
         {chapters.map((ch) => {
           const result = getQuizResult(ch.slug)
           return (
             <li key={ch.slug}>
               <Link
                 to={`/kapitel/${ch.slug}`}
-                className="flex flex-col gap-1 px-5 py-4 transition-colors hover:bg-paper-muted/40 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-1 px-5 py-4 transition-colors hover:bg-paper-muted sm:flex-row sm:items-center sm:justify-between"
               >
                 <span>
-                  <span className="text-sm text-ink/50">Kapitel {ch.number}</span>
+                  <span className="font-mono text-sm text-ink/50">Kapitel {ch.number}</span>
                   <span className="mt-0.5 block font-medium">{ch.title}</span>
                 </span>
                 <span className="text-sm text-ink/60">

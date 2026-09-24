@@ -18,7 +18,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
 
   if (questions.length === 0) {
     return (
-      <p className="rounded-lg border border-dashed border-paper-muted bg-white/40 p-6 text-ink/75">
+      <p className="surface-raised border-dashed p-6 text-ink/75">
         Övningsfrågor för det här kapitlet kommer snart. Under tiden: läs kapitlet i PDF och lyssna
         på MP3 från UHR.
       </p>
@@ -46,10 +46,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
         const isWrong = submitted && chosen != null && chosen !== q.correctOptionId
 
         return (
-          <fieldset
-            key={q.id}
-            className="rounded-xl border border-paper-muted bg-white/60 p-5 shadow-sm"
-          >
+          <fieldset key={q.id} className="surface-raised p-5">
             <legend className="mb-3 font-medium text-ink">
               {index + 1}. {q.prompt}
             </legend>
@@ -59,7 +56,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
                 const showResult =
                   submitted &&
                   (opt.id === q.correctOptionId || (chosen === opt.id && opt.id !== q.correctOptionId))
-                let ring = 'border-paper-muted hover:border-accent/40'
+                let ring = 'border-line-strong bg-raised hover:border-accent/40'
                 if (showResult && opt.id === q.correctOptionId) ring = 'border-accent bg-accent-soft'
                 if (showResult && chosen === opt.id && isWrong) ring = 'border-red-700/50 bg-red-50'
 
@@ -67,7 +64,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
                   <label
                     key={opt.id}
                     htmlFor={id}
-                    className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 transition-colors ${ring}`}
+                    className={`flex min-h-12 cursor-pointer items-center gap-3 rounded border px-4 py-3 transition-colors ${ring}`}
                   >
                     <input
                       id={id}
@@ -88,7 +85,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
             </div>
 
             {submitted && (
-              <div className="mt-4 space-y-2 border-t border-paper-muted pt-4 text-sm">
+              <div className="mt-4 space-y-2 border-t border-line-strong pt-4 text-sm">
                 <p className={isCorrect ? 'text-accent' : isWrong ? 'text-red-800' : 'text-ink/70'}>
                   {isCorrect
                     ? 'Rätt.'
@@ -119,7 +116,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
       {!submitted ? (
         <button
           type="submit"
-          className="w-full rounded-lg bg-accent px-4 py-3 text-base font-medium text-white sm:w-auto sm:px-8"
+          className="w-full rounded border border-accent bg-accent px-4 py-3 text-base font-medium text-white sm:w-auto sm:px-8"
         >
           Rätta svar
         </button>

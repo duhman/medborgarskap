@@ -11,7 +11,7 @@ export function Layout() {
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
         <Outlet />
       </main>
-      <footer className="border-t border-paper-muted px-4 py-6">
+      <footer className="border-t border-line-strong px-4 py-6">
         <div className="mx-auto max-w-3xl space-y-3">
           <Disclaimer compact />
           <p className="text-xs text-ink/50">

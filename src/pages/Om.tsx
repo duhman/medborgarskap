@@ -15,7 +15,7 @@ export function Om() {
   return (
     <article className="space-y-8">
       <header className="space-y-3">
-        <h1 className="font-serif text-3xl font-semibold">Om Medborgarskap</h1>
+        <h1 className="text-3xl font-semibold">Om Medborgarskap</h1>
         <p className="text-ink/85">
           Personlig, fristående studiehjälp av Adrian Martén. Gratis att använda. Sidan finns live
           på{' '}
@@ -32,10 +32,10 @@ export function Om() {
       <Disclaimer />
 
       <section className="space-y-3">
-        <h2 className="font-serif text-xl font-semibold">Källor</h2>
-        <div className="overflow-x-auto rounded-xl border border-paper-muted">
+        <h2 className="text-xl font-semibold">Källor</h2>
+        <div className="surface-raised overflow-x-auto">
           <table className="w-full min-w-[280px] text-left text-sm">
-            <thead className="bg-paper-muted/50">
+            <thead className="bg-paper-muted">
               <tr>
                 <th className="px-4 py-2 font-medium">Resurs</th>
                 <th className="px-4 py-2 font-medium">Länk</th>
@@ -43,10 +43,15 @@ export function Om() {
             </thead>
             <tbody>
               {sources.map((s) => (
-                <tr key={s.url} className="border-t border-paper-muted">
+                <tr key={s.url} className="border-t border-line-strong">
                   <td className="px-4 py-2">{s.label}</td>
                   <td className="px-4 py-2">
-                    <a href={s.url} className="break-all text-accent hover:underline" target="_blank" rel="noreferrer">
+                    <a
+                      href={s.url}
+                      className="break-all text-accent hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       {s.url}
                     </a>
                   </td>
@@ -57,8 +62,8 @@ export function Om() {
         </div>
       </section>
 
-      <section className="space-y-2 rounded-xl border border-paper-muted bg-white/40 p-5 text-sm">
-        <h2 className="font-serif text-xl font-semibold">Statusremsa</h2>
+      <section className="surface-raised space-y-2 p-5 text-sm">
+        <h2 className="text-xl font-semibold">Statusremsa</h2>
         <p>
           Nästa tillfälle: <strong>{uhrStatus.nextSitting}</strong>. Anmälan:{' '}
           {uhrStatus.registrationOpen ? 'öppen' : 'stängd'}.
@@ -80,7 +85,7 @@ export function Om() {
       </section>
 
       <section className="space-y-2 text-sm text-ink/80">
-        <h2 className="font-serif text-xl font-semibold text-ink">Innehåll</h2>
+        <h2 className="text-xl font-semibold text-ink">Innehåll</h2>
         <p>
           Kapitelintroduktioner och övningsfrågor är egna sammanfattningar. De ersätter inte
           läsning av PDF. Fem exempel på provfrågor är ordagrant från UHR och märkta som sådana.

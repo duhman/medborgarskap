@@ -27,8 +27,8 @@ export function KapitelStudy() {
   return (
     <article className="space-y-8">
       <header className="space-y-2">
-        <p className="text-sm text-ink/50">Kapitel {chapter.number}</p>
-        <h1 className="font-serif text-3xl font-semibold">{chapter.title}</h1>
+        <p className="font-mono text-sm text-ink/50">Kapitel {chapter.number}</p>
+        <h1 className="text-3xl font-semibold">{chapter.title}</h1>
       </header>
 
       <section className="space-y-3 text-ink/85">
@@ -45,7 +45,7 @@ export function KapitelStudy() {
       <section className="flex flex-col gap-3 sm:flex-row">
         <a
           href={sverigeIFokusPdfUrl}
-          className="inline-flex min-h-12 flex-1 items-center justify-center rounded-lg border border-ink/15 bg-white px-4 py-3 text-center text-sm font-medium"
+          className="inline-flex min-h-12 flex-1 items-center justify-center rounded border border-line-strong bg-raised px-4 py-3 text-center text-sm font-medium"
           target="_blank"
           rel="noreferrer"
         >
@@ -53,7 +53,7 @@ export function KapitelStudy() {
         </a>
         <a
           href={chapter.mp3Url}
-          className="inline-flex min-h-12 flex-1 items-center justify-center rounded-lg border border-ink/15 bg-white px-4 py-3 text-center text-sm font-medium"
+          className="inline-flex min-h-12 flex-1 items-center justify-center rounded border border-line-strong bg-raised px-4 py-3 text-center text-sm font-medium"
           target="_blank"
           rel="noreferrer"
         >
@@ -61,8 +61,8 @@ export function KapitelStudy() {
         </a>
       </section>
 
-      <section className="rounded-xl border border-paper-muted bg-accent-soft/30 p-6">
-        <h2 className="font-serif text-xl font-semibold">Öva detta kapitel</h2>
+      <section className="surface-raised p-6">
+        <h2 className="text-xl font-semibold">Öva detta kapitel</h2>
         <p className="mt-2 text-sm text-ink/80">
           {chapter.isStub
             ? 'Quiz kommer i en senare uppdatering.'
@@ -75,7 +75,7 @@ export function KapitelStudy() {
         )}
         <Link
           to={`/ovning/${chapter.slug}`}
-          className="mt-4 inline-flex min-h-12 items-center justify-center rounded-lg bg-accent px-6 py-3 font-medium text-white"
+          className="mt-4 inline-flex min-h-12 items-center justify-center rounded border border-accent bg-accent px-6 py-3 font-medium text-white"
         >
           {chapter.isStub ? 'Visa quiz-sida' : 'Starta quiz'}
         </Link>
