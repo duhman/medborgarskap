@@ -1,7 +1,17 @@
 import type { ChapterContent } from '../types'
+import { arbetsmarknadOchPrivatekonomi } from './arbetsmarknad-och-privatekonomi'
+import { enSekularStatOchEttMangreligiostLand } from './en-sekular-stat-och-ett-mangreligiost-land'
+import { lagOchRatt } from './lag-och-ratt'
 import { landetSverige } from './landet-sverige'
+import { manskligaRattigheter } from './manskliga-rattigheter'
+import { mediernasRoll } from './mediernas-roll'
+import { politiskaValOchPartier } from './politiska-val-och-partier'
 import { saHarStyrsSverige } from './sa-har-styrs-sverige'
+import { sverigeOchOmvarlden } from './sverige-och-omvarlden'
 import { sverigesDemokratiskaSystem } from './sveriges-demokratiska-system'
+import { sverigesModernaHistoria } from './sveriges-moderna-historia'
+import { traditionerOchHogtider } from './traditioner-och-hogtider'
+import { valfardssamhallet } from './valfardssamhallet'
 
 const PDF =
   'https://www.uhr.se/globalassets/_uhr.se/medborgarskapsprovet/utbildningsmaterial/sverige-i-fokus_.pdf'
@@ -14,9 +24,6 @@ type ChapterMeta = Pick<
   ChapterContent,
   'slug' | 'number' | 'title' | 'mp3Url'
 > & { stubIntro: string }
-
-const stubIntro =
-  'Kapitlet finns i UHR:s utbildningsmaterial. Läs och lyssna via länkarna nedan. Övningsfrågor kommer i en senare uppdatering.'
 
 export const chapterMetaList: ChapterMeta[] = [
   {
@@ -45,70 +52,70 @@ export const chapterMetaList: ChapterMeta[] = [
     slug: 'politiska-val-och-partier',
     title: 'Politiska val och partier',
     mp3Url: `${UHR}/05_politiska-val-och-partier.mp3`,
-    stubIntro,
+    stubIntro: politiskaValOchPartier.intro,
   },
   {
     number: 5,
     slug: 'lag-och-ratt',
     title: 'Lag och rätt',
     mp3Url: `${UHR}/06_lag-och-ratt.mp3`,
-    stubIntro,
+    stubIntro: lagOchRatt.intro,
   },
   {
     number: 6,
     slug: 'mediernas-roll',
     title: 'Mediernas roll',
     mp3Url: `${UHR}/07_mediernas-roll.mp3`,
-    stubIntro,
+    stubIntro: mediernasRoll.intro,
   },
   {
     number: 7,
     slug: 'manskliga-rattigheter',
     title: 'Mänskliga rättigheter',
     mp3Url: `${UHR}/08_manskliga-rattigheter.mp3`,
-    stubIntro,
+    stubIntro: manskligaRattigheter.intro,
   },
   {
     number: 8,
     slug: 'arbetsmarknad-och-privatekonomi',
     title: 'Arbetsmarknad och privatekonomi',
     mp3Url: `${UHR}/09_arbetsmarknad-och-privatekonomi.mp3`,
-    stubIntro,
+    stubIntro: arbetsmarknadOchPrivatekonomi.intro,
   },
   {
     number: 9,
     slug: 'valfardssamhallet',
     title: 'Välfärdssamhället',
     mp3Url: `${UHR}/10_valfardssamhallet.mp3`,
-    stubIntro,
+    stubIntro: valfardssamhallet.intro,
   },
   {
     number: 10,
     slug: 'sveriges-moderna-historia',
     title: 'Sveriges moderna historia',
     mp3Url: `${UHR}/11_sveriges-moderna-historia.mp3`,
-    stubIntro,
+    stubIntro: sverigesModernaHistoria.intro,
   },
   {
     number: 11,
     slug: 'sverige-och-omvarlden',
     title: 'Sverige och omvärlden',
     mp3Url: `${UHR}/12_sverige-och-omvarlden_uppdaterat-ljud-260811.mp3`,
-    stubIntro,
+    stubIntro: sverigeOchOmvarlden.intro,
   },
   {
     number: 12,
     slug: 'en-sekular-stat-och-ett-mangreligiost-land',
     title: 'En sekulär stat och ett mångreligiöst land',
     mp3Url: `${UHR}/13_en-sekular-stat-och-ett-mangreligiost-land_uppdaterat-ljud-260811.mp3`,
-    stubIntro,
+    stubIntro: enSekularStatOchEttMangreligiostLand.intro,
   },
   {
     number: 13,
     slug: 'traditioner-och-hogtider',
     title: 'Traditioner och högtider',
     mp3Url: `${UHR}/14_traditioner-och-hogtider.mp3`,
-    stubIntro,
+    stubIntro: traditionerOchHogtider.intro,
   },
 ]
 
@@ -116,6 +123,16 @@ const fullChapters: ChapterContent[] = [
   landetSverige,
   sverigesDemokratiskaSystem,
   saHarStyrsSverige,
+  politiskaValOchPartier,
+  lagOchRatt,
+  mediernasRoll,
+  manskligaRattigheter,
+  arbetsmarknadOchPrivatekonomi,
+  valfardssamhallet,
+  sverigesModernaHistoria,
+  sverigeOchOmvarlden,
+  enSekularStatOchEttMangreligiostLand,
+  traditionerOchHogtider,
 ]
 
 const fullBySlug = new Map(fullChapters.map((c) => [c.slug, c]))

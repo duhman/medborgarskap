@@ -11,17 +11,20 @@ describe('chapter catalog', () => {
     expect(slugs.size).toBe(13)
   })
 
-  it('fully populates first three chapters with at least 5 questions', () => {
-    for (const slug of [
-      'landet-sverige',
-      'sveriges-demokratiska-system',
-      'sa-har-styrs-sverige',
-    ]) {
-      const ch = getChapterBySlug(slug)
-      expect(ch).toBeDefined()
-      expect(ch!.isStub).toBeFalsy()
-      expect(ch!.questions.length).toBeGreaterThanOrEqual(5)
-      expect(validateChapterQuestions(ch!.questions)).toEqual([])
+  it('fully populates all 13 chapters with at least 5 valid questions', () => {
+    const chapters = getAllChapters()
+    for (const ch of chapters) {
+      expect(ch.isStub).toBeFalsy()
+      expect(ch.questions.length).toBeGreaterThanOrEqual(5)
+      expect(validateChapterQuestions(ch.questions)).toEqual([])
+    }
+  })
+
+  it('resolves every slug through getChapterBySlug', () => {
+    for (const ch of getAllChapters()) {
+      const loaded = getChapterBySlug(ch.slug)
+      expect(loaded?.questions.length).toBe(ch.questions.length)
+      expect(loaded?.isStub).toBeFalsy()
     }
   })
 })
