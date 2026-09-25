@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { officialLinks } from '../config/status'
+import { GfNum } from '../components/GfNum'
 import {
   derivePathwayOutcome,
   getPathwayAnswers,
@@ -37,7 +38,7 @@ export function BehoverJag() {
               checked={answers.ageBracket === '16-66'}
               onChange={() => setAnswers((a) => ({ ...a, ageBracket: '16-66' }))}
             />
-            16-66 år (prov kan krävas enligt nya regler)
+            <GfNum value={16} />-<GfNum value={66} /> år (prov kan krävas enligt nya regler)
           </label>
           <label className="flex min-h-11 items-center gap-3">
             <input
@@ -46,7 +47,7 @@ export function BehoverJag() {
               checked={answers.ageBracket === '67plus'}
               onChange={() => setAnswers((a) => ({ ...a, ageBracket: '67plus' }))}
             />
-            67 år eller äldre (åldersundantag kan gälla)
+            <GfNum value={67} /> år eller äldre (åldersundantag kan gälla)
           </label>
         </fieldset>
 
@@ -139,7 +140,8 @@ export function BehoverJag() {
         {outcome === 'likely-needed' && (
           <p className="mt-2">
             Du kan behöva UHR:s medborgarskapsprov om du inte kan visa samhällskunskap på annat
-            sätt. Börja gärna med kapitel 1-3 medan du planerar din ansökan.
+            sätt. Börja gärna med kapitel <GfNum value={1} />-<GfNum value={3} /> medan du planerar
+            din ansökan.
           </p>
         )}
         {outcome === 'maybe-exempt' && (
@@ -171,7 +173,7 @@ export function BehoverJag() {
           </Link>
         </div>
         <p className="mt-3 text-xs text-ink/60">
-          Nya regler från 6 juni 2026:{' '}
+          Nya regler från <GfNum value={6} /> juni <GfNum value={2026} />:{' '}
           <a href={officialLinks.reformNotice} className="text-accent hover:underline" target="_blank" rel="noreferrer">
             Migrationsverkets nyhet
           </a>

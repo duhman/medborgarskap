@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import type { QuizQuestion } from '../content/types'
-import { formatSource, scoreQuiz } from '../lib/quiz'
+import { scoreQuiz } from '../lib/quiz'
 import { saveQuizResult } from '../lib/progress'
+import { GfNum } from './GfNum'
+import { SourceCitation } from './SourceCitation'
 
 type Props = {
   slug: string
@@ -48,7 +50,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
         return (
           <fieldset key={q.id} className="surface-raised p-5">
             <legend className="mb-3 font-medium text-ink">
-              {index + 1}. {q.prompt}
+              <GfNum value={index + 1} />. {q.prompt}
             </legend>
             <div className="space-y-2">
               {q.options.map((opt) => {
@@ -94,7 +96,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
                       : 'Du svarade inte på den här frågan.'}
                 </p>
                 <p>{q.explanationSv}</p>
-                <p className="text-ink/60">{formatSource(q.source)}</p>
+                <SourceCitation source={q.source} />
                 {q.explanationEn && (
                   <div>
                     <button
@@ -122,7 +124,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
         </button>
       ) : (
         <p className="text-lg font-medium text-ink">
-          Resultat för {chapterTitle}: {score} av {total} rätt.
+          Resultat för {chapterTitle}: <GfNum value={score} /> av <GfNum value={total} /> rätt.
         </p>
       )}
     </form>

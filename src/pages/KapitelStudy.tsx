@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getChapterBySlug, sverigeIFokusPdfUrl } from '../content/chapters/meta'
+import { GfNum } from '../components/GfNum'
 import { getQuizResult, markChapterVisited } from '../lib/progress'
 
 export function KapitelStudy() {
@@ -27,7 +28,9 @@ export function KapitelStudy() {
   return (
     <article className="space-y-8">
       <header className="space-y-2">
-        <p className="font-mono text-sm text-ink/50">Kapitel {chapter.number}</p>
+        <p className="text-sm text-ink/50">
+          Kapitel <GfNum value={chapter.number} />
+        </p>
         <h1 className="text-3xl font-semibold">{chapter.title}</h1>
       </header>
 
@@ -66,11 +69,17 @@ export function KapitelStudy() {
         <p className="mt-2 text-sm text-ink/80">
           {chapter.isStub
             ? 'Quiz kommer i en senare uppdatering.'
-            : `${chapter.questions.length} egna flervalsfrågor med förklaring och källhänvisning.`}
+            : (
+                <>
+                  <GfNum value={chapter.questions.length} /> egna flervalsfrågor med förklaring och
+                  källhänvisning.
+                </>
+              )}
         </p>
         {quizResult && (
           <p className="mt-1 text-sm text-ink/60">
-            Ditt senaste resultat: {quizResult.score} av {quizResult.total} rätt.
+            Ditt senaste resultat: <GfNum value={quizResult.score} /> av{' '}
+            <GfNum value={quizResult.total} /> rätt.
           </p>
         )}
         <Link
