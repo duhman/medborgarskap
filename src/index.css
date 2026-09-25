@@ -9,6 +9,17 @@
 @import './styles/site-theme.css';
 @import 'tailwindcss';
 
+/*
+ * Grundform core sets unlayered `a { color: var(--accent-text) }`, which outranks
+ * Tailwind @layer utilities. Solid accent controls need explicit on-accent color.
+ */
+a.bg-accent,
+a.bg-accent:hover,
+button.bg-accent {
+  color: var(--site-accent-on);
+  text-decoration: none;
+}
+
 @theme {
   --color-paper: var(--bg);
   --color-ink: var(--ink);
