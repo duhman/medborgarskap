@@ -4,60 +4,38 @@
 @import '@fontsource/ibm-plex-serif/600.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
+@import './styles/grundform/grundform.css';
+@import './styles/grundform/components.css';
+@import './styles/site-theme.css';
 @import 'tailwindcss';
 
-:root {
-  --color-paper: #faf7f1;
-  --color-ink: #211d18;
-  --color-accent: #2d4a3e;
-  --font-sans: 'Jost', system-ui, sans-serif;
-  --font-serif: 'IBM Plex Serif', Georgia, serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --radius: 2px;
-  --bg-raised: #fffdf8;
-  --line-strong: #c9c0b1;
-}
-
 @theme {
-  --color-paper: #faf7f1;
-  --color-ink: #211d18;
-  --color-paper-muted: #e8e2d8;
-  --color-accent: #2d4a3e;
-  --color-accent-soft: #e8f0ec;
-  --color-raised: #fffdf8;
-  --color-line-strong: #c9c0b1;
-  --font-sans: 'Jost', system-ui, sans-serif;
+  --color-paper: var(--bg);
+  --color-ink: var(--ink);
+  --color-paper-muted: var(--bg-sunk);
+  --color-raised: var(--bg-raised);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--site-accent);
+  --color-accent-soft: var(--site-accent-soft);
+  --color-accent-on: var(--site-accent-on);
+  --font-sans: var(--font-text);
   --font-serif: 'IBM Plex Serif', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --radius-sm: 2px;
-  --radius: 2px;
-  --radius-md: 2px;
-  --radius-lg: 2px;
-  --radius-xl: 2px;
+  --radius-sm: var(--radius-control);
+  --radius: var(--radius-control);
+  --radius-md: var(--radius-control);
+  --radius-lg: var(--radius-control);
+  --radius-xl: var(--radius-control);
 }
 
 @layer components {
   .surface-raised {
-    border-radius: var(--radius);
-    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-control);
+    border: var(--border-hairline) solid var(--line-strong);
     background-color: var(--bg-raised);
   }
 }
 
 html {
   scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  min-height: 100dvh;
-  background-color: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-h1 {
-  font-family: var(--font-serif);
 }

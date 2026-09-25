@@ -1,4 +1,5 @@
 import { officialLinks } from '../config/status'
+import { GfNum } from '../components/GfNum'
 import { officialSampleQuestions } from '../content/officialSamples'
 
 export function Provfragor() {
@@ -22,7 +23,7 @@ export function Provfragor() {
         {officialSampleQuestions.map((q) => (
           <li key={q.id} className="surface-raised p-5">
             <p className="mb-1 font-mono text-xs font-medium uppercase tracking-wide text-ink/60">
-              Officiellt UHR-exempel {q.id}
+              Officiellt UHR-exempel <GfNum value={q.id} />
             </p>
             <p className="mb-4 font-medium">{q.prompt}</p>
             <ol className="space-y-2">

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getAllChapters, inledningMp3Url, sverigeIFokusPdfUrl } from '../content/chapters/meta'
 import { officialLinks } from '../config/status'
+import { GfNum } from '../components/GfNum'
 import { getProgressState, getQuizResult } from '../lib/progress'
 
 export function KapitelIndex() {
@@ -21,8 +22,15 @@ export function KapitelIndex() {
         </p>
         {(visitedCount > 0 || quizCount > 0) && (
           <p className="text-sm text-ink/65">
-            {visitedCount}/{totalChapters} kapitel besökta
-            {quizCount > 0 ? ` · ${quizCount} quiz genomförda` : ''}
+            <GfNum value={visitedCount} />/<GfNum value={totalChapters} /> kapitel besökta
+            {quizCount > 0 ? (
+              <>
+                {' '}
+                · <GfNum value={quizCount} /> quiz genomförda
+              </>
+            ) : (
+              ''
+            )}
           </p>
         )}
         <p className="flex flex-wrap gap-3 text-sm">
@@ -48,12 +56,27 @@ export function KapitelIndex() {
                 className="flex flex-col gap-1 px-5 py-4 transition-colors hover:bg-paper-muted sm:flex-row sm:items-center sm:justify-between"
               >
                 <span>
-                  <span className="font-mono text-sm text-ink/50">Kapitel {ch.number}</span>
+                  <span className="text-sm text-ink/50">
+                    Kapitel <GfNum value={ch.number} />
+                  </span>
                   <span className="mt-0.5 block font-medium">{ch.title}</span>
                 </span>
                 <span className="text-sm text-ink/60">
-                  {ch.isStub ? 'Länkar klara, quiz kommer' : `${ch.questions.length} övningsfrågor`}
-                  {result ? ` · Senast ${result.score}/${result.total}` : ''}
+                  {ch.isStub ? (
+                    'Länkar klara, quiz kommer'
+                  ) : (
+                    <>
+                      <GfNum value={ch.questions.length} /> övningsfrågor
+                    </>
+                  )}
+                  {result ? (
+                    <>
+                      {' '}
+                      · Senast <GfNum value={result.score} />/<GfNum value={result.total} />
+                    </>
+                  ) : (
+                    ''
+                  )}
                 </span>
               </Link>
             </li>
