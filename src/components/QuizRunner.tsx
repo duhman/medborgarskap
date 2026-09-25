@@ -56,7 +56,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
                 const showResult =
                   submitted &&
                   (opt.id === q.correctOptionId || (chosen === opt.id && opt.id !== q.correctOptionId))
-                let ring = 'border-line-strong bg-raised hover:border-accent/40'
+                let ring = 'border-line-strong bg-raised'
                 if (showResult && opt.id === q.correctOptionId) ring = 'border-accent bg-accent-soft'
                 if (showResult && chosen === opt.id && isWrong) ring = 'border-red-700/50 bg-red-50'
 

@@ -1,0 +1,184 @@
+/* Grundform components. Hand-written. Needs dist/css/grundform.css loaded first.
+   Every class reads only CSS variables, so themes and dark mode apply automatically.
+   Naming: .gf-<component>, modifiers .gf-<component>--<variant>, state via ARIA attributes. */
+
+/* ---------- Button ---------- */
+.gf-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  height: var(--size-control); padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius-control);
+  font: 500 16px/1 var(--font-text); cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: transform var(--dur-instant) var(--ease-out), background-color var(--dur-quick) var(--ease-out),
+    border-color var(--dur-quick) var(--ease-out), color var(--dur-quick) var(--ease-out), filter var(--dur-quick) var(--ease-out);
+}
+.gf-button:active { transform: translateY(1px) scale(.98); }
+.gf-button--primary { background: var(--accent); color: var(--accent-on); }
+.gf-button--primary:hover { filter: brightness(1.08); }
+.gf-button--secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
+.gf-button--secondary:hover { background: var(--bg-sunk); }
+.gf-button--ghost { background: transparent; color: var(--ink-2); }
+.gf-button--ghost:hover { background: var(--bg-sunk); color: var(--ink); }
+.gf-button--sm { height: var(--size-control-sm); padding: 0 14px; font-size: 14px; }
+.gf-button--icon { width: var(--size-control); padding: 0; }
+.gf-button:disabled, .gf-button[aria-disabled="true"] { opacity: .4; cursor: not-allowed; transform: none; filter: none; }
+
+/* ---------- Key (calculator key: thick bottom edge collapses on press) ---------- */
+.gf-key {
+  min-width: 56px; height: 56px; padding: 0 12px; border-radius: var(--radius-control);
+  background: var(--bg-raised); color: var(--ink); border: 1px solid var(--line-strong); border-bottom-width: 4px;
+  font: 500 18px/1 var(--font-mono); cursor: pointer;
+  transition: transform var(--dur-instant) var(--ease-out), border-bottom-width var(--dur-instant) var(--ease-out);
+}
+.gf-key:active { transform: translateY(3px); border-bottom-width: 1px; }
+.gf-key--accent { background: var(--accent); color: var(--accent-on); border-color: var(--accent-deep); }
+
+/* ---------- Switch: <button role="switch" aria-checked> with <span class="gf-switch__knob"> ---------- */
+.gf-switch {
+  position: relative; flex: none; width: 56px; height: 30px; padding: 0; cursor: pointer;
+  border-radius: var(--radius-control); border: 1px solid var(--line-strong); background: var(--bg-sunk);
+  transition: background-color var(--dur-quick) var(--ease-out), border-color var(--dur-quick) var(--ease-out);
+}
+.gf-switch[aria-checked="true"] { background: var(--accent); border-color: var(--accent-deep); }
+.gf-switch__knob {
+  position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; box-sizing: border-box;
+  border-radius: 1px; background: var(--bg-raised); border: 1px solid var(--line-strong);
+  transition: transform 220ms var(--ease-detent);
+}
+.gf-switch__knob::after { content: ''; position: absolute; left: 10px; top: 5px; width: 1px; height: 10px; background: var(--line-strong); }
+.gf-switch[aria-checked="true"] .gf-switch__knob { transform: translateX(26px); border-color: var(--accent-deep); }
+.gf-switch:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ---------- Indicator light ---------- */
+.gf-indicator {
+  display: inline-block; flex: none; width: 10px; height: 10px; border-radius: var(--radius-full); background: var(--line-strong);
+  transition: background-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+.gf-indicator[data-on="true"] { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.gf-indicator[data-state="ok"] { background: var(--ok); }
+.gf-indicator[data-state="warn"] { background: var(--warn); }
+.gf-indicator[data-state="error"] { background: var(--error); }
+
+/* ---------- Checkbox: native <input type="checkbox" class="gf-checkbox"> ---------- */
+.gf-checkbox {
+  appearance: none; -webkit-appearance: none; flex: none; margin: 0; width: 20px; height: 20px; cursor: pointer;
+  border: 1.5px solid var(--ink); border-radius: 1px; background: transparent; display: inline-grid; place-content: center;
+  transition: background-color 120ms var(--ease-out), border-color 120ms var(--ease-out);
+}
+.gf-checkbox::before {
+  content: ''; width: 12px; height: 12px; background: var(--accent-on);
+  clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 22%, 86% 8%, 38% 72%);
+  transform: scale(.4); opacity: 0; transition: transform 200ms var(--ease-detent), opacity 120ms var(--ease-out);
+}
+.gf-checkbox:checked { background: var(--accent); border-color: var(--accent-deep); }
+.gf-checkbox:checked::before { transform: scale(1); opacity: 1; }
+.gf-check-row { display: flex; align-items: center; gap: var(--space-3); min-height: var(--size-target); padding: 0 var(--space-1); border-bottom: 1px solid var(--line); cursor: pointer; }
+.gf-check-row:hover { background: var(--bg-sunk); }
+.gf-check-row:has(.gf-checkbox:checked) .gf-check-row__label { color: var(--ink-3); }
+
+/* ---------- Field ---------- */
+.gf-field { display: flex; flex-direction: column; gap: 6px; }
+.gf-field__label { font: 500 12px/16px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.gf-field__help { font-size: 14px; line-height: 20px; color: var(--ink-3); }
+.gf-field__error { font-size: 14px; line-height: 20px; color: var(--error); }
+.gf-input {
+  box-sizing: border-box; width: 100%; height: var(--size-control); padding: 0 12px; margin: 0;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--bg-raised); color: var(--ink);
+  font: 400 16px/24px var(--font-text); transition: border-color var(--dur-quick) var(--ease-out);
+}
+textarea.gf-input { height: auto; min-height: 96px; padding: 10px 12px; resize: vertical; }
+.gf-input::placeholder { color: var(--ink-3); }
+.gf-input:hover { border-color: var(--ink-3); }
+.gf-input:focus { outline: var(--border-focus) solid var(--accent-ring); outline-offset: 0; border-color: var(--ink); }
+.gf-input[aria-invalid="true"] { border-color: var(--error); }
+
+/* ---------- Segmented: role="group" with <button aria-pressed> ---------- */
+.gf-segmented { display: flex; border: 1px solid var(--ink); border-radius: var(--radius-control); overflow: hidden; }
+.gf-segmented > button {
+  flex: 1; height: 40px; padding: 0 16px; border: 0; border-right: 1px solid var(--ink); background: transparent; color: var(--ink);
+  font: 500 15px/1 var(--font-text); cursor: pointer; transition: background-color var(--dur-quick) var(--ease-out), color var(--dur-quick) var(--ease-out);
+}
+.gf-segmented > button:last-child { border-right: 0; }
+.gf-segmented > button:hover { background: var(--bg-sunk); }
+.gf-segmented > button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* ---------- Meter: 10 blocks. role="meter" on the wrapper ---------- */
+.gf-meter { display: flex; gap: 3px; }
+.gf-meter__block { flex: 1; height: 10px; background: var(--line); transition: background-color 200ms var(--ease-out); }
+.gf-meter__block[data-on="true"] { background: var(--accent); }
+
+/* ---------- Dial: role="slider". Pointer rotates -135deg..135deg ---------- */
+.gf-dial { position: relative; width: 120px; height: 120px; flex: none; }
+.gf-dial__face { position: absolute; inset: 22px; border-radius: var(--radius-full); background: var(--bg-raised); border: 1px solid var(--line-strong); }
+.gf-dial__pointer { position: absolute; left: 50%; top: 30px; width: 3px; height: 30px; margin-left: -1.5px; background: var(--accent); transform-origin: 50% 30px; transition: transform 260ms var(--ease-detent); }
+.gf-dial__hub { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: var(--radius-full); background: var(--ink); }
+
+/* ---------- Card ---------- */
+.gf-card {
+  display: flex; flex-direction: column; gap: var(--space-3); padding: 20px; color: var(--ink); text-decoration: none;
+  background: var(--bg-raised); border: 1px solid var(--line-strong);
+  transition: border-color var(--dur-quick) var(--ease-out), transform var(--dur-quick) var(--ease-out);
+}
+a.gf-card:hover, button.gf-card:hover { border-color: var(--ink); transform: translateY(-2px); }
+.gf-card__arrow { transition: transform var(--dur-quick) var(--ease-out); }
+.gf-card:hover .gf-card__arrow { transform: translateX(4px); }
+.gf-card[aria-current="true"], .gf-card--selected { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+
+/* ---------- Copy ---------- */
+.gf-copy {
+  display: inline-flex; align-items: center; gap: var(--space-2); height: var(--size-control-sm); padding: 0 12px; cursor: pointer;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--bg-raised); color: var(--ink);
+  font: 500 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; transition: transform var(--dur-instant) var(--ease-out);
+}
+.gf-copy:active { transform: translateY(1px); }
+
+/* ---------- Tag ---------- */
+.gf-tag { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border: 1px solid var(--line-strong); font: 500 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.gf-tag--accent { border-color: var(--accent-text); color: var(--accent-text); }
+
+/* ---------- Section header: label + ink rule ---------- */
+.gf-section-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); padding-bottom: var(--space-4); border-bottom: 1px solid var(--ink); }
+.gf-section-head h2 { margin: 0; }
+
+/* ---------- Table / list rows ---------- */
+.gf-table { width: 100%; border-collapse: collapse; }
+.gf-table th { text-align: left; font: 500 12px/16px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding: var(--space-2) var(--space-3) var(--space-2) 0; border-bottom: 1px solid var(--ink); }
+.gf-table td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.gf-table td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+
+/* ---------- Code block ---------- */
+.gf-code { display: block; font-family: var(--font-mono); padding: var(--space-4); background: var(--bg-sunk); color: var(--ink); overflow-x: auto; }
+
+/* ---------- Reveal: add .gf-reveal to a list, set data-shown="true" to play ---------- */
+.gf-reveal > * { opacity: 0; transform: translateY(4px); transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.gf-reveal[data-shown="true"] > * { opacity: 1; transform: none; }
+.gf-reveal > *:nth-child(2) { transition-delay: 40ms; }
+.gf-reveal > *:nth-child(3) { transition-delay: 80ms; }
+.gf-reveal > *:nth-child(4) { transition-delay: 120ms; }
+.gf-reveal > *:nth-child(5) { transition-delay: 160ms; }
+.gf-reveal > *:nth-child(n+6) { transition-delay: 200ms; }
+
+/* Yellow and other light accents: controls need an ink edge to stay visible on paper. */
+.gf-accent-edge .gf-switch[aria-checked="true"], .gf-accent-edge .gf-checkbox:checked, .gf-accent-edge .gf-button--primary { border-color: var(--ink); }
+[data-theme="beredskap"] .gf-switch[aria-checked="true"], [data-theme="beredskap"] .gf-checkbox:checked, [data-theme="beredskap"] .gf-button--primary { border-color: var(--ink); }
+
+/* ---------- Shapes: Kandinsky semantics (DESIGN.md 3.8) ----------
+   triangle = attention, square = action, circle = state, crossed square = error.
+   <span class="gf-shape gf-shape--attention" role="img" aria-label="Needs attention"></span> */
+.gf-shape { display: inline-block; flex: none; width: 12px; height: 12px; position: relative; vertical-align: middle; }
+.gf-shape--lg { width: 20px; height: 20px; }
+.gf-shape--action { background: var(--accent); }
+.gf-shape--state { border-radius: var(--radius-full); background: var(--accent); transition: background-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out); }
+.gf-shape--state[data-on="false"] { background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink-3); }
+.gf-shape--state[data-tone="ok"] { background: var(--ok); }
+.gf-shape--attention { background: var(--warn); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.gf-shape--error { background: var(--error); }
+.gf-shape--error::before, .gf-shape--error::after { content: ''; position: absolute; left: 50%; top: 50%; width: 140%; height: 2px; background: var(--bg); transform: translate(-50%, -50%) rotate(45deg); }
+.gf-shape--error::after { transform: translate(-50%, -50%) rotate(-45deg); }
+.gf-shape--error { overflow: hidden; }
+
+/* Primary buttons may carry the action square before the label. */
+.gf-button__mark { width: 8px; height: 8px; background: currentColor; flex: none; }
+
+/* Status row: shape, text, mono time. */
+.gf-status { display: flex; align-items: center; gap: var(--space-3); min-height: var(--size-target); border-bottom: 1px solid var(--line); }
+.gf-status__text { flex: 1; }
+.gf-status__meta { font-family: var(--font-numerals); font-size: 14px; color: var(--ink-3); font-variant-numeric: tabular-nums; }

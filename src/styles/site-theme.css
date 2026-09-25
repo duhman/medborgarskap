@@ -1,0 +1,32 @@
+/**
+ * Medborgarskap site layer only. Not an official Grundform theme.
+ * Overrides seed accent tokens from vendored core with local brand green.
+ */
+
+:root {
+  --site-accent: #2d4a3e;
+  --site-accent-on: #ffffff;
+  --site-accent-text: #2d4a3e;
+  --site-accent-deep: #1f352c;
+  --site-accent-soft: #e8f0ec;
+  --site-accent-soft-alpha: rgba(45, 74, 62, 0.14);
+  --site-accent-ring: #2d4a3e;
+
+  --accent-l: var(--site-accent);
+  --accent-on-l: var(--site-accent-on);
+  --accent-text-l: var(--site-accent-text);
+  --accent-deep-l: var(--site-accent-deep);
+  --accent-soft-l: var(--site-accent-soft-alpha);
+  --accent-ring-l: var(--site-accent-ring);
+
+  --accent-d: #5a8f78;
+  --accent-on-d: #ffffff;
+  --accent-text-d: #8fc4a8;
+  --accent-deep-d: #2d4a3e;
+  --accent-soft-d: rgba(90, 143, 120, 0.22);
+  --accent-ring-d: #8fc4a8;
+}
+
+h1 {
+  font-family: 'IBM Plex Serif', Georgia, serif;
+}
