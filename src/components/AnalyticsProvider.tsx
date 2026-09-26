@@ -59,9 +59,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   }, [])
 
   useEffect(() => {
-    if (!ready) {
-      return
-    }
+    if (!ready) return
     posthog.capture('$pageview')
   }, [ready, location.pathname, location.search, location.hash])
 
