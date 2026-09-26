@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import posthog from 'posthog-js'
 import { isAnalyticsOptedOut } from '../lib/analyticsOptOut'
@@ -44,20 +44,26 @@ function initPostHog(): boolean {
 
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const location = useLocation()
-  const activeRef = useRef(false)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
+    let cancelled = false
     return scheduleDeferred(() => {
-      activeRef.current = initPostHog()
+      if (cancelled) {
+        return
+      }
+      if (initPostHog()) {
+        setReady(true)
+      }
     })
   }, [])
 
   useEffect(() => {
-    if (!activeRef.current) {
+    if (!ready) {
       return
     }
     posthog.capture('$pageview')
-  }, [location.pathname, location.search, location.hash])
+  }, [ready, location.pathname, location.search, location.hash])
 
   return children
 }
