@@ -1,4 +1,5 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AnalyticsProvider } from './components/AnalyticsProvider'
 import { Layout } from './components/Layout'
 import { BehoverJag } from './pages/BehoverJag'
@@ -11,10 +12,30 @@ import { Villkor } from './pages/Villkor'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 
+function FocusMainOnNavigate() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const main = document.getElementById('main-content')
+      if (main instanceof HTMLElement) {
+        main.focus({ preventScroll: true })
+      }
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frame)
+    }
+  }, [pathname])
+
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <AnalyticsProvider>
+        <FocusMainOnNavigate />
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
