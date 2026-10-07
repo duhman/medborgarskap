@@ -14,9 +14,16 @@ const siblingSites = [
 export function Layout() {
   return (
     <div className="flex min-h-dvh flex-col">
+      <a href="#main-content" className="skip-link">
+        Hoppa till innehåll
+      </a>
       <StatusStrip />
       <Nav />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 outline-none"
+      >
         <Outlet />
       </main>
       <footer className="border-t border-line-strong bg-paper px-4 py-8">
@@ -54,6 +61,7 @@ export function Layout() {
                     className="text-ink/75 hover:text-accent hover:underline"
                     target="_blank"
                     rel="noreferrer"
+                    aria-label={`${site.label}, öppnas i ny flik`}
                   >
                     {site.label}
                   </a>
@@ -67,6 +75,7 @@ export function Layout() {
               className="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
               target="_blank"
               rel="noreferrer"
+              aria-label="Made by Adrian Martén, öppnas i ny flik"
             >
               Made by Adrian Martén
             </a>{' '}

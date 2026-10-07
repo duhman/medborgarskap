@@ -50,3 +50,31 @@ button.bg-accent {
 html {
   scroll-behavior: smooth;
 }
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 80;
+  transform: translateY(-160%);
+  min-height: 2.75rem;
+  border-radius: var(--radius-control);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 150ms ease-out;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+#main-content:focus:not(:focus-visible) {
+  outline: none;
+}
