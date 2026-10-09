@@ -23,6 +23,8 @@ button.bg-accent {
 @theme {
   --color-paper: var(--bg);
   --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
   --color-paper-muted: var(--bg-sunk);
   --color-raised: var(--bg-raised);
   --color-line-strong: var(--line-strong);

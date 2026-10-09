@@ -90,7 +90,7 @@ export function BehoverJag() {
             Kan du visa samhällskunskap via SFI kurs D, motsvarande, eller annat sätt som
             Migrationsverket dokumenterar?
           </legend>
-          <p className="text-sm text-ink/70">
+          <p className="text-sm text-ink-2">
             Det här gäller kunskapskravet, inte språkkravet. Migrationsverket avgör om din
             dokumentation räcker.
           </p>
@@ -109,7 +109,7 @@ export function BehoverJag() {
 
         <fieldset className="surface-raised space-y-3 p-5">
           <legend className="px-1 font-medium">Studerar du SFI just nu?</legend>
-          <p className="text-sm text-ink/70">
+          <p className="text-sm text-ink-2">
             SFI handlar om svenska språket. Språkkrav och samhällskunskap är separata spår i
             medborgarskapsprocessen. Att studera SFI språk ger inte automatiskt undantag från
             medborgarskapsprovet.
@@ -172,9 +172,14 @@ export function BehoverJag() {
             Till kapitlen
           </Link>
         </div>
-        <p className="mt-3 text-xs text-ink/60">
+        <p className="mt-3 text-xs text-ink-3">
           Nya regler från <GfNum value={6} /> juni <GfNum value={2026} />:{' '}
-          <a href={officialLinks.reformNotice} className="text-accent hover:underline" target="_blank" rel="noreferrer">
+          <a
+            href={officialLinks.reformNotice}
+            className="text-accent underline underline-offset-2"
+            target="_blank"
+            rel="noreferrer"
+          >
             Migrationsverkets nyhet
           </a>
         </p>

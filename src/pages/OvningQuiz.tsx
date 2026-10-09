@@ -20,9 +20,9 @@ export function OvningQuiz() {
   return (
     <article className="space-y-6">
       <header className="space-y-2">
-        <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink/60">Övning</p>
+        <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink-3">Övning</p>
         <h1 className="text-3xl font-semibold">{chapter.title}</h1>
-        <p className="text-sm text-ink/70">
+        <p className="text-sm text-ink-2">
           Originalfrågor. Inte kopierade från kommersiella sidor. Facit och förklaring efter
           inlämning.
         </p>

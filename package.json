@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:a11y": "node scripts/a11y-axe.mjs",
+    "test:a11y:install-browser": "playwright install chromium",
+    "screenshots:a11y": "node scripts/a11y-screenshots.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",
@@ -31,6 +34,8 @@
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.1",
+    "@axe-core/playwright": "4.10.1",
+    "playwright": "1.52.0"
   }
 }

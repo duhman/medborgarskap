@@ -88,7 +88,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
 
             {submitted && (
               <div className="mt-4 space-y-2 border-t border-line-strong pt-4 text-sm">
-                <p className={isCorrect ? 'text-accent' : isWrong ? 'text-red-800' : 'text-ink/70'}>
+                <p className={isCorrect ? 'text-accent' : isWrong ? 'text-red-800' : 'text-ink-2'}>
                   {isCorrect
                     ? 'Rätt.'
                     : chosen
@@ -106,7 +106,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
                     >
                       {showEn[q.id] ? 'Dölj engelska' : 'Visa engelska'}
                     </button>
-                    {showEn[q.id] && <p className="mt-1 text-ink/70">{q.explanationEn}</p>}
+                    {showEn[q.id] && <p className="mt-1 text-ink-2">{q.explanationEn}</p>}
                   </div>
                 )}
               </div>

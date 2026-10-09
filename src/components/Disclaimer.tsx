@@ -3,7 +3,7 @@ export function Disclaimer({ compact = false }: { compact?: boolean }) {
     <p
       className={
         compact
-          ? 'text-xs leading-relaxed text-ink/70'
+          ? 'text-xs leading-relaxed text-ink-2'
           : 'surface-raised px-4 py-3 text-sm leading-relaxed text-ink/80'
       }
     >

@@ -22,7 +22,7 @@ export function Provfragor() {
       <ul className="space-y-6">
         {officialSampleQuestions.map((q) => (
           <li key={q.id} className="surface-raised p-5">
-            <p className="mb-1 font-mono text-xs font-medium uppercase tracking-wide text-ink/60">
+            <p className="mb-1 font-mono text-xs font-medium uppercase tracking-wide text-ink-3">
               Officiellt UHR-exempel <GfNum value={q.id} />
             </p>
             <p className="mb-4 font-medium">{q.prompt}</p>
@@ -33,7 +33,7 @@ export function Provfragor() {
                 </li>
               ))}
             </ol>
-            <p className="mt-3 text-xs text-ink/60">{q.note}</p>
+            <p className="mt-3 text-xs text-ink-3">{q.note}</p>
           </li>
         ))}
       </ul>
