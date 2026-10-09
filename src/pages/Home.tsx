@@ -39,7 +39,7 @@ export function Home() {
       <section className="surface-raised space-y-3 p-6">
         <h2 className="text-xl font-semibold">Så fungerar det</h2>
         <ol className="list-decimal space-y-2 pl-5 text-ink/85">
-          <li>Gå igenom checklistan om du osäker på om UHR:s prov gäller för dig.</li>
+          <li>Gå igenom checklistan om du är osäker på om UHR:s prov gäller för dig.</li>
           <li>Välj kapitel, lyssna på MP3 och läs i PDF från UHR.</li>
           <li>Öva kapitlet med flervalsfrågor och läs förklaringar med källhänvisning.</li>
         </ol>

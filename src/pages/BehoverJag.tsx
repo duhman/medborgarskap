@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { pathwaySources } from '../config/pathwaySources'
 import { officialLinks } from '../config/status'
 import { GfNum } from '../components/GfNum'
+import { OfficialSourceCitation } from '../components/SourceCitation'
 import {
   derivePathwayOutcome,
   getPathwayAnswers,
@@ -49,6 +51,7 @@ export function BehoverJag() {
             />
             <GfNum value={67} /> år eller äldre (åldersundantag kan gälla)
           </label>
+          <OfficialSourceCitation sources={pathwaySources.age} />
         </fieldset>
 
         <fieldset className="surface-raised space-y-3 p-5">
@@ -66,6 +69,7 @@ export function BehoverJag() {
               {v === 'yes' ? 'Ja' : v === 'no' ? 'Nej' : 'Osäker'}
             </label>
           ))}
+          <OfficialSourceCitation sources={pathwaySources.school} />
         </fieldset>
 
         <fieldset className="surface-raised space-y-3 p-5">
@@ -83,6 +87,7 @@ export function BehoverJag() {
               {v === 'yes' ? 'Ja' : v === 'no' ? 'Nej' : 'Osäker'}
             </label>
           ))}
+          <OfficialSourceCitation sources={pathwaySources.komvux} />
         </fieldset>
 
         <fieldset className="surface-raised space-y-3 p-5">
@@ -105,6 +110,7 @@ export function BehoverJag() {
               {v === 'yes' ? 'Ja' : v === 'no' ? 'Nej' : 'Osäker'}
             </label>
           ))}
+          <OfficialSourceCitation sources={pathwaySources.sfiKnowledge} />
         </fieldset>
 
         <fieldset className="surface-raised space-y-3 p-5">
@@ -132,6 +138,7 @@ export function BehoverJag() {
             />
             Nej
           </label>
+          <OfficialSourceCitation sources={pathwaySources.sfi} />
         </fieldset>
       </div>
 
