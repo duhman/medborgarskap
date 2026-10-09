@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:a11y": "node scripts/a11y-axe.mjs",
+    "test:a11y:install-browser": "playwright install chromium",
     "screenshots:a11y": "node scripts/a11y-screenshots.mjs"
   },
   "dependencies": {
@@ -34,7 +35,7 @@
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.1",
-    "@axe-core/playwright": "^4.10.1",
-    "playwright": "^1.52.0"
+    "@axe-core/playwright": "4.10.1",
+    "playwright": "1.52.0"
   }
 }

@@ -38,7 +38,7 @@ export function Layout() {
                 Medborgarskap
               </p>
               <nav
-                aria-label="Webbplatslänkar"
+                aria-label="Medborgarskap"
                 className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
               >
                 <Link to="/integritet" className="text-accent hover:underline">

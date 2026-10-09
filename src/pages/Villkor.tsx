@@ -5,7 +5,7 @@ export function Villkor() {
     <article className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Användarvillkor</h1>
-        <p className="text-sm text-ink/70">Senast uppdaterad: 24 september 2026</p>
+        <p className="text-sm text-ink-2">Senast uppdaterad: 24 september 2026</p>
       </header>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
@@ -24,7 +24,7 @@ export function Villkor() {
           regler för medborgarskap och prov kan ändras. Bekräfta alltid aktuell information på{' '}
           <a
             href="https://www.uhr.se"
-            className="text-accent hover:underline"
+            className="text-accent underline underline-offset-2"
             target="_blank"
             rel="noreferrer"
           >
@@ -64,11 +64,11 @@ export function Villkor() {
         <h2 className="text-xl font-semibold text-ink">Kontakt</h2>
         <p>
           Frågor om villkoren:{' '}
-          <a href="mailto:adrian@adrianmarten.net" className="text-accent hover:underline">
+          <a href="mailto:adrian@adrianmarten.net" className="text-accent underline underline-offset-2">
             adrian@adrianmarten.net
           </a>
           . Integritet:{' '}
-          <Link to="/integritet" className="text-accent hover:underline">
+          <Link to="/integritet" className="text-accent underline underline-offset-2">
             Integritetspolicy
           </Link>
           .
