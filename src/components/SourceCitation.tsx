@@ -7,7 +7,7 @@ type Props = {
   className?: string
 }
 
-export function SourceCitation({ source, className = 'text-ink/70' }: Props) {
+export function SourceCitation({ source, className = 'text-ink/60' }: Props) {
   if (source.page != null) {
     return (
       <p className={className}>
@@ -27,7 +27,7 @@ type OfficialProps = {
   className?: string
 }
 
-export function OfficialSourceCitation({ sources, className = 'text-xs text-ink/70' }: OfficialProps) {
+export function OfficialSourceCitation({ sources, className = 'text-xs text-ink-3' }: OfficialProps) {
   return (
     <ul className={className}>
       {sources.map((s) => (
