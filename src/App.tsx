@@ -9,6 +9,7 @@ import { KapitelStudy } from './pages/KapitelStudy'
 import { Integritet } from './pages/Integritet'
 import { Om } from './pages/Om'
 import { Villkor } from './pages/Villkor'
+import { getDocumentTitle } from './lib/documentTitle'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 
@@ -43,11 +44,22 @@ function FocusMainOnNavigate() {
   return null
 }
 
+function DocumentTitle() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    document.title = getDocumentTitle(pathname)
+  }, [pathname])
+
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <AnalyticsProvider>
         <FocusMainOnNavigate />
+        <DocumentTitle />
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Home />} />

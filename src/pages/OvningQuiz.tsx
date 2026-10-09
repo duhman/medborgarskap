@@ -9,7 +9,7 @@ export function OvningQuiz() {
   if (!chapter) {
     return (
       <p>
-        Quiz hittades inte.{' '}
+        Övningen hittades inte.{' '}
         <Link to="/kapitel" className="text-accent hover:underline">
           Till kapitel
         </Link>

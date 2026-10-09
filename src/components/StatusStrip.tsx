@@ -29,7 +29,7 @@ export function StatusStrip() {
         </a>
         . Läs mer om statusremsan på{' '}
         <Link to="/om" className="font-sans text-accent underline-offset-2 hover:underline">
-          Om sidan
+          Om-sidan
         </Link>
         .
       </p>
