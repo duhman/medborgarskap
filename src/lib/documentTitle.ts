@@ -26,7 +26,7 @@ function pageName(pathname: string): string | null {
   const quizMatch = path.match(/^\/ovning\/([^/]+)$/)
   if (quizMatch) {
     const label = chapterLabel(quizMatch[1])
-    return label ? `Övning, ${label}` : 'Quiz hittades inte'
+    return label ? `Övning, ${label}` : 'Övningen hittades inte'
   }
 
   return null

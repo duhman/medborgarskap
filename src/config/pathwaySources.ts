@@ -23,7 +23,7 @@ export const pathwaySources: Record<PathwayQuestionKey, OfficialSource[]> = {
   age: [
     {
       publisher: 'Migrationsverket',
-      label: 'Medborgarskap för vuxna: kunskaper i svenska och om det svenska samhället',
+      label: 'Medborgarskap för vuxna',
       url: MV_VUXNA,
       checkedAt: CHECKED,
     },
@@ -31,7 +31,7 @@ export const pathwaySources: Record<PathwayQuestionKey, OfficialSource[]> = {
   school: [
     {
       publisher: 'Migrationsverket',
-      label: 'Medborgarskap för vuxna: kunskaper om det svenska samhället, godkända meriter',
+      label: 'Medborgarskap för vuxna',
       url: MV_VUXNA,
       checkedAt: CHECKED,
     },
@@ -45,7 +45,7 @@ export const pathwaySources: Record<PathwayQuestionKey, OfficialSource[]> = {
   komvux: [
     {
       publisher: 'Migrationsverket',
-      label: 'Medborgarskap för vuxna: kunskaper om det svenska samhället, godkända meriter',
+      label: 'Medborgarskap för vuxna',
       url: MV_VUXNA,
       checkedAt: CHECKED,
     },
@@ -53,7 +53,7 @@ export const pathwaySources: Record<PathwayQuestionKey, OfficialSource[]> = {
   sfiKnowledge: [
     {
       publisher: 'Migrationsverket',
-      label: 'Medborgarskap för vuxna: godkända meriter för svenska och för samhällskunskap',
+      label: 'Medborgarskap för vuxna',
       url: MV_VUXNA,
       checkedAt: CHECKED,
     },

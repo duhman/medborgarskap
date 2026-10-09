@@ -24,6 +24,6 @@ describe('getDocumentTitle', () => {
 
   it('handles unknown chapter slugs', () => {
     expect(getDocumentTitle('/kapitel/nope')).toBe('Kapitlet hittades inte | Medborgarskap')
-    expect(getDocumentTitle('/ovning/nope')).toBe('Quiz hittades inte | Medborgarskap')
+    expect(getDocumentTitle('/ovning/nope')).toBe('Övningen hittades inte | Medborgarskap')
   })
 })

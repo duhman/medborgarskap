@@ -7,7 +7,7 @@ type Props = {
   className?: string
 }
 
-export function SourceCitation({ source, className = 'text-ink/60' }: Props) {
+export function SourceCitation({ source, className = 'text-ink/70' }: Props) {
   if (source.page != null) {
     return (
       <p className={className}>
@@ -27,7 +27,7 @@ type OfficialProps = {
   className?: string
 }
 
-export function OfficialSourceCitation({ sources, className = 'text-xs text-ink/60' }: OfficialProps) {
+export function OfficialSourceCitation({ sources, className = 'text-xs text-ink/70' }: OfficialProps) {
   return (
     <ul className={className}>
       {sources.map((s) => (
@@ -35,14 +35,15 @@ export function OfficialSourceCitation({ sources, className = 'text-xs text-ink/
           Källa:{' '}
           <a
             href={s.url}
-            className="text-accent hover:underline"
+            className="mb-link-quiet"
             target="_blank"
-            rel="noreferrer"
-            aria-label={`${s.publisher}: ${s.label}, öppnas i ny flik`}
+            rel="noopener noreferrer"
+            aria-label={`${s.publisher}, ${s.label}, öppnas i ny flik`}
           >
-            {s.publisher}: {s.label}
+            {s.publisher}, {s.label}
+            <span aria-hidden="true"> ↗</span>
           </a>
-          , kontrollerad {s.checkedAt}
+          , kontrollerad <GfNum value={s.checkedAt} />
         </li>
       ))}
     </ul>
