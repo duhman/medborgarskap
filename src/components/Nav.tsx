@@ -5,7 +5,7 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
     'rounded px-2 py-1.5 text-sm transition-colors',
     isActive
       ? 'font-semibold text-ink underline decoration-ink underline-offset-4'
-      : 'font-medium text-ink/70 hover:text-ink',
+      : 'font-medium text-ink-2 hover:text-ink',
   ].join(' ')
 
 export function Nav() {

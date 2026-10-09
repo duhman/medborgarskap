@@ -5,7 +5,7 @@ export function Integritet() {
     <article className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Integritetspolicy</h1>
-        <p className="text-sm text-ink/70">Senast uppdaterad: 24 september 2026</p>
+        <p className="text-sm text-ink-2">Senast uppdaterad: 24 september 2026</p>
       </header>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
@@ -13,7 +13,7 @@ export function Integritet() {
         <p>
           Medborgarskap är en fristående studiehjälp som drivs av Adrian Martén. Webbplatsen är
           inte knuten till UHR, Skolverket eller Migrationsverket. Frågor om integritet:{' '}
-          <a href="mailto:adrian@adrianmarten.net" className="text-accent hover:underline">
+          <a href="mailto:adrian@adrianmarten.net" className="text-accent underline underline-offset-2">
             adrian@adrianmarten.net
           </a>
           .
@@ -69,14 +69,14 @@ export function Integritet() {
           Eftersom vi inte samlar in konton eller applikationsdata på servern handlar de flesta
           frågor om det som finns i din webbläsare (localStorage) eller hos hostingleverantören.
           Kontakta oss på{' '}
-          <a href="mailto:adrian@adrianmarten.net" className="text-accent hover:underline">
+          <a href="mailto:adrian@adrianmarten.net" className="text-accent underline underline-offset-2">
             adrian@adrianmarten.net
           </a>{' '}
           om du vill veta mer.
         </p>
         <p>
           Mer om webbplatsen finns på{' '}
-          <Link to="/om" className="text-accent hover:underline">
+          <Link to="/om" className="text-accent underline underline-offset-2">
             Om
           </Link>
           .

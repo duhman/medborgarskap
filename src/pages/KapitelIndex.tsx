@@ -21,7 +21,7 @@ export function KapitelIndex() {
           PDF:en här.
         </p>
         {(visitedCount > 0 || quizCount > 0) && (
-          <p className="text-sm text-ink/65">
+          <p className="text-sm text-ink-3">
             <GfNum value={visitedCount} />/<GfNum value={totalChapters} /> kapitel besökta
             {quizCount > 0 ? (
               <>
@@ -56,12 +56,12 @@ export function KapitelIndex() {
                 className="flex flex-col gap-1 px-5 py-4 transition-colors hover:bg-paper-muted sm:flex-row sm:items-center sm:justify-between"
               >
                 <span>
-                  <span className="text-sm text-ink/50">
+                  <span className="text-sm text-ink-3">
                     Kapitel <GfNum value={ch.number} />
                   </span>
                   <span className="mt-0.5 block font-medium">{ch.title}</span>
                 </span>
-                <span className="text-sm text-ink/60">
+                <span className="text-sm text-ink-3">
                   {ch.isStub ? (
                     'Länkar klara, quiz kommer'
                   ) : (

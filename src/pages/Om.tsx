@@ -1,5 +1,4 @@
 import { officialLinks, uhrStatus } from '../config/status'
-import { Disclaimer } from '../components/Disclaimer'
 
 const sources = [
   { label: 'Sverige i fokus (PDF)', url: officialLinks.pdf },
@@ -21,15 +20,13 @@ export function Om() {
           på{' '}
           <a
             href="https://medborgarskap.adrianmarten.net"
-            className="text-accent hover:underline"
+            className="text-accent underline underline-offset-2"
           >
             medborgarskap.adrianmarten.net
           </a>
           .
         </p>
       </header>
-
-      <Disclaimer />
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Källor</h2>
@@ -48,7 +45,7 @@ export function Om() {
                   <td className="px-4 py-2">
                     <a
                       href={s.url}
-                      className="break-all text-accent hover:underline"
+                      className="break-all text-accent underline underline-offset-2"
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -69,12 +66,12 @@ export function Om() {
           {uhrStatus.registrationOpen ? 'öppen' : 'stängd'}.
         </p>
         <p>{uhrStatus.notes}</p>
-        <p className="text-ink/70">
+        <p className="text-ink-2">
           Status hålls uppdaterad av sidans ägare utifrån UHR:s publicerade information. Vi
           anger inte datum som UHR inte publicerat. Bekräfta alltid på{' '}
           <a
             href={officialLinks.medborgarskapsprov}
-            className="text-accent hover:underline"
+            className="text-accent underline underline-offset-2"
             target="_blank"
             rel="noreferrer"
           >
@@ -94,7 +91,7 @@ export function Om() {
           Kontakt: via GitHub-projektet{' '}
           <a
             href="https://github.com/duhman/medborgarskap"
-            className="text-accent hover:underline"
+            className="text-accent underline underline-offset-2"
             target="_blank"
             rel="noreferrer"
           >

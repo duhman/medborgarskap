@@ -28,7 +28,7 @@ export function KapitelStudy() {
   return (
     <article className="space-y-8">
       <header className="space-y-2">
-        <p className="text-sm text-ink/50">
+        <p className="text-sm text-ink-3">
           Kapitel <GfNum value={chapter.number} />
         </p>
         <h1 className="text-3xl font-semibold">{chapter.title}</h1>
@@ -77,7 +77,7 @@ export function KapitelStudy() {
               )}
         </p>
         {quizResult && (
-          <p className="mt-1 text-sm text-ink/60">
+          <p className="mt-1 text-sm text-ink-3">
             Ditt senaste resultat: <GfNum value={quizResult.score} /> av{' '}
             <GfNum value={quizResult.total} /> rätt.
           </p>

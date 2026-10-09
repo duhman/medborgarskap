@@ -7,7 +7,7 @@ type Props = {
   className?: string
 }
 
-export function SourceCitation({ source, className = 'text-ink/60' }: Props) {
+export function SourceCitation({ source, className = 'text-ink-3' }: Props) {
   if (source.page != null) {
     return (
       <p className={className}>

@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom'
-import { Disclaimer } from '../components/Disclaimer'
 import { officialLinks } from '../config/status'
 
 export function Home() {
   return (
     <article className="space-y-8">
       <header className="space-y-4">
-        <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink/60">
+        <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink-3">
           Fristående övning
         </p>
         <h1 className="text-4xl font-semibold leading-tight text-ink sm:text-5xl">
@@ -18,8 +17,6 @@ export function Home() {
           - en lugn studiekompanjon, inte en provsimulering.
         </p>
       </header>
-
-      <Disclaimer />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <Link
@@ -35,6 +32,7 @@ export function Home() {
           Börja studera
         </Link>
       </div>
+      <p className="text-sm text-ink-2 sm:hidden">Inte en officiell tjänst.</p>
 
       <section className="surface-raised space-y-3 p-6">
         <h2 className="text-xl font-semibold">Så fungerar det</h2>
@@ -43,9 +41,14 @@ export function Home() {
           <li>Välj kapitel, lyssna på MP3 och läs i PDF från UHR.</li>
           <li>Öva kapitlet med flervalsfrågor och läs förklaringar med källhänvisning.</li>
         </ol>
-        <p className="text-sm text-ink/70">
+        <p className="text-sm text-ink-2">
           Officiellt material:{' '}
-          <a href={officialLinks.utbildningsmaterial} className="text-accent hover:underline" target="_blank" rel="noreferrer">
+          <a
+            href={officialLinks.utbildningsmaterial}
+            className="text-accent underline underline-offset-2"
+            target="_blank"
+            rel="noreferrer"
+          >
             uhr.se/medborgarskapsprovet/utbildningsmaterial
           </a>
         </p>

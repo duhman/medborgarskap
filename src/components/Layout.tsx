@@ -29,15 +29,18 @@ export function Layout() {
       <footer className="border-t border-line-strong bg-paper px-4 py-8">
         <div className="mx-auto max-w-3xl space-y-6">
           <Disclaimer compact />
-          <p className="text-xs leading-relaxed text-ink/60">
+          <p className="text-xs leading-relaxed text-ink-3">
             Fristående övning till medborgarskapsprovet, baserad på UHR:s Sverige i fokus.
           </p>
           <div className="flex flex-col gap-6 sm:flex-row sm:justify-between sm:gap-8">
             <div className="space-y-2">
-              <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink/60">
+              <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink-3">
                 Medborgarskap
               </p>
-              <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+              <nav
+                aria-label="Medborgarskap"
+                className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
+              >
                 <Link to="/integritet" className="text-accent hover:underline">
                   Integritet
                 </Link>
@@ -50,10 +53,13 @@ export function Layout() {
               </nav>
             </div>
             <div className="space-y-2">
-              <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink/60">
+              <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink-3">
                 Fler projekt
               </p>
-              <nav className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+              <nav
+                aria-label="Fler projekt"
+                className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
+              >
                 {siblingSites.map((site) => (
                   <a
                     key={site.href}
@@ -69,7 +75,7 @@ export function Layout() {
               </nav>
             </div>
           </div>
-          <p className="text-xs text-ink/50">
+          <p className="text-xs text-ink-3">
             <a
               href="https://adrianmarten.net"
               className="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
