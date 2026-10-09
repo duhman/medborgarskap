@@ -1,5 +1,4 @@
 import { officialLinks, uhrStatus } from '../config/status'
-import { Disclaimer } from '../components/Disclaimer'
 
 const sources = [
   { label: 'Sverige i fokus (PDF)', url: officialLinks.pdf },
@@ -28,8 +27,6 @@ export function Om() {
           .
         </p>
       </header>
-
-      <Disclaimer />
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Källor</h2>

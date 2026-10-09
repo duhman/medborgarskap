@@ -1,4 +1,3 @@
-import { Disclaimer } from '../components/Disclaimer'
 import { Link } from 'react-router-dom'
 
 export function Villkor() {
@@ -8,8 +7,6 @@ export function Villkor() {
         <h1 className="text-3xl font-semibold">Användarvillkor</h1>
         <p className="text-sm text-ink/70">Senast uppdaterad: 24 september 2026</p>
       </header>
-
-      <Disclaimer />
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
         <h2 className="text-xl font-semibold text-ink">Syfte</h2>

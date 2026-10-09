@@ -172,7 +172,7 @@ export function BehoverJag() {
             Till kapitlen
           </Link>
         </div>
-        <p className="mt-3 text-xs text-ink/60">
+        <p className="mt-3 text-xs text-ink-3">
           Nya regler från <GfNum value={6} /> juni <GfNum value={2026} />:{' '}
           <a href={officialLinks.reformNotice} className="text-accent hover:underline" target="_blank" rel="noreferrer">
             Migrationsverkets nyhet
