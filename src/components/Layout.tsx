@@ -26,7 +26,7 @@ export function Layout() {
       >
         <Outlet />
       </main>
-      <footer className="border-t border-line-strong bg-paper px-4 py-8">
+      <footer role="contentinfo" className="border-t border-line-strong bg-paper px-4 py-8">
         <div className="mx-auto max-w-3xl space-y-6">
           <Disclaimer compact />
           <p className="text-xs leading-relaxed text-ink-3">

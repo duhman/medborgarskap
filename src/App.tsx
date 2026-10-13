@@ -9,7 +9,7 @@ import { KapitelStudy } from './pages/KapitelStudy'
 import { Integritet } from './pages/Integritet'
 import { Om } from './pages/Om'
 import { Villkor } from './pages/Villkor'
-import { getDocumentTitle } from './lib/documentTitle'
+import { applyRouteDocumentMeta } from './lib/routeDocumentMeta'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 
@@ -48,7 +48,7 @@ function DocumentTitle() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    document.title = getDocumentTitle(pathname)
+    applyRouteDocumentMeta(pathname)
   }, [pathname])
 
   return null
