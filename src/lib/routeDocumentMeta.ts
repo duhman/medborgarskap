@@ -1,3 +1,4 @@
+import { getDocumentDescription } from './documentDescription'
 import { getDocumentTitle } from './documentTitle'
 
 export const SITE_ORIGIN = 'https://medborgarskap.adrianmarten.net'
@@ -47,11 +48,15 @@ function upsertMetaByName(name: string, content: string): void {
 /** Keep document title and share tags aligned on client-side route changes. */
 export function applyRouteDocumentMeta(pathname: string): void {
   const title = getDocumentTitle(pathname)
+  const description = getDocumentDescription(pathname)
   const url = canonicalUrl(pathname)
 
   document.title = title
   upsertLinkRel('canonical', url)
+  upsertMetaByName('description', description)
   upsertMetaByProperty('og:title', title)
+  upsertMetaByProperty('og:description', description)
   upsertMetaByProperty('og:url', url)
   upsertMetaByName('twitter:title', title)
+  upsertMetaByName('twitter:description', description)
 }
