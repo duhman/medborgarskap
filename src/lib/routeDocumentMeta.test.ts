@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { canonicalPathname, canonicalUrl } from './routeDocumentMeta'
+import { applyRouteDocumentMeta, canonicalPathname, canonicalUrl } from './routeDocumentMeta'
 
 describe('canonicalPathname', () => {
   it('normalizes home and trailing slashes', () => {
@@ -14,5 +14,16 @@ describe('canonicalUrl', () => {
     expect(canonicalUrl('/')).toBe('https://medborgarskap.adrianmarten.net/')
     expect(canonicalUrl('/behover-jag')).toBe('https://medborgarskap.adrianmarten.net/behover-jag')
     expect(canonicalUrl('/kapitel/')).toBe('https://medborgarskap.adrianmarten.net/kapitel')
+  })
+})
+
+describe('applyRouteDocumentMeta', () => {
+  it('upserts twitter:url to match the route canonical URL', () => {
+    document.head.innerHTML = '<title>Medborgarskap</title>'
+    applyRouteDocumentMeta('/kapitel/landet-sverige')
+    const twitterUrl = document.head.querySelector('meta[name="twitter:url"]')
+    expect(twitterUrl?.getAttribute('content')).toBe(
+      'https://medborgarskap.adrianmarten.net/kapitel/landet-sverige',
+    )
   })
 })
