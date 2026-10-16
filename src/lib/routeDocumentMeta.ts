@@ -59,4 +59,5 @@ export function applyRouteDocumentMeta(pathname: string): void {
   upsertMetaByProperty('og:url', url)
   upsertMetaByName('twitter:title', title)
   upsertMetaByName('twitter:description', description)
+  upsertMetaByName('twitter:url', url)
 }
