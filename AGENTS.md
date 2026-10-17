@@ -22,6 +22,8 @@ bun run verify
 
 **Accessibility (CI-only today):** Playwright axe on all routes: `bun run test:a11y:install-browser -- --with-deps` once, then `bun run test:a11y`. Run before merge when touching layout, nav, or copy on interactive pages.
 
+**Grundform cascade:** Vendored core lives in `@layer grundform` in `src/index.css` so utilities beat base anchor color. Solid clay CTAs (`a.bg-accent`, `button.bg-accent`) use `--site-accent-on` after the Tailwind import (see [PR #7](https://github.com/duhman/medborgarskap/pull/7)). Before merge on theme or chrome changes: `bun run test:grundform-contrast` (fail string `GRUNDFORM_CTA_CONTRAST`). Vault SoT: [Grundform 0.2.0 seeded design system](https://github.com/duhman/obsidian-memory/blob/ed46ed28adca8fd6c30cd31f0fc2c4187a5edeb2/06-Atomic/insights/2026-09-25-grundform-0-2-0-seeded-design-system-sot.md).
+
 ## House rules
 
 - No em/en dash in user-facing copy (ASCII hyphen only).

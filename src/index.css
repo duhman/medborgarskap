@@ -4,14 +4,22 @@
 @import '@fontsource/ibm-plex-serif/600.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
-@import './styles/grundform/grundform.css';
-@import './styles/grundform/components.css';
-@import './styles/site-theme.css';
+
+/*
+ * Cascade contract (Phase B / class 1): vendored Grundform core stays in the
+ * `grundform` layer so Tailwind @layer utilities outrank base `a { color }`.
+ * Solid accent CTA overrides follow Tailwind import (medborgarskap PR #7 pattern).
+ */
+@layer grundform, site, theme, base, components, utilities;
+
+@import './styles/grundform/grundform.css' layer(grundform);
+@import './styles/grundform/components.css' layer(grundform);
+@import './styles/site-theme.css' layer(site);
 @import 'tailwindcss';
 
 /*
- * Grundform core sets unlayered `a { color: var(--accent-text) }`, which outranks
- * Tailwind @layer utilities. Solid accent controls need explicit on-accent color.
+ * Grundform core sets `a { color: var(--accent-text) }`. On solid accent fills
+ * that matched the clay fill before layering; keep explicit on-accent labels.
  */
 a.bg-accent,
 a.bg-accent:hover,
