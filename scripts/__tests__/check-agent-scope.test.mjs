@@ -70,6 +70,25 @@ describe("check-agent-scope", () => {
     expect(bumps[0].name).toBe("zod");
   });
 
+  it("does not treat a deleted approval doc as approval", () => {
+    expect(hasInfraEscape([INFRA_DOC, "drizzle/foo.ts"], [INFRA_DOC])).toBe(false);
+  });
+
+  it("sees the source path of a moved workflow", () => {
+    const dir = mkdtempSync(join(tmpdir(), "agent-scope-mv-"));
+    const git = (cmd) => execSync(`git ${cmd}`, { cwd: dir, stdio: "ignore" });
+    git("init -q -b main");
+    execSync("mkdir -p .github/workflows", { cwd: dir });
+    writeFileSync(join(dir, ".github/workflows/ci.yml"), "name: ci\n");
+    git("add .");
+    git("-c user.name=t -c user.email=t@t commit -qm init");
+    git("update-ref refs/remotes/origin/main HEAD");
+    git("checkout -q -b feature");
+    git("mv .github/workflows/ci.yml ci.yml");
+    git("-c user.name=t -c user.email=t@t commit -qm move");
+    expect(listChangedFiles({ baseRef: "main", cwd: dir })).toContain(".github/workflows/ci.yml");
+  });
+
   it("passes when infra doc is in the same PR", () => {
     expect(hasInfraEscape([INFRA_DOC, "drizzle/foo.ts"])).toBe(true);
   });

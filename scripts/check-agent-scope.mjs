@@ -70,10 +70,11 @@ function currentDependabotContext(cwd = repoRoot) {
   return { branch, author };
 }
 
-export function hasInfraEscape(changedFiles = []) {
+export function hasInfraEscape(changedFiles = [], deletedFiles = []) {
   if (truthyEnv("AGENT_SCOPE_INFRA_APPROVED")) return true;
   if (readGithubEventLabels().includes("infra-approved")) return true;
-  if (changedFiles.includes(INFRA_DOC)) return true;
+  // Deleting the approval doc is not an approval; it must be added or edited in this PR.
+  if (changedFiles.includes(INFRA_DOC) && !deletedFiles.includes(INFRA_DOC)) return true;
   return false;
 }
 
@@ -225,9 +226,24 @@ export function listChangedFiles({ baseRef = "main", cwd = repoRoot } = {}) {
     }
   }
 
-  const out = runGit(["diff", "--name-only", `${mergeBase}...HEAD`], cwd);
+  // --no-renames reports a move as delete + add, so moving a protected file out of
+  // its folder still shows the protected source path.
+  const out = runGit(["diff", "--name-only", "--no-renames", `${mergeBase}...HEAD`], cwd);
   if (!out) return [];
   return out.split("\n").map((l) => l.trim()).filter(Boolean);
+}
+
+export function listDeletedFiles({ baseRef = "main", cwd = repoRoot } = {}) {
+  try {
+    const mergeBase = runGit(["merge-base", "HEAD", `origin/${baseRef}`], cwd);
+    const out = runGit(
+      ["diff", "--name-only", "--no-renames", "--diff-filter=D", `${mergeBase}...HEAD`],
+      cwd,
+    );
+    return out ? out.split("\n").map((l) => l.trim()).filter(Boolean) : [];
+  } catch {
+    return [];
+  }
 }
 
 function readPackageJsonAtRef(ref, cwd) {
@@ -259,8 +275,9 @@ export function checkAgentScope(options = {}) {
   const baseRef = options.baseRef ?? resolveBaseRef();
   const cwd = options.cwd ?? repoRoot;
   const changedFiles = options.changedFiles ?? listChangedFiles({ baseRef, cwd });
+  const deletedFiles = options.deletedFiles ?? (options.changedFiles ? [] : listDeletedFiles({ baseRef, cwd }));
   const infraApproved =
-    options.infraApproved ?? hasInfraEscape(changedFiles);
+    options.infraApproved ?? hasInfraEscape(changedFiles, deletedFiles);
   const majorBumps =
     options.majorBumps ??
     collectMajorBumps(changedFiles, { baseRef, cwd });
