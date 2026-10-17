@@ -3,7 +3,7 @@
  * Class 4 PR diff guard: agents must not touch infra paths without an escape.
  * Fails with stable prefix AGENT_SCOPE_VIOLATION (grep-friendly).
  */
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname, basename, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -103,9 +103,9 @@ export function forbiddenReasonForPath(file, { manifestChanged = false, dependab
 
 function parseSemver(version) {
   const cleaned = String(version).trim().replace(/^[\^~>=<]+/, "");
-  const m = cleaned.match(/^(\d+)\.(\d+)\.(\d+)/);
+  const m = cleaned.match(/^(\d+)(?:\.(\d+|x|\*))?(?:\.(\d+|x|\*))?/);
   if (!m) return null;
-  return { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3]) };
+  return { major: Number(m[1]), minor: Number(m[2]) || 0, patch: Number(m[3]) || 0 };
 }
 
 function depSections(pkg) {
@@ -202,48 +202,72 @@ function isShallow(cwd) {
   }
 }
 
-export function listChangedFiles({ baseRef = "main", cwd = repoRoot } = {}) {
-  try {
-    runGit(["rev-parse", "--git-dir"], cwd);
-  } catch {
-    // No git metadata (for example a hosted builder export): nothing to diff.
-    return [];
-  }
-
-  const remoteBase = `origin/${baseRef}`;
-  let mergeBase;
-  try {
-    mergeBase = runGit(["merge-base", "HEAD", remoteBase], cwd);
-  } catch {
+function tryMergeBase(baseRef, cwd) {
+  for (const ref of [`origin/${baseRef}`, baseRef]) {
     try {
-      mergeBase = runGit(["merge-base", "HEAD", baseRef], cwd);
+      return runGit(["merge-base", "HEAD", ref], cwd);
     } catch {
-      // Never pass silently: an unresolvable base means the diff was not checked.
-      const hint = isShallow(cwd)
-        ? "shallow checkout; use actions/checkout fetch-depth: 0 or git fetch --unshallow origin"
-        : `base ${remoteBase} not found; run git fetch origin ${baseRef}`;
-      throw new BaseUnresolvedError(`${SHALLOW_ERROR}: cannot compute PR diff (${hint}).`);
+      // try next candidate
     }
   }
+  return null;
+}
 
-  // --no-renames reports a move as delete + add, so moving a protected file out of
-  // its folder still shows the protected source path.
-  const out = runGit(["diff", "--name-only", "--no-renames", `${mergeBase}...HEAD`], cwd);
-  if (!out) return [];
-  return out.split("\n").map((l) => l.trim()).filter(Boolean);
+/**
+ * Resolve the PR merge base. In GitHub Actions the default checkout is shallow
+ * (fetch-depth 1), so fetch the base branch with full history first. Never fall
+ * back to "no diff": an unresolved base throws BaseUnresolvedError.
+ */
+export function resolveMergeBase({ baseRef = "main", cwd = repoRoot } = {}) {
+  let mergeBase = tryMergeBase(baseRef, cwd);
+  if (!mergeBase && process.env.GITHUB_ACTIONS === "true") {
+    const refspec = `+refs/heads/${baseRef}:refs/remotes/origin/${baseRef}`;
+    try {
+      const unshallow = isShallow(cwd) ? ["--unshallow"] : [];
+      runGit(["fetch", "--no-tags", "--quiet", ...unshallow, "origin", refspec], cwd);
+    } catch {
+      // reported below
+    }
+    mergeBase = tryMergeBase(baseRef, cwd);
+  }
+  if (!mergeBase) {
+    const hint = isShallow(cwd)
+      ? "shallow checkout; use actions/checkout fetch-depth: 0 or git fetch --unshallow origin"
+      : `base origin/${baseRef} not found; run git fetch origin ${baseRef}`;
+    throw new BaseUnresolvedError(`${SHALLOW_ERROR}: cannot compute PR diff (${hint}).`);
+  }
+  return mergeBase;
+}
+
+function hasGit(cwd) {
+  try {
+    runGit(["rev-parse", "--git-dir"], cwd);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function diffNames(mergeBase, extra, cwd) {
+  // -z: NUL-delimited so unusual file names cannot split or merge entries.
+  // --no-renames: a move shows as delete + add, so a protected source path is still seen.
+  const out = execFileSync(
+    "git",
+    ["diff", "--name-only", "-z", "--no-renames", ...extra, `${mergeBase}...HEAD`],
+    { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+  );
+  return out.split("\0").filter(Boolean);
+}
+
+export function listChangedFiles({ baseRef = "main", cwd = repoRoot } = {}) {
+  // No git metadata (for example a hosted builder export): nothing to diff.
+  if (!hasGit(cwd)) return [];
+  return diffNames(resolveMergeBase({ baseRef, cwd }), [], cwd);
 }
 
 export function listDeletedFiles({ baseRef = "main", cwd = repoRoot } = {}) {
-  try {
-    const mergeBase = runGit(["merge-base", "HEAD", `origin/${baseRef}`], cwd);
-    const out = runGit(
-      ["diff", "--name-only", "--no-renames", "--diff-filter=D", `${mergeBase}...HEAD`],
-      cwd,
-    );
-    return out ? out.split("\n").map((l) => l.trim()).filter(Boolean) : [];
-  } catch {
-    return [];
-  }
+  if (!hasGit(cwd)) return [];
+  return diffNames(resolveMergeBase({ baseRef, cwd }), ["--diff-filter=D"], cwd);
 }
 
 function readPackageJsonAtRef(ref, cwd) {
@@ -257,14 +281,7 @@ function readPackageJsonAtRef(ref, cwd) {
 
 export function collectMajorBumps(changedFiles, { baseRef = "main", cwd = repoRoot } = {}) {
   if (!changedFiles.includes("package.json")) return [];
-  const remoteBase = `origin/${baseRef}`;
-  let mergeBase;
-  try {
-    mergeBase = runGit(["merge-base", "HEAD", remoteBase], cwd);
-  } catch {
-    mergeBase = baseRef;
-  }
-  const before = readPackageJsonAtRef(mergeBase, cwd);
+  const before = readPackageJsonAtRef(resolveMergeBase({ baseRef, cwd }), cwd);
   const afterPath = join(cwd, "package.json");
   if (!before || !existsSync(afterPath)) return [];
   const after = JSON.parse(readFileSync(afterPath, "utf8"));

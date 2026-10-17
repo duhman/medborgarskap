@@ -46,7 +46,7 @@ describe("check-agent-scope", () => {
     ).toHaveLength(1);
   });
 
-  it("fails loudly when the base cannot be resolved (shallow checkout)", () => {
+  it("fails loudly when the base cannot be resolved", () => {
     const dir = mkdtempSync(join(tmpdir(), "agent-scope-"));
     const git = (cmd) => execSync(`git ${cmd}`, { cwd: dir, stdio: "ignore" });
     git("init -q");
@@ -71,7 +71,24 @@ describe("check-agent-scope", () => {
   });
 
   it("does not treat a deleted approval doc as approval", () => {
-    expect(hasInfraEscape([INFRA_DOC, "drizzle/foo.ts"], [INFRA_DOC])).toBe(false);
+    const saved = {
+      approved: process.env.AGENT_SCOPE_INFRA_APPROVED,
+      event: process.env.GITHUB_EVENT_PATH,
+    };
+    delete process.env.AGENT_SCOPE_INFRA_APPROVED;
+    delete process.env.GITHUB_EVENT_PATH;
+    try {
+      expect(hasInfraEscape([INFRA_DOC, "drizzle/foo.ts"], [INFRA_DOC])).toBe(false);
+    } finally {
+      if (saved.approved !== undefined) process.env.AGENT_SCOPE_INFRA_APPROVED = saved.approved;
+      if (saved.event !== undefined) process.env.GITHUB_EVENT_PATH = saved.event;
+    }
+  });
+
+  it("treats major-only ranges as majors", () => {
+    expect(
+      findMajorDependencyBumps({ dependencies: { a: "^5" } }, { dependencies: { a: "^6" } }),
+    ).toHaveLength(1);
   });
 
   it("sees the source path of a moved workflow", () => {
