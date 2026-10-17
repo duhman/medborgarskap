@@ -26,4 +26,15 @@ describe('applyRouteDocumentMeta', () => {
       'https://medborgarskap.adrianmarten.net/kapitel/landet-sverige',
     )
   })
+
+  it('sets og:image and twitter:card on navigation', () => {
+    document.head.innerHTML = '<title>Medborgarskap</title>'
+    applyRouteDocumentMeta('/om')
+    expect(document.head.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
+      'https://medborgarskap.adrianmarten.net/og-image.png',
+    )
+    expect(document.head.querySelector('meta[name="twitter:card"]')?.getAttribute('content')).toBe(
+      'summary_large_image',
+    )
+  })
 })
