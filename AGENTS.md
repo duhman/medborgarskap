@@ -20,10 +20,10 @@ bun run verify
 
 **Prod-like static server (Vercel shape):** after `bun run build`, smoke with `bun run preview` (default port 4173). This is the stack’s production bundle served locally; no Wrangler.
 
-**Accessibility (CI-only today):** Playwright axe on all routes — `bun run test:a11y:install-browser -- --with-deps` once, then `bun run test:a11y`. Run before merge when touching layout, nav, or copy on interactive pages.
+**Accessibility (CI-only today):** Playwright axe on all routes: `bun run test:a11y:install-browser -- --with-deps` once, then `bun run test:a11y`. Run before merge when touching layout, nav, or copy on interactive pages.
 
 ## House rules
 
 - No em/en dash in user-facing copy (ASCII hyphen only).
 - Never invent UHR exam dates; edit `src/config/status.ts` from official sources only.
-- Not affiliated with UHR / Skolverket / Migrationsverket — keep disclaimer visible.
+- Not affiliated with UHR / Skolverket / Migrationsverket; keep disclaimer visible.
