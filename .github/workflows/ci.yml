@@ -26,6 +26,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Route document meta
+        run: npm run check:route-meta
+
       - name: Build
         run: npm run build
 
