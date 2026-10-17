@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "tsc": "tsc -b",
-    "lint": "oxlint",
+    "lint": "oxlint && node scripts/check-agent-scope.mjs",
     "lint:ci": "oxlint && node scripts/check-agent-scope.mjs",
     "check:agent-scope": "node scripts/check-agent-scope.mjs",
     "verify": "npm run tsc && npm run lint:ci && npm run test && npm run build",
