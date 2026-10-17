@@ -3,6 +3,8 @@ import { getDocumentTitle } from './documentTitle'
 
 export const SITE_ORIGIN = 'https://medborgarskap.adrianmarten.net'
 
+export const SITE_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`
+
 /** Canonical path for medborgarskap.adrianmarten.net (no trailing slash except home). */
 export function canonicalPathname(pathname: string): string {
   if (!pathname || pathname === '/') return '/'
@@ -60,4 +62,8 @@ export function applyRouteDocumentMeta(pathname: string): void {
   upsertMetaByName('twitter:title', title)
   upsertMetaByName('twitter:description', description)
   upsertMetaByName('twitter:url', url)
+  upsertMetaByName('twitter:image', SITE_OG_IMAGE)
+  upsertMetaByProperty('og:image', SITE_OG_IMAGE)
+  upsertMetaByProperty('og:type', 'website')
+  upsertMetaByName('twitter:card', 'summary_large_image')
 }
