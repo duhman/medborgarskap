@@ -24,6 +24,13 @@ bun run verify
 
 **Grundform cascade:** `src/index.css` declares `@layer theme, base, grundform, site, components, utilities;` first, imports the vendored core with `layer(grundform)` and site CSS with `layer(site)`, so utilities beat base anchor color. Solid clay CTAs (`a.bg-accent`, `button.bg-accent`) use `--site-accent-on` from `@layer site` (see [PR #7](https://github.com/duhman/medborgarskap/pull/7)); do not add unlayered rules. Enforced by `npm run check:cascade` (scripts/check-layer-order.mjs, last step of `verify`): base < grundform < utilities in the built CSS, and no unlayered rules unless `grundform-unlayered-baseline.json` lists them with a reason and an expiry date (empty today). Before merge on theme or chrome changes: `bun run test:grundform-contrast` (fail string `GRUNDFORM_CTA_CONTRAST`). Vault SoT: [Grundform 0.2.0 seeded design system](https://github.com/duhman/obsidian-memory/blob/ed46ed28adca8fd6c30cd31f0fc2c4187a5edeb2/06-Atomic/insights/2026-09-25-grundform-0-2-0-seeded-design-system-sot.md).
 
+## Dual writers (Lovable vs Cursor)
+
+- Merge `main` into the PR branch before push; never rebase or amend commits already on the remote PR head.
+- Agents change app code via PR; do not edit `supabase/migrations/`, `drizzle/`, lockfiles, or `.github/workflows/` unless the PR has GitHub label `infra-approved` or adds `docs/agent-scope-infra-approved.md` in the same change set.
+- `npm run check:agent-scope` (also in `lint:ci`) fails with `AGENT_SCOPE_VIOLATION` when those paths change without that escape.
+- Lockfile changes pass when the same PR changes the matching `package.json`; Dependabot PRs (identified by PR author `dependabot[bot]`, never by branch name) may change lockfiles and majors (not workflows or migrations). In GitHub Actions the guard re-reads the PR's labels and author from the API, so a re-run sees an `infra-approved` label added after the first run; this needs `GITHUB_TOKEN` in the step env on private repos, otherwise it warns and uses the event payload. Guard tests live in `scripts/__tests__/check-agent-scope.test.mjs` and run with the unit tests. If the PR base cannot be resolved (for example a shallow CI checkout), the guard first fetches the base branch when running in GitHub Actions, and otherwise fails with `AGENT_SCOPE_BASE_UNRESOLVED` instead of passing. Push events to `main` (including Lovable commits) are skipped.
+
 ## House rules
 
 - No em/en dash in user-facing copy (ASCII hyphen only).
