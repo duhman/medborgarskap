@@ -25,15 +25,20 @@ function startPreview() {
   if (process.env.BASE_URL) {
     return { close: async () => {} }
   }
+  // Own process group so close() also stops the vite child of `npm run preview`.
   const proc = spawn('npm', ['run', 'preview', '--', '--port', String(PORT), '--strictPort'], {
     stdio: 'inherit',
-    shell: true,
+    detached: true,
   })
+  const exited = once(proc, 'exit').catch(() => {})
   const close = async () => {
-    if (proc.exitCode === null) {
+    if (proc.exitCode !== null || proc.signalCode !== null) return
+    try {
+      process.kill(-proc.pid, 'SIGTERM')
+    } catch {
       proc.kill('SIGTERM')
-      await once(proc, 'exit').catch(() => {})
     }
+    await exited
   }
   return { close }
 }
@@ -65,9 +70,10 @@ function contrastRatio(fg, bg) {
 
 async function run() {
   const { close } = startPreview()
+  let browser
   try {
     await waitForServer(`${BASE_URL}/`)
-    const browser = await chromium.launch()
+    browser = await chromium.launch()
     const page = await browser.newPage()
     await page.goto(`${BASE_URL}/`, { waitUntil: 'load' })
     await page.waitForSelector(CTA_SELECTOR, { state: 'visible' })
@@ -85,25 +91,26 @@ async function run() {
     const bg = parseRgb(sample.backgroundColor)
     const ratio = contrastRatio(fg, bg)
 
-    await browser.close()
-
     if (ratio < MIN_CONTRAST) {
+      // Set the exit code instead of exiting so `finally` still closes the browser and preview.
       console.error(
         `GRUNDFORM_CTA_CONTRAST: "${sample.text}" contrast ${ratio.toFixed(2)}:1 ` +
           `(fg ${sample.color}, bg ${sample.backgroundColor}); need >= ${MIN_CONTRAST}:1`,
       )
-      process.exit(1)
+      process.exitCode = 1
+      return
     }
 
     console.log(
       `grundform-contrast ok: "${sample.text}" ${ratio.toFixed(2)}:1 (${sample.color} on ${sample.backgroundColor})`,
     )
   } finally {
+    await browser?.close().catch(() => {})
     await close()
   }
 }
 
 run().catch((err) => {
   console.error(err instanceof Error ? err.message : err)
-  process.exit(1)
+  process.exitCode = 1
 })

@@ -8,9 +8,11 @@
 /*
  * Cascade contract (Phase B / class 1): vendored Grundform core stays in the
  * `grundform` layer so Tailwind @layer utilities outrank base `a { color }`.
+ * Grundform and the site layer sit above Tailwind `base` (preflight resets
+ * `a { color: inherit }` and font stacks) and below `components`/`utilities`.
  * Solid accent CTA overrides follow Tailwind import (medborgarskap PR #7 pattern).
  */
-@layer grundform, site, theme, base, components, utilities;
+@layer theme, base, grundform, site, components, utilities;
 
 @import './styles/grundform/grundform.css' layer(grundform);
 @import './styles/grundform/components.css' layer(grundform);
