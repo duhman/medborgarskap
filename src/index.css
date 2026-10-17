@@ -4,20 +4,33 @@
 @import '@fontsource/ibm-plex-serif/600.css';
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
-@import './styles/grundform/grundform.css';
-@import './styles/grundform/components.css';
-@import './styles/site-theme.css';
+
+/*
+ * Cascade contract (Phase B / class 1): vendored Grundform core stays in the
+ * `grundform` layer so Tailwind @layer utilities outrank base `a { color }`.
+ * Grundform and the site layer sit above Tailwind `base` (preflight resets
+ * `a { color: inherit }` and font stacks) and below `components`/`utilities`.
+ * Solid accent CTA overrides follow Tailwind import (medborgarskap PR #7 pattern).
+ */
+@layer theme, base, grundform, site, components, utilities;
+
+@import './styles/grundform/grundform.css' layer(grundform);
+@import './styles/grundform/components.css' layer(grundform);
+@import './styles/site-theme.css' layer(site);
 @import 'tailwindcss';
 
 /*
- * Grundform core sets unlayered `a { color: var(--accent-text) }`, which outranks
- * Tailwind @layer utilities. Solid accent controls need explicit on-accent color.
+ * Grundform core sets `a { color: var(--accent-text) }`. On solid accent fills
+ * that matched the clay fill before layering; keep explicit on-accent labels.
+ * In `site` (above grundform, below utilities) so a utility on the CTA still wins.
  */
-a.bg-accent,
-a.bg-accent:hover,
-button.bg-accent {
-  color: var(--site-accent-on);
-  text-decoration: none;
+@layer site {
+  a.bg-accent,
+  a.bg-accent:hover,
+  button.bg-accent {
+    color: var(--site-accent-on);
+    text-decoration: none;
+  }
 }
 
 @theme {
@@ -49,34 +62,37 @@ button.bg-accent {
   }
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* Site chrome: in `site` so it beats Grundform base but never a utility. */
+@layer site {
+  html {
+    scroll-behavior: smooth;
+  }
 
-.skip-link {
-  position: fixed;
-  top: 0.75rem;
-  left: 0.75rem;
-  z-index: 80;
-  transform: translateY(-160%);
-  min-height: 2.75rem;
-  border-radius: var(--radius-control);
-  background: var(--ink);
-  color: var(--bg);
-  padding: 0.5rem 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: transform 150ms ease-out;
-}
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 80;
+    transform: translateY(-160%);
+    min-height: 2.75rem;
+    border-radius: var(--radius-control);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 150ms ease-out;
+  }
 
-.skip-link:focus-visible {
-  transform: translateY(0);
-}
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
 
-#main-content:focus:not(:focus-visible) {
-  outline: none;
+  #main-content:focus:not(:focus-visible) {
+    outline: none;
+  }
 }
