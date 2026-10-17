@@ -22,6 +22,12 @@ bun run verify
 
 **Accessibility (CI-only today):** Playwright axe on all routes: `bun run test:a11y:install-browser -- --with-deps` once, then `bun run test:a11y`. Run before merge when touching layout, nav, or copy on interactive pages.
 
+## Dual writers (Lovable vs Cursor)
+
+- Merge `main` into the PR branch before push; never rebase or amend commits already on the remote PR head.
+- Agents change app code via PR; do not edit `supabase/migrations/`, `drizzle/`, lockfiles, or `.github/workflows/` unless the PR has GitHub label `infra-approved` or adds `docs/agent-scope-infra-approved.md` in the same change set.
+- `npm run check:agent-scope` (also in `lint:ci`) fails with `AGENT_SCOPE_VIOLATION` when those paths change without that escape.
+
 ## House rules
 
 - No em/en dash in user-facing copy (ASCII hyphen only).
