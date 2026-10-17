@@ -8,6 +8,8 @@ import {
   hasInfraEscape,
   isDependabot,
   listChangedFiles,
+  resolvePullRequestContext,
+  checkAgentScope,
   BaseUnresolvedError,
 } from "../check-agent-scope.mjs";
 import { execSync } from "node:child_process";
@@ -35,8 +37,8 @@ describe("check-agent-scope", () => {
   });
 
   it("lets Dependabot change lockfiles and majors but not workflows", () => {
-    expect(isDependabot({ branch: "dependabot/npm_and_yarn/x" })).toBe(true);
     expect(isDependabot({ author: "dependabot[bot]" })).toBe(true);
+    expect(isDependabot({ actor: "dependabot[bot]" })).toBe(true);
     const bump = [{ name: "vite", section: "devDependencies", from: "^6.0.0", to: "^7.0.0" }];
     expect(
       evaluateScope({ changedFiles: ["bun.lock"], infraApproved: false, majorBumps: bump, dependabot: true }),
@@ -44,6 +46,75 @@ describe("check-agent-scope", () => {
     expect(
       evaluateScope({ changedFiles: [".github/workflows/ci.yml"], infraApproved: false, dependabot: true }),
     ).toHaveLength(1);
+  });
+
+  it("identifies Dependabot by PR author, not branch name", () => {
+    // A human can push a branch named dependabot/...; only the author login counts.
+    expect(isDependabot({ branch: "dependabot/npm_and_yarn/x", author: "someone" })).toBe(false);
+    expect(isDependabot({ branch: "dependabot/npm_and_yarn/x" })).toBe(false);
+    // A human re-running a Dependabot PR keeps the exemption (author wins over actor).
+    expect(isDependabot({ author: "dependabot[bot]", actor: "someone" })).toBe(true);
+    // A human-authored PR is not exempt even if Dependabot is the actor.
+    expect(isDependabot({ author: "someone", actor: "dependabot[bot]" })).toBe(false);
+    expect(
+      checkAgentScope({
+        changedFiles: ["bun.lock"],
+        deletedFiles: [],
+        majorBumps: [],
+        pullRequest: { labels: [], author: "someone", actor: "someone" },
+      }),
+    ).toHaveLength(1);
+  });
+
+  it("reads labels fresh from the GitHub API on re-run", async () => {
+    const env = { GITHUB_REPOSITORY: "o/r", GITHUB_TOKEN: "t", GITHUB_ACTOR: "someone" };
+    const event = { pull_request: { number: 7, labels: [], user: { login: "someone" } } };
+    const calls = [];
+    const fetchImpl = async (url, init) => {
+      calls.push({ url, auth: init.headers.Authorization });
+      return { ok: true, json: async () => ({ labels: [{ name: "infra-approved" }], user: { login: "someone" } }) };
+    };
+    const pr = await resolvePullRequestContext({ env, event, fetchImpl });
+    expect(calls[0].url).toBe("https://api.github.com/repos/o/r/pulls/7");
+    expect(calls[0].auth).toBe("Bearer t");
+    expect(pr.source).toBe("api");
+    expect(pr.labels).toEqual(["infra-approved"]);
+    expect(
+      checkAgentScope({ changedFiles: [".github/workflows/ci.yml"], deletedFiles: [], majorBumps: [], pullRequest: pr }),
+    ).toEqual([]);
+  });
+
+  it("drops a label removed since the run was triggered", async () => {
+    const env = { GITHUB_REPOSITORY: "o/r" };
+    const event = { pull_request: { number: 7, labels: [{ name: "infra-approved" }], user: { login: "someone" } } };
+    const fetchImpl = async () => ({ ok: true, json: async () => ({ labels: [], user: { login: "someone" } }) });
+    const pr = await resolvePullRequestContext({ env, event, fetchImpl });
+    expect(pr.labels).toEqual([]);
+    expect(hasInfraEscape([".github/workflows/ci.yml"], [], pr.labels)).toBe(false);
+  });
+
+  it("falls back to the event payload when the API fails", async () => {
+    const env = { GITHUB_REPOSITORY: "o/r" };
+    const event = { pull_request: { number: 7, labels: [{ name: "infra-approved" }], user: { login: "dependabot[bot]" } } };
+    const fetchImpl = async () => ({ ok: false, status: 503 });
+    const pr = await resolvePullRequestContext({ env, event, fetchImpl });
+    expect(pr.source).toBe("event");
+    expect(pr.labels).toEqual(["infra-approved"]);
+    expect(isDependabot(pr)).toBe(true);
+  });
+
+  it("does not call the API outside a pull request", async () => {
+    let called = false;
+    const pr = await resolvePullRequestContext({
+      env: { GITHUB_REPOSITORY: "o/r", GITHUB_ACTOR: "dependabot[bot]" },
+      event: null,
+      fetchImpl: async () => {
+        called = true;
+      },
+    });
+    expect(called).toBe(false);
+    expect(pr.source).toBe("none");
+    expect(isDependabot(pr)).toBe(true);
   });
 
   it("never passes a base ref through a shell", () => {

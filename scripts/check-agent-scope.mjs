@@ -46,33 +46,70 @@ function readGithubEvent() {
   }
 }
 
-function readGithubEventLabels() {
-  const labels = readGithubEvent()?.pull_request?.labels ?? [];
-  return labels.map((l) => l.name).filter(Boolean);
+function labelNames(labels) {
+  return (labels ?? []).map((l) => (typeof l === "string" ? l : l?.name)).filter(Boolean);
 }
 
-/** Dependabot PRs legitimately bump manifests, lockfiles and majors. */
-export function isDependabot({ branch = "", author = "" } = {}) {
-  return author === "dependabot[bot]" || branch.startsWith("dependabot/");
+export const DEPENDABOT_LOGIN = "dependabot[bot]";
+
+/**
+ * Dependabot PRs legitimately bump manifests, lockfiles and majors.
+ * Identity is the PR author login (from the GitHub API or event payload), falling back to
+ * GITHUB_ACTOR when there is no PR author. Branch names are never trusted: anyone can push
+ * a `dependabot/...` branch.
+ */
+export function isDependabot({ author = "", actor = "" } = {}) {
+  if (author) return author === DEPENDABOT_LOGIN;
+  return actor === DEPENDABOT_LOGIN;
 }
 
-function currentDependabotContext(cwd = repoRoot) {
-  const event = readGithubEvent();
-  const author = event?.pull_request?.user?.login ?? process.env.GITHUB_ACTOR ?? "";
-  let branch = process.env.GITHUB_HEAD_REF ?? "";
-  if (!branch) {
-    try {
-      branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"], cwd);
-    } catch {
-      branch = "";
-    }
+/**
+ * Read the PR's current labels and author from the GitHub API. On a re-run the event
+ * payload still holds the labels from when the run was first triggered, so a label added
+ * or removed since then would be missed. Falls back to the payload (with a warning) when
+ * the API is unreachable.
+ */
+export async function resolvePullRequestContext({
+  env = process.env,
+  event = readGithubEvent(),
+  fetchImpl = globalThis.fetch,
+} = {}) {
+  const pr = event?.pull_request;
+  const payload = {
+    labels: labelNames(pr?.labels),
+    author: pr?.user?.login ?? "",
+    actor: env.GITHUB_ACTOR ?? "",
+    source: pr ? "event" : "none",
+  };
+  const repo = env.GITHUB_REPOSITORY;
+  if (!pr?.number || !repo || typeof fetchImpl !== "function") return payload;
+  const api = (env.GITHUB_API_URL || "https://api.github.com").replace(/\/+$/, "");
+  const headers = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+  if (env.GITHUB_TOKEN) headers.Authorization = `Bearer ${env.GITHUB_TOKEN}`;
+  try {
+    const res = await fetchImpl(`${api}/repos/${repo}/pulls/${pr.number}`, {
+      headers,
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const fresh = await res.json();
+    return {
+      labels: labelNames(fresh.labels),
+      author: fresh.user?.login ?? payload.author,
+      actor: payload.actor,
+      source: "api",
+    };
+  } catch (err) {
+    console.warn(
+      `check-agent-scope: could not read PR #${pr.number} from the GitHub API (${err?.message ?? err}); using event payload labels`,
+    );
+    return payload;
   }
-  return { branch, author };
 }
 
-export function hasInfraEscape(changedFiles = [], deletedFiles = []) {
+export function hasInfraEscape(changedFiles = [], deletedFiles = [], labels = []) {
   if (truthyEnv("AGENT_SCOPE_INFRA_APPROVED")) return true;
-  if (readGithubEventLabels().includes("infra-approved")) return true;
+  if (labelNames(labels).includes("infra-approved")) return true;
   // Deleting the approval doc is not an approval; it must be added or edited in this PR.
   if (changedFiles.includes(INFRA_DOC) && !deletedFiles.includes(INFRA_DOC)) return true;
   return false;
@@ -294,13 +331,14 @@ export function checkAgentScope(options = {}) {
   const cwd = options.cwd ?? repoRoot;
   const changedFiles = options.changedFiles ?? listChangedFiles({ baseRef, cwd });
   const deletedFiles = options.deletedFiles ?? (options.changedFiles ? [] : listDeletedFiles({ baseRef, cwd }));
+  const pr = options.pullRequest ?? { labels: [], author: "", actor: process.env.GITHUB_ACTOR ?? "" };
   const infraApproved =
-    options.infraApproved ?? hasInfraEscape(changedFiles, deletedFiles);
+    options.infraApproved ?? hasInfraEscape(changedFiles, deletedFiles, pr.labels);
   const majorBumps =
     options.majorBumps ??
     collectMajorBumps(changedFiles, { baseRef, cwd });
 
-  const dependabot = options.dependabot ?? isDependabot(currentDependabotContext(cwd));
+  const dependabot = options.dependabot ?? isDependabot(pr);
 
   return evaluateScope({ changedFiles, infraApproved, majorBumps, dependabot });
 }
@@ -315,14 +353,15 @@ function formatViolation(v) {
   return `  ${v.file}: ${v.reason}`;
 }
 
-function main() {
+async function main() {
   if (!isPullRequestContext()) {
     console.log(`check-agent-scope: skipped (${process.env.GITHUB_EVENT_NAME} event has no PR diff)`);
     return;
   }
+  const pullRequest = await resolvePullRequestContext();
   let violations;
   try {
-    violations = checkAgentScope();
+    violations = checkAgentScope({ pullRequest });
   } catch (err) {
     if (err instanceof BaseUnresolvedError) {
       console.error(err.message);
@@ -350,5 +389,8 @@ const isMain =
   process.argv[1] &&
   fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
-  main();
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }
