@@ -86,10 +86,13 @@ export async function resolvePullRequestContext({
   const api = (env.GITHUB_API_URL || "https://api.github.com").replace(/\/+$/, "");
   const headers = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
   if (env.GITHUB_TOKEN) headers.Authorization = `Bearer ${env.GITHUB_TOKEN}`;
+  // AbortController + timer rather than AbortSignal.timeout(): test DOM environments (jsdom) lack it.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10_000);
   try {
     const res = await fetchImpl(`${api}/repos/${repo}/pulls/${pr.number}`, {
       headers,
-      signal: AbortSignal.timeout(10_000),
+      signal: controller.signal,
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const fresh = await res.json();
@@ -104,6 +107,8 @@ export async function resolvePullRequestContext({
       `check-agent-scope: could not read PR #${pr.number} from the GitHub API (${err?.message ?? err}); using event payload labels`,
     );
     return payload;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
