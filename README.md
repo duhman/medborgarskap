@@ -13,10 +13,11 @@ Se [BUILD.md](./BUILD.md) för produktbrief och MVP-scope.
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm run build    # produktion till dist/
-npm test         # vitest
-npm run preview  # förhandsgranska dist/
+bun run verify   # tsc, lint:ci, vitest, build (CoS gate; npm run verify works too)
+npm run preview  # prod-like preview of dist/ (port 4173)
 ```
+
+CI also runs Playwright axe (`npm run test:a11y`) after build; see [AGENTS.md](./AGENTS.md).
 
 Deploy: statisk build på Vercel. `vercel.json` innehåller SPA-rewrite.
 
