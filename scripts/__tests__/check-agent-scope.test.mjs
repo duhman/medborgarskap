@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   ERROR,
   INFRA_DOC,
@@ -18,6 +18,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 describe("check-agent-scope", () => {
+  // A developer or CI shell with AGENT_SCOPE_INFRA_APPROVED set must not flip expectations.
+  let savedApproval;
+  beforeEach(() => {
+    savedApproval = process.env.AGENT_SCOPE_INFRA_APPROVED;
+    delete process.env.AGENT_SCOPE_INFRA_APPROVED;
+  });
+  afterEach(() => {
+    if (savedApproval === undefined) delete process.env.AGENT_SCOPE_INFRA_APPROVED;
+    else process.env.AGENT_SCOPE_INFRA_APPROVED = savedApproval;
+  });
+
   it("flags forbidden globs", () => {
     expect(forbiddenReasonForPath("supabase/migrations/20260101_x.sql")).toMatch(
       /forbidden path/,
