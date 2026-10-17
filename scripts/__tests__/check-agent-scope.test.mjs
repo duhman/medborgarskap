@@ -11,7 +11,7 @@ import {
   BaseUnresolvedError,
 } from "../check-agent-scope.mjs";
 import { execSync } from "node:child_process";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -44,6 +44,20 @@ describe("check-agent-scope", () => {
     expect(
       evaluateScope({ changedFiles: [".github/workflows/ci.yml"], infraApproved: false, dependabot: true }),
     ).toHaveLength(1);
+  });
+
+  it("never passes a base ref through a shell", () => {
+    const dir = mkdtempSync(join(tmpdir(), "agent-scope-inj-"));
+    const marker = join(dir, "pwned");
+    const git = (cmd) => execSync(`git ${cmd}`, { cwd: dir, stdio: "ignore" });
+    git("init -q");
+    writeFileSync(join(dir, "a.txt"), "a");
+    git("add a.txt");
+    git("-c user.name=t -c user.email=t@t commit -qm init");
+    expect(() =>
+      listChangedFiles({ baseRef: `main;touch\${IFS}${marker}`, cwd: dir }),
+    ).toThrow(BaseUnresolvedError);
+    expect(existsSync(marker)).toBe(false);
   });
 
   it("fails loudly when the base cannot be resolved", () => {

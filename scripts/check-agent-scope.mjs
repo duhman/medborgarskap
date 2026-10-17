@@ -3,7 +3,7 @@
  * Class 4 PR diff guard: agents must not touch infra paths without an escape.
  * Fails with stable prefix AGENT_SCOPE_VIOLATION (grep-friendly).
  */
-import { execFileSync, execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { readFileSync, existsSync } from "node:fs";
 import { join, dirname, basename, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -175,7 +175,8 @@ export function evaluateScope({ changedFiles, infraApproved, majorBumps = [], de
 }
 
 function runGit(args, cwd = repoRoot) {
-  return execSync(["git", ...args].join(" "), {
+  // execFileSync: refs from GITHUB_BASE_REF / AGENT_SCOPE_BASE never reach a shell.
+  return execFileSync("git", args, {
     cwd,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
