@@ -26,6 +26,8 @@ const LOCKFILE_NAMES = new Set([
   "yarn.lock",
 ]);
 
+export const SHALLOW_ERROR = "AGENT_SCOPE_BASE_UNRESOLVED";
+
 /** Documented human escape path (must be added in the same PR as infra edits). */
 export const INFRA_DOC = "docs/agent-scope-infra-approved.md";
 
@@ -34,16 +36,38 @@ function truthyEnv(name) {
   return v === "1" || v === "true" || v === "yes";
 }
 
-function readGithubEventLabels() {
+function readGithubEvent() {
   const path = process.env.GITHUB_EVENT_PATH;
-  if (!path || !existsSync(path)) return [];
+  if (!path || !existsSync(path)) return null;
   try {
-    const event = JSON.parse(readFileSync(path, "utf8"));
-    const labels = event.pull_request?.labels ?? [];
-    return labels.map((l) => l.name).filter(Boolean);
+    return JSON.parse(readFileSync(path, "utf8"));
   } catch {
-    return [];
+    return null;
   }
+}
+
+function readGithubEventLabels() {
+  const labels = readGithubEvent()?.pull_request?.labels ?? [];
+  return labels.map((l) => l.name).filter(Boolean);
+}
+
+/** Dependabot PRs legitimately bump manifests, lockfiles and majors. */
+export function isDependabot({ branch = "", author = "" } = {}) {
+  return author === "dependabot[bot]" || branch.startsWith("dependabot/");
+}
+
+function currentDependabotContext(cwd = repoRoot) {
+  const event = readGithubEvent();
+  const author = event?.pull_request?.user?.login ?? process.env.GITHUB_ACTOR ?? "";
+  let branch = process.env.GITHUB_HEAD_REF ?? "";
+  if (!branch) {
+    try {
+      branch = runGit(["rev-parse", "--abbrev-ref", "HEAD"], cwd);
+    } catch {
+      branch = "";
+    }
+  }
+  return { branch, author };
 }
 
 export function hasInfraEscape(changedFiles = []) {
@@ -57,7 +81,7 @@ function normalizeRepoPath(file) {
   return normalize(file).replace(/\\/g, "/").replace(/^\.\//, "");
 }
 
-export function forbiddenReasonForPath(file) {
+export function forbiddenReasonForPath(file, { manifestChanged = false, dependabot = false } = {}) {
   const p = normalizeRepoPath(file);
   for (const prefix of FORBIDDEN_PREFIXES) {
     if (p === prefix.slice(0, -1) || p.startsWith(prefix)) {
@@ -66,7 +90,12 @@ export function forbiddenReasonForPath(file) {
   }
   const base = basename(p);
   if (LOCKFILE_NAMES.has(base)) {
-    return "lockfile change";
+    // A lockfile that moves with its package.json is a normal dependency change.
+    const dir = p.slice(0, p.length - base.length);
+    if (dependabot || manifestChanged === true || (manifestChanged instanceof Set && manifestChanged.has(dir))) {
+      return null;
+    }
+    return "lockfile change without package.json change";
   }
   return null;
 }
@@ -115,17 +144,27 @@ export function findMajorDependencyBumps(beforePkg, afterPkg) {
   return bumps;
 }
 
-export function evaluateScope({ changedFiles, infraApproved, majorBumps = [] }) {
+function manifestDirs(changedFiles) {
+  const dirs = new Set();
+  for (const file of changedFiles) {
+    const p = normalizeRepoPath(file);
+    if (basename(p) === "package.json") dirs.add(p.slice(0, p.length - "package.json".length));
+  }
+  return dirs;
+}
+
+export function evaluateScope({ changedFiles, infraApproved, majorBumps = [], dependabot = false }) {
   if (infraApproved) return [];
 
   const violations = [];
+  const manifestChanged = manifestDirs(changedFiles);
   for (const file of changedFiles) {
-    const reason = forbiddenReasonForPath(file);
+    const reason = forbiddenReasonForPath(file, { manifestChanged, dependabot });
     if (reason) {
       violations.push({ file, reason });
     }
   }
-  for (const bump of majorBumps) {
+  for (const bump of dependabot ? [] : majorBumps) {
     violations.push({
       file: "package.json",
       reason: `major dependency bump (${bump.section} ${bump.name}: ${bump.from} → ${bump.to})`,
@@ -152,10 +191,21 @@ function resolveBaseRef() {
   return "main";
 }
 
+export class BaseUnresolvedError extends Error {}
+
+function isShallow(cwd) {
+  try {
+    return runGit(["rev-parse", "--is-shallow-repository"], cwd) === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function listChangedFiles({ baseRef = "main", cwd = repoRoot } = {}) {
   try {
     runGit(["rev-parse", "--git-dir"], cwd);
   } catch {
+    // No git metadata (for example a hosted builder export): nothing to diff.
     return [];
   }
 
@@ -167,7 +217,11 @@ export function listChangedFiles({ baseRef = "main", cwd = repoRoot } = {}) {
     try {
       mergeBase = runGit(["merge-base", "HEAD", baseRef], cwd);
     } catch {
-      return [];
+      // Never pass silently: an unresolvable base means the diff was not checked.
+      const hint = isShallow(cwd)
+        ? "shallow checkout; use actions/checkout fetch-depth: 0 or git fetch --unshallow origin"
+        : `base ${remoteBase} not found; run git fetch origin ${baseRef}`;
+      throw new BaseUnresolvedError(`${SHALLOW_ERROR}: cannot compute PR diff (${hint}).`);
     }
   }
 
@@ -211,7 +265,15 @@ export function checkAgentScope(options = {}) {
     options.majorBumps ??
     collectMajorBumps(changedFiles, { baseRef, cwd });
 
-  return evaluateScope({ changedFiles, infraApproved, majorBumps });
+  const dependabot = options.dependabot ?? isDependabot(currentDependabotContext(cwd));
+
+  return evaluateScope({ changedFiles, infraApproved, majorBumps, dependabot });
+}
+
+function isPullRequestContext() {
+  const event = process.env.GITHUB_EVENT_NAME;
+  // Outside Actions (local verify) we always check. In Actions only PR events have a PR diff.
+  return !event || event === "pull_request" || event === "pull_request_target";
 }
 
 function formatViolation(v) {
@@ -219,7 +281,20 @@ function formatViolation(v) {
 }
 
 function main() {
-  const violations = checkAgentScope();
+  if (!isPullRequestContext()) {
+    console.log(`check-agent-scope: skipped (${process.env.GITHUB_EVENT_NAME} event has no PR diff)`);
+    return;
+  }
+  let violations;
+  try {
+    violations = checkAgentScope();
+  } catch (err) {
+    if (err instanceof BaseUnresolvedError) {
+      console.error(err.message);
+      process.exit(2);
+    }
+    throw err;
+  }
   if (violations.length === 0) {
     console.log("check-agent-scope: ok");
     return;

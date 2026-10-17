@@ -27,6 +27,7 @@ bun run verify
 - Merge `main` into the PR branch before push; never rebase or amend commits already on the remote PR head.
 - Agents change app code via PR; do not edit `supabase/migrations/`, `drizzle/`, lockfiles, or `.github/workflows/` unless the PR has GitHub label `infra-approved` or adds `docs/agent-scope-infra-approved.md` in the same change set.
 - `npm run check:agent-scope` (also in `lint:ci`) fails with `AGENT_SCOPE_VIOLATION` when those paths change without that escape.
+- Lockfile changes pass when the same PR changes the matching `package.json`; Dependabot PRs may change lockfiles and majors (not workflows or migrations). If the PR base cannot be resolved (for example a shallow CI checkout), the guard fails with `AGENT_SCOPE_BASE_UNRESOLVED` instead of passing; use `fetch-depth: 0`. Push events to `main` (including Lovable commits) are skipped.
 
 ## House rules
 
