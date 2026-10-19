@@ -10,6 +10,7 @@ import { Integritet } from './pages/Integritet'
 import { Om } from './pages/Om'
 import { Villkor } from './pages/Villkor'
 import { applyRouteDocumentMeta } from './lib/routeDocumentMeta'
+import { syncRouteJsonLd } from './seo/syncJsonLd'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 
@@ -49,6 +50,7 @@ function DocumentTitle() {
 
   useEffect(() => {
     applyRouteDocumentMeta(pathname)
+    syncRouteJsonLd(pathname)
   }, [pathname])
 
   return null

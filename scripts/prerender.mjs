@@ -66,7 +66,7 @@ async function main() {
       .replace(
         /<script type="application\/ld\+json">[\s\S]*?<\/script>/,
         page.jsonLd
-          .map((block) => `<script type="application/ld+json">${JSON.stringify(block).replace(/</g, '\\u003c')}</script>`)
+          .map((block) => `<script type="application/ld+json" data-route="${escAttr(route.path)}">${JSON.stringify(block).replace(/</g, '\\u003c')}</script>`)
           .join('\n    '),
       )
     for (const [attr, key, value] of [
