@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/prerender.mjs",
+    "indexnow": "node scripts/indexnow-submit.mjs",
     "tsc": "tsc -b",
     "lint": "oxlint && node scripts/check-agent-scope.mjs",
     "lint:ci": "oxlint && node scripts/check-agent-scope.mjs",
