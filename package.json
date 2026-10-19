@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "tsc": "tsc -b",
     "lint": "oxlint && node scripts/check-agent-scope.mjs",
     "lint:ci": "oxlint && node scripts/check-agent-scope.mjs",
@@ -18,7 +18,8 @@
     "test:a11y": "node scripts/a11y-axe.mjs",
     "test:a11y:install-browser": "playwright install chromium",
     "test:grundform-contrast": "node scripts/grundform-contrast.mjs",
-    "screenshots:a11y": "node scripts/a11y-screenshots.mjs"
+    "screenshots:a11y": "node scripts/a11y-screenshots.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

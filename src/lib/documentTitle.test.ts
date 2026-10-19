@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { getDocumentTitle, SITE_TITLE } from './documentTitle'
+import { getDocumentTitle, HOME_TITLE } from './documentTitle'
 
 describe('getDocumentTitle', () => {
-  it('keeps the site name on the home page and unknown paths', () => {
-    expect(getDocumentTitle('/')).toBe(SITE_TITLE)
-    expect(getDocumentTitle('/finns-inte')).toBe(SITE_TITLE)
+  it('uses the home title on the home page and unknown paths', () => {
+    expect(getDocumentTitle('/')).toBe(HOME_TITLE)
+    expect(getDocumentTitle('/finns-inte')).toBe(HOME_TITLE)
   })
 
   it('titles static pages', () => {
