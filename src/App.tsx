@@ -54,27 +54,34 @@ function DocumentTitle() {
   return null
 }
 
+/** Routes shared by the browser entry and the build-time prerender (src/entry-server.tsx). */
+export function AppRoutes() {
+  return (
+    <AnalyticsProvider>
+      <FocusMainOnNavigate />
+      <DocumentTitle />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="behover-jag" element={<BehoverJag />} />
+          <Route path="kapitel" element={<KapitelIndex />} />
+          <Route path="kapitel/:slug" element={<KapitelStudy />} />
+          <Route path="ovning/:slug" element={<OvningQuiz />} />
+          <Route path="provfragor" element={<Provfragor />} />
+          <Route path="om" element={<Om />} />
+          <Route path="integritet" element={<Integritet />} />
+          <Route path="villkor" element={<Villkor />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </AnalyticsProvider>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <AnalyticsProvider>
-        <FocusMainOnNavigate />
-        <DocumentTitle />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="behover-jag" element={<BehoverJag />} />
-            <Route path="kapitel" element={<KapitelIndex />} />
-            <Route path="kapitel/:slug" element={<KapitelStudy />} />
-            <Route path="ovning/:slug" element={<OvningQuiz />} />
-            <Route path="provfragor" element={<Provfragor />} />
-            <Route path="om" element={<Om />} />
-            <Route path="integritet" element={<Integritet />} />
-            <Route path="villkor" element={<Villkor />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </AnalyticsProvider>
+      <AppRoutes />
     </BrowserRouter>
   )
 }

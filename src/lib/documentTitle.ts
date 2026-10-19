@@ -2,6 +2,9 @@ import { chapterMetaList } from '../content/chapters/meta'
 
 export const SITE_TITLE = 'Medborgarskap'
 
+/** Home and fallback title: names the exam so search and AI answers can match it. */
+export const HOME_TITLE = 'Medborgarskap: gratis övning till medborgarskapsprovet'
+
 const staticPageNames: Record<string, string> = {
   '/behover-jag': 'Behöver jag provet?',
   '/kapitel': 'Kapitel i Sverige i fokus',
@@ -32,8 +35,8 @@ function pageName(pathname: string): string | null {
   return null
 }
 
-/** Dokumenttitel per route, format "<Sidnamn> | Medborgarskap". Startsidan heter bara Medborgarskap. */
+/** Dokumenttitel per route, format "<Sidnamn> | Medborgarskap". Startsidan använder HOME_TITLE. */
 export function getDocumentTitle(pathname: string): string {
   const name = pageName(pathname)
-  return name ? `${name} | ${SITE_TITLE}` : SITE_TITLE
+  return name ? `${name} | ${SITE_TITLE}` : HOME_TITLE
 }

@@ -1,4 +1,41 @@
+# Medborgarskap robots.txt
+# Open to search engines and AI assistants so the study guide can be found and cited.
+# GPTBot and Google-Extended are allowed on purpose: visibility in ChatGPT and Gemini is the goal.
+
 User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Applebot-Extended
 Allow: /
 
 Sitemap: https://medborgarskap.adrianmarten.net/sitemap.xml
