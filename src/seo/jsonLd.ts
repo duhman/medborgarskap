@@ -75,7 +75,8 @@ export function routeJsonLd(pathname: string, lastModified?: string): JsonLd[] {
   }
 
   const chapterMatch = path.match(/^\/(kapitel|ovning)\/([^/]+)$/)
-  if (chapterMatch) {
+  const isStaticPage = path === '/ovning/blandat' || path === '/ovning/mina-fel'
+  if (chapterMatch && !isStaticPage) {
     const [, kind, slug] = chapterMatch
     const chapter = chapterMetaList.find((c) => c.slug === slug)
     if (!chapter) return []

@@ -26,12 +26,15 @@ export type ProgressState = {
   visitedChapters: string[]
   quizResults: QuizResult[]
   pathway: PathwayAnswers
+  /** Ids of questions answered wrong and not yet answered right since. */
+  mistakes: string[]
 }
 
 const defaultState = (): ProgressState => ({
   visitedChapters: [],
   quizResults: [],
   pathway: {},
+  mistakes: [],
 })
 
 function readState(): ProgressState {
@@ -44,15 +47,29 @@ function readState(): ProgressState {
       visitedChapters: parsed.visitedChapters ?? [],
       quizResults: parsed.quizResults ?? [],
       pathway: parsed.pathway ?? {},
+      mistakes: parsed.mistakes ?? [],
     }
   } catch {
     return defaultState()
   }
 }
 
+const listeners = new Set<() => void>()
+
 function writeState(state: ProgressState): void {
   if (typeof localStorage === 'undefined') return
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  } catch {
+    // Storage full or blocked (private mode): progress is a convenience, so carry on without it.
+  }
+  listeners.forEach((listener) => listener())
+}
+
+/** Subscribe to progress changes, for useSyncExternalStore. */
+export function subscribeProgress(listener: () => void): () => void {
+  listeners.add(listener)
+  return () => listeners.delete(listener)
 }
 
 export function markChapterVisited(slug: string): void {
@@ -72,6 +89,25 @@ export function saveQuizResult(result: QuizResult): void {
     state.quizResults.push(result)
   }
   writeState(state)
+}
+
+/**
+ * Remember which questions were answered wrong, and forget them once answered right.
+ * Unanswered questions leave the list unchanged.
+ */
+export function recordAnswers(answers: { id: string; correct: boolean | null }[]): void {
+  const state = readState()
+  const mistakes = new Set(state.mistakes)
+  for (const a of answers) {
+    if (a.correct === true) mistakes.delete(a.id)
+    if (a.correct === false) mistakes.add(a.id)
+  }
+  state.mistakes = [...mistakes]
+  writeState(state)
+}
+
+export function getMistakeIds(): string[] {
+  return readState().mistakes
 }
 
 export function getQuizResult(slug: string): QuizResult | undefined {

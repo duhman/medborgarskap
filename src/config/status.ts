@@ -1,4 +1,6 @@
 export type UhrStatusConfig = {
+  /** Datum (YYYY-MM-DD) då uppgifterna senast jämfördes med uhr.se. */
+  checkedAt: string
   nextSitting: string
   registrationOpen: boolean
   notes: string
@@ -9,6 +11,7 @@ export type UhrStatusConfig = {
  * Källa: uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/ (uppdaterad 2026-10-22, kontrollerad 2026-10-24).
  */
 export const uhrStatus: UhrStatusConfig = {
+  checkedAt: '2026-10-24',
   nextSitting: 'planeras april-maj 2027 enligt UHR, datum och plats kommer',
   registrationOpen: false,
   notes:

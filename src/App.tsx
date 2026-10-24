@@ -11,6 +11,8 @@ import { Om } from './pages/Om'
 import { Villkor } from './pages/Villkor'
 import { applyRouteDocumentMeta } from './lib/routeDocumentMeta'
 import { syncRouteJsonLd } from './seo/syncJsonLd'
+import { OvningBlandat } from './pages/OvningBlandat'
+import { OvningMinaFel } from './pages/OvningMinaFel'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 
@@ -68,6 +70,8 @@ export function AppRoutes() {
           <Route path="behover-jag" element={<BehoverJag />} />
           <Route path="kapitel" element={<KapitelIndex />} />
           <Route path="kapitel/:slug" element={<KapitelStudy />} />
+          <Route path="ovning/blandat" element={<OvningBlandat />} />
+          <Route path="ovning/mina-fel" element={<OvningMinaFel />} />
           <Route path="ovning/:slug" element={<OvningQuiz />} />
           <Route path="provfragor" element={<Provfragor />} />
           <Route path="om" element={<Om />} />

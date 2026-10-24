@@ -1,4 +1,8 @@
+import { Link } from 'react-router-dom'
 import { officialLinks, uhrStatus } from '../config/status'
+import { getAllChapters, SOURCE_PDF_VERSION } from '../content/chapters/meta'
+import { GfNum } from '../components/GfNum'
+import { CONTACT_EMAIL, REPO_URL } from '../lib/report'
 
 const sources = [
   { label: 'Sverige i fokus (PDF)', url: officialLinks.pdf },
@@ -9,6 +13,8 @@ const sources = [
   { label: 'Migrationsverket (medborgarskap vuxna)', url: officialLinks.migrationsverket },
   { label: 'Reform 6 juni 2026', url: officialLinks.reformNotice },
 ]
+
+const questionCount = getAllChapters().reduce((n, c) => n + c.questions.length, 0)
 
 export function Om() {
   return (
@@ -66,6 +72,7 @@ export function Om() {
           {uhrStatus.registrationOpen ? 'öppen' : 'stängd'}.
         </p>
         <p>{uhrStatus.notes}</p>
+        <p>Senast kontrollerad mot uhr.se: {uhrStatus.checkedAt}.</p>
         <p className="text-ink-2">
           Status hålls uppdaterad av sidans ägare utifrån UHR:s publicerade information. Vi
           anger inte datum som UHR inte publicerat. Bekräfta alltid på{' '}
@@ -78,6 +85,64 @@ export function Om() {
             uhr.se
           </a>
           .
+        </p>
+      </section>
+
+      <section className="space-y-3 text-sm text-ink/85" aria-labelledby="hur-vi-gor">
+        <h2 id="hur-vi-gor" className="text-xl font-semibold text-ink">
+          Hur vi gör frågorna
+        </h2>
+        <ul className="list-disc space-y-2 pl-5">
+          <li>
+            <strong>En källa.</strong> Alla <GfNum value={questionCount} /> övningsfrågor bygger
+            bara på UHR:s Sverige i fokus, korrigerad version {SOURCE_PDF_VERSION}. Provet bygger på
+            samma material.
+          </li>
+          <li>
+            <strong>Citat och sida.</strong> Efter rättningen visar varje fråga meningen i
+            materialet som svaret bygger på, med kapitel och sida. Ett automatiskt test kontrollerar
+            att citaten finns i PDF:en.
+          </li>
+          <li>
+            <strong>Granskning.</strong> Varje kapitel visar när frågorna senast granskades mot
+            materialet. När UHR publicerar en ny version granskar vi om alla kapitel innan de
+            visas som aktuella.
+          </li>
+          <li>
+            <strong>Gällande lag.</strong> Där materialet är äldre än en lagändring, till exempel
+            rösträtt i kommunval eller straffmyndighetsåldern, förklarar vi skillnaden i stället för
+            att fråga om den.
+          </li>
+          <li>
+            <strong>Egna frågor.</strong> Frågorna är skrivna för sidan. De är inte kopierade från
+            UHR:s provfrågor eller från kommersiella tjänster. UHR:s fem exempel finns separat och
+            märkta på{' '}
+            <Link to="/provfragor" className="text-accent underline underline-offset-2">
+              Provfrågor
+            </Link>
+            .
+          </li>
+          <li>
+            <strong>Fel rättas snabbt.</strong> Varje fråga har en länk för att rapportera fel.
+            Målet är att ett känt fel aldrig ska ligga kvar mer än en vecka. Du kan också mejla{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-accent underline underline-offset-2">
+              {CONTACT_EMAIL}
+            </a>{' '}
+            eller skriva ett ärende på{' '}
+            <a
+              href={`${REPO_URL}/issues`}
+              className="text-accent underline underline-offset-2"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+            .
+          </li>
+        </ul>
+        <p className="text-ink-2">
+          Sidan är inte en del av UHR, Skolverket eller Migrationsverket, och UHR har inte granskat
+          frågorna. Läs alltid materialet själv: övningsfrågorna är ett komplement.
         </p>
       </section>
 

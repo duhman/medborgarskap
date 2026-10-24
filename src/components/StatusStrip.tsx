@@ -18,7 +18,7 @@ export function StatusStrip() {
       </div>
       <p className="mx-auto mt-2 max-w-3xl text-ink/75">{uhrStatus.notes}</p>
       <p className="mx-auto mt-1 max-w-3xl font-mono text-xs text-ink-3">
-        Bekräfta alltid datum och anmälan på{' '}
+        Senast kontrollerad mot uhr.se: {uhrStatus.checkedAt}. Bekräfta alltid datum och anmälan på{' '}
         <a
           href={officialLinks.medborgarskapsprov}
           className="font-sans text-accent underline-offset-2 hover:underline"
