@@ -379,7 +379,7 @@ export const saHarStyrsSverige: ChapterContent = {
         'The government runs the country with the help of state agencies. There are several hundred agencies in Sweden.',
       source: {
         chapter: 3,
-        page: 12,
+        page: 13,
         quote:
           'Regeringen styr landet med hjälp av statliga myndigheter. Det finns flera hundra myndigheter i Sverige.',
       },
@@ -421,7 +421,7 @@ export const saHarStyrsSverige: ChapterContent = {
       explanationEn: 'The Swedish Social Insurance Agency (Försäkringskassan) decides on applications for parental benefit.',
       source: {
         chapter: 3,
-        page: 12,
+        page: 13,
         quote: 'Om en person till exempel söker föräldrapenning är det Försäkringskassan som fattar beslut.',
       },
     },
@@ -441,7 +441,7 @@ export const saHarStyrsSverige: ChapterContent = {
         'Agencies must follow the law. JO and JK are special authorities that check that other agencies act correctly.',
       source: {
         chapter: 3,
-        page: 12,
+        page: 13,
         quote:
           'Det finns särskilda myndigheter som kontrollerar att de andra myndigheterna gör rätt, bland annat Justitieombudsmannen (JO)',
       },

@@ -459,7 +459,7 @@ export const manskligaRattigheter: ChapterContent = {
         'Honour-related violence means that a family or group tries to control how people within it behave, for example through violence, pressure or threats.',
       source: {
         chapter: 7,
-        page: 24,
+        page: 23,
         quote:
           'Hedersrelaterat våld innebär att en familj eller grupp försöker kontrollera hur människor inom familjen eller gruppen beter sig.',
       },

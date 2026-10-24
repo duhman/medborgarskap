@@ -256,7 +256,7 @@ export const landetSverige: ChapterContent = {
       explanationEn: 'The Scandes mountain range runs along the border with Norway and is called "fjällen". Kebnekaise is one mountain there.',
       source: {
         chapter: 1,
-        page: 5,
+        page: 6,
         quote: 'Bergskedjan Skanderna ligger längs gränsen mot Norge och kallas för fjällen.',
       },
     },
@@ -274,7 +274,7 @@ export const landetSverige: ChapterContent = {
       explanationEn: 'Sweden\'s highest mountain is Kebnekaise, in the mountain range, about 2,000 metres high.',
       source: {
         chapter: 1,
-        page: 5,
+        page: 6,
         quote: 'Där finns Sveriges högsta berg Kebnekaise som är cirka 2 000 meter högt.',
       },
     },

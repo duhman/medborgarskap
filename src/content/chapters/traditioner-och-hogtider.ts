@@ -114,7 +114,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'På julafton den 24 december samlas familjer för att umgås, äta särskild julmat och ge varandra julklappar.',
       explanationEn: 'On Christmas Eve, 24 December, families get together, eat special Christmas food and give each other presents.',
-      source: { chapter: 13, page: 48, quote: 'På julafton den 24 december samlas familjer för att umgås, äta särskild julmat och ge varandra presenter' },
+      source: { chapter: 13, page: 47, quote: 'På julafton den 24 december samlas familjer för att umgås, äta särskild julmat och ge varandra presenter' },
     },
     {
       id: 'k13-q2',
@@ -156,7 +156,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'A',
       explanationSv: 'Helgonet Lucia firades den 13 december redan under katolsk tid. Firandet fick sin form av i dag under 1800-talet.',
       explanationEn: 'Saint Lucy was celebrated on 13 December already in Catholic times. The celebration got its present form in the 1800s.',
-      source: { chapter: 13, page: 48, quote: 'Under katolsk tid firades helgonet Lucia den 13 december.' },
+      source: { chapter: 13, page: 47, quote: 'Under katolsk tid firades helgonet Lucia den 13 december.' },
     },
     {
       id: 'k13-q5',
@@ -170,7 +170,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'A',
       explanationSv: 'Vanlig mat på midsommar är sill, färskpotatis och jordgubbar.',
       explanationEn: 'Typical Midsummer food is herring, new potatoes and strawberries.',
-      source: { chapter: 13, page: 47, quote: 'Vanlig mat är sill, färskpotatis och jordgubbar.' },
+      source: { chapter: 13, page: 46, quote: 'Vanlig mat är sill, färskpotatis och jordgubbar.' },
     },
     {
       id: 'k13-q6',
@@ -352,7 +352,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'C',
       explanationSv: 'Midsommarafton firas alltid på en fredag mellan 19 juni och 25 juni.',
       explanationEn: 'Midsummer Eve is always celebrated on a Friday between 19 and 25 June.',
-      source: { chapter: 13, page: 47, quote: 'Midsommarafton firas alltid på en fredag mellan 19 juni och 25 juni.' },
+      source: { chapter: 13, page: 46, quote: 'Midsommarafton firas alltid på en fredag mellan 19 juni och 25 juni.' },
     },
     {
       id: 'k13-q19',
@@ -366,7 +366,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'A',
       explanationSv: 'Midsommarfirandet handlar om att välkomna sommaren och ljuset. Det är en gammal tradition som kommer från tiden före kristendomen.',
       explanationEn: 'Midsummer is about welcoming summer and light. It is an old tradition dating from before Christianity.',
-      source: { chapter: 13, page: 47, quote: 'I Sverige är midsommarfirandet en gammal tradition som kommer från tiden före kristendomen.' },
+      source: { chapter: 13, page: 46, quote: 'I Sverige är midsommarfirandet en gammal tradition som kommer från tiden före kristendomen.' },
     },
     {
       id: 'k13-q20',
@@ -380,7 +380,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'På alla helgons dag går många till kyrkogården och tänder ljus på gravar för att minnas och hedra dem som har dött.',
       explanationEn: 'On All Saints\' Day many people go to the cemetery and light candles on graves to remember and honour those who have died.',
-      source: { chapter: 13, page: 47, quote: 'Då går många till kyrkogården för att tända ljus på släktingars och vänners gravar för att minnas och hedra dem som har dött.' },
+      source: { chapter: 13, page: 46, quote: 'Då går många till kyrkogården för att tända ljus på släktingars och vänners gravar för att minnas och hedra dem som har dött.' },
     },
     {
       id: 'k13-q21',
@@ -394,7 +394,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'C',
       explanationSv: 'Alla helgons dag är en kristen helgdag. Den firas på en lördag i slutet av oktober eller i början av november.',
       explanationEn: 'All Saints\' Day is a Christian holiday celebrated on a Saturday in late October or early November.',
-      source: { chapter: 13, page: 47, quote: 'Alla helgons dag firas på en lördag i slutet av oktober eller i början av november.' },
+      source: { chapter: 13, page: 46, quote: 'Alla helgons dag firas på en lördag i slutet av oktober eller i början av november.' },
     },
     {
       id: 'k13-q22',
@@ -436,7 +436,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Luciafirandet handlar mycket om att sprida ljus när det är som mörkast på året.',
       explanationEn: 'The Lucia celebration is very much about spreading light when it is darkest in the year.',
-      source: { chapter: 13, page: 48, quote: 'Firandet handlar mycket om att sprida ljus när det är som mörkast på året.' },
+      source: { chapter: 13, page: 47, quote: 'Firandet handlar mycket om att sprida ljus när det är som mörkast på året.' },
     },
     {
       id: 'k13-q25',
@@ -450,7 +450,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'C',
       explanationSv: 'I ett luciatåg bär en person, Lucia, en ljuskrona på huvudet. De andra deltagarna bär ljus i händerna och alla sjunger sånger om Lucia och julen.',
       explanationEn: 'In a Lucia procession one person, Lucia, wears a crown of candles. The others carry candles and everyone sings songs about Lucia and Christmas.',
-      source: { chapter: 13, page: 48, quote: 'En person är Lucia och bär en ljuskrona på huvudet medan de andra deltagarna bär ljus i händerna.' },
+      source: { chapter: 13, page: 47, quote: 'En person är Lucia och bär en ljuskrona på huvudet medan de andra deltagarna bär ljus i händerna.' },
     },
     {
       id: 'k13-q26',
@@ -464,7 +464,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Vissa går upp tidigt på morgonen den 25 december för att gå på en gudstjänst i kyrkan som kallas julotta.',
       explanationEn: 'Some people get up early on 25 December to attend a church service called julotta.',
-      source: { chapter: 13, page: 48, quote: 'delta i en gudstjänst i kyrkan som kallas för julotta' },
+      source: { chapter: 13, page: 47, quote: 'delta i en gudstjänst i kyrkan som kallas för julotta' },
     },
     {
       id: 'k13-q27',
@@ -478,7 +478,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'D',
       explanationSv: 'Id al-fitr är högtiden som avslutar fastemånaden ramadan. Den är ett exempel på en tradition som har kommit till Sverige med invandrare.',
       explanationEn: 'Eid al-Fitr is the festival that ends the fasting month of Ramadan. It is an example of a tradition brought to Sweden by immigrants.',
-      source: { chapter: 13, page: 48, quote: 'Id al-fitr, högtiden som avslutar fastemånaden ramadan' },
+      source: { chapter: 13, page: 47, quote: 'Id al-fitr, högtiden som avslutar fastemånaden ramadan' },
     },
     {
       id: 'k13-q28',
@@ -492,7 +492,7 @@ export const traditionerOchHogtider: ChapterContent = {
       correctOptionId: 'A',
       explanationSv: 'Det persiska nyåret Nouruz och det kurdiska nyåret Newroz firas i samband med vårdagjämningen den 21 mars.',
       explanationEn: 'The Persian New Year Nouruz and the Kurdish New Year Newroz are celebrated at the spring equinox on 21 March.',
-      source: { chapter: 13, page: 48, quote: 'det persiska nyåret Nouruz och det kurdiska nyåret Newroz, som firas i samband med vårdagjämningen den 21 mars' },
+      source: { chapter: 13, page: 47, quote: 'det persiska nyåret Nouruz och det kurdiska nyåret Newroz, som firas i samband med vårdagjämningen den 21 mars' },
     },
   ],
 }

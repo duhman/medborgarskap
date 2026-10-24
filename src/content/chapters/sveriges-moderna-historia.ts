@@ -462,7 +462,7 @@ export const sverigesModernaHistoria: ChapterContent = {
       explanationEn: 'In 1909 the Riksdag changed the law so that almost all men got the right to vote. Women still could not vote.',
       source: {
         chapter: 10,
-        page: 34,
+        page: 33,
         quote: '1909 genomförde riksdagen en lagförändring som gjorde att nästan alla män fick rätt att rösta.',
       },
     },
@@ -482,7 +482,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'After almost all men got the vote in 1909, the women\'s movement in particular pushed for women to get it too.',
       source: {
         chapter: 10,
-        page: 34,
+        page: 33,
         quote: 'Särskilt kvinnorörelsen drev nu på för att detta skulle gälla även för kvinnor.',
       },
     },
@@ -502,7 +502,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'The 1918 decision on universal suffrage came after many years of protests and political unrest. The first election with universal suffrage was in 1921.',
       source: {
         chapter: 10,
-        page: 34,
+        page: 33,
         quote: 'Beslutet om allmän rösträtt 1918 kom efter många år av protester och politisk oro.',
       },
     },
@@ -688,7 +688,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'The strict policy of the 1930s continued in the first years of the war, so very few Jews could flee to Sweden. Towards the end the policy changed and Sweden helped Jews.',
       source: {
         chapter: 10,
-        page: 36,
+        page: 35,
         quote:
           'Mot slutet av kriget förändrades politiken och Sverige gjorde olika insatser för att hjälpa judar',
       },
@@ -709,7 +709,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'Raoul Wallenberg gave Jews protective passports showing they were under Swedish protection and could not be sent to concentration camps.',
       source: {
         chapter: 10,
-        page: 36,
+        page: 35,
         quote:
           'diplomaten Raoul Wallenberg gav judar skyddspass, papper som visade att de var under svenskt skydd',
       },
@@ -730,7 +730,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'At the end of the war the Red Cross rescued thousands of Jews from the German concentration camps and drove them to Sweden in white buses.',
       source: {
         chapter: 10,
-        page: 36,
+        page: 35,
         quote:
           'räddade Röda Korset tusentals judar från de tyska koncentrationslägren. De kördes över gränsen till Sverige i vita bussar.',
       },
@@ -835,7 +835,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'In the 1800s many people left Sweden. During the record years many came to work here instead, and Sweden became a country of immigration.',
       source: {
         chapter: 10,
-        page: 37,
+        page: 36,
         quote: 'Sverige, som under 1800-talet hade varit ett utvandrarland, blev nu ett invandrarland.',
       },
     },
@@ -855,7 +855,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'Rapid migration to the cities caused a housing shortage, so the state started the Million Programme to build one million homes in ten years.',
       source: {
         chapter: 10,
-        page: 37,
+        page: 36,
         quote: 'staten det så kallade miljonprogrammet under 1960-talet. Målet var att bygga en miljon bostäder på tio år.',
       },
     },
@@ -958,7 +958,7 @@ export const sverigesModernaHistoria: ChapterContent = {
         'In the information society knowledge quickly became outdated as technology developed, so the need for lifelong learning and adult education grew.',
       source: {
         chapter: 10,
-        page: 38,
+        page: 37,
         quote:
           'Behovet av ett livslångt lärande ökade, eftersom kunskap snabbt blev gammal när den tekniska utvecklingen gick allt fortare.',
       },

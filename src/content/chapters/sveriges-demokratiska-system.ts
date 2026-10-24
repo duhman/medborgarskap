@@ -293,7 +293,7 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       correctOptionId: 'C',
       explanationSv: 'Ett av sätten att påverka och delta i samhället är att lämna synpunkter och förslag till sin kommun.',
       explanationEn: 'One way to influence and take part in society is to give comments and suggestions to your municipality.',
-      source: { chapter: 2, page: 11, quote: 'Lämna synpunkter och förslag till sin kommun.' },
+      source: { chapter: 2, page: 10, quote: 'Lämna synpunkter och förslag till sin kommun.' },
     },
     {
       id: 'k2-q19',
@@ -307,7 +307,7 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       correctOptionId: 'D',
       explanationSv: 'Man kan påverka på sin arbetsplats, till exempel genom fackföreningar.',
       explanationEn: 'You can have influence at your workplace, for example through trade unions.',
-      source: { chapter: 2, page: 11, quote: 'Påverka på sin arbetsplats, till exempel genom fackföreningar.' },
+      source: { chapter: 2, page: 10, quote: 'Påverka på sin arbetsplats, till exempel genom fackföreningar.' },
     },
     {
       id: 'k2-q20',
@@ -321,7 +321,7 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       correctOptionId: 'A',
       explanationSv: 'Man kan påverka genom att kontakta journalister eller skriva debattartiklar i olika medier.',
       explanationEn: 'You can have influence by contacting journalists or writing opinion pieces in the media.',
-      source: { chapter: 2, page: 11, quote: 'Kontakta journalister eller skriva debattartiklar i olika medier.' },
+      source: { chapter: 2, page: 10, quote: 'Kontakta journalister eller skriva debattartiklar i olika medier.' },
     },
     {
       id: 'k2-q21',

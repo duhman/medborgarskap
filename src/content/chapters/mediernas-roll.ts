@@ -368,7 +368,7 @@ export const mediernasRoll: ChapterContent = {
         'Journalists should check information with several independent sources and make sure the sources are reliable.',
       source: {
         chapter: 6,
-        page: 20,
+        page: 21,
         quote:
           'Journalister ska kontrollera uppgifter med flera oberoende källor och kontrollera att källorna är pålitliga.',
       },

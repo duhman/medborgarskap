@@ -378,7 +378,7 @@ export const politiskaValOchPartier: ChapterContent = {
         'You usually vote at the polling station on your voting card, but you can also vote in advance at special places.',
       source: {
         chapter: 4,
-        page: 14,
+        page: 15,
         quote: 'förväg på särskilda platser. I vallokalen finns valsedlar till de olika partierna.',
       },
     },
@@ -418,7 +418,7 @@ export const politiskaValOchPartier: ChapterContent = {
         'At the polling station there are ballot papers for the different parties. The vote is secret, so you vote behind a screen.',
       source: {
         chapter: 4,
-        page: 14,
+        page: 15,
         quote: 'I vallokalen finns valsedlar till de olika partierna. Valen är hemliga.',
       },
     },

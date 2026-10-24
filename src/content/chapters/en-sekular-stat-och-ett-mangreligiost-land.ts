@@ -296,7 +296,7 @@ export const enSekularStatOchEttMangreligiostLand: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Religionens roll i samhället har minskat. Samtidigt har religion och religiösa frågor fått större uppmärksamhet på senare tid.',
       explanationEn: 'The role of religion in society has declined, but religion and religious questions have received more attention in recent years.',
-      source: { chapter: 12, page: 43, quote: 'Religionens roll i samhället har minskat. Samtidigt har religion och religiösa frågor fått större uppmärksamhet i samhället på senare tid.' },
+      source: { chapter: 12, page: 42, quote: 'Religionens roll i samhället har minskat. Samtidigt har religion och religiösa frågor fått större uppmärksamhet i samhället på senare tid.' },
     },
     {
       id: 'k12-q16',
