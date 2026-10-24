@@ -5,7 +5,7 @@ import { chromium } from 'playwright'
 const PORT = Number(process.env.A11Y_PORT ?? 4173)
 const BASE_URL = process.env.BASE_URL ?? `http://localhost:${PORT}`
 const MIN_CONTRAST = Number(process.env.GRUNDFORM_MIN_CONTRAST ?? 4.5)
-const CTA_SELECTOR = 'main a.bg-accent'
+const CTA_SELECTOR = 'main a.mb-btn--primary, main a.bg-accent'
 
 async function waitForServer(url, timeoutMs = 60_000) {
   const start = Date.now()

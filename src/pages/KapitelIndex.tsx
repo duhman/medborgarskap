@@ -57,11 +57,7 @@ export function KapitelIndex() {
       <ol className="surface-raised divide-y divide-line-strong">
         {chapters.map((ch) => {
           const result = getQuizResult(ch.slug)
-          const status = result
-            ? `Övat, senast ${result.score} av ${result.total} rätt`
-            : visitedChapters.includes(ch.slug)
-              ? 'Läst, inte övat'
-              : 'Inte påbörjat'
+          const visitedOnly = !result && visitedChapters.includes(ch.slug)
           return (
             <li key={ch.slug}>
               <Link
@@ -81,8 +77,8 @@ export function KapitelIndex() {
                         result ? 'border-accent bg-accent' : 'border-ink-3 bg-transparent'
                       }`}
                     />
-                    <span className="sr-only">{status}. </span>
-                    <span aria-hidden="true">
+                    {visitedOnly && <span className="sr-only">Läst, inte övat. </span>}
+                    <span>
                       {result ? (
                         <>
                           Senast <GfNum value={result.score} /> av <GfNum value={result.total} /> rätt

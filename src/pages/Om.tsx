@@ -55,6 +55,7 @@ export function Om() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
+                      <span className="sr-only">{s.label}, </span>
                       {new URL(s.url).hostname.replace(/^www\./, '')}
                       <span aria-hidden="true"> ↗</span>
                       <span className="sr-only"> (öppnas i ny flik)</span>
