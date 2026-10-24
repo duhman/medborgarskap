@@ -5,7 +5,7 @@ export type OfficialSource = {
   checkedAt: string
 }
 
-export type PathwayQuestionKey = 'age' | 'school' | 'komvux' | 'sfiKnowledge' | 'sfi'
+export type PathwayQuestionKey = 'age' | 'school' | 'komvux' | 'sfi'
 
 const MV_VUXNA =
   'https://www.migrationsverket.se/du-vill-ansoka/svenskt-medborgarskap/medborgarskap-for-vuxna/medborgarskap-for-vuxna.html'
@@ -13,7 +13,7 @@ const MV_SVENSKA_NYHET =
   'https://www.migrationsverket.se/nyheter/nyhetsarkiv/2026-09-30-medborgarskapsprovet-i-svenska-kan-flyttas-fram.html'
 const UHR_FAQ = 'https://www.uhr.se/medborgarskapsprovet/fragor-och-svar/'
 
-const CHECKED = '2026-10-09'
+const CHECKED = '2026-10-24'
 
 /**
  * Officiella källor per fråga i "Behöver jag provet?".
@@ -50,15 +50,13 @@ export const pathwaySources: Record<PathwayQuestionKey, OfficialSource[]> = {
       checkedAt: CHECKED,
     },
   ],
-  sfiKnowledge: [
+  sfi: [
     {
       publisher: 'Migrationsverket',
-      label: 'Medborgarskap för vuxna',
+      label: 'Medborgarskap för vuxna: kunskaper i svenska',
       url: MV_VUXNA,
       checkedAt: CHECKED,
     },
-  ],
-  sfi: [
     {
       publisher: 'Migrationsverket',
       label: 'Medborgarskapsprovet i svenska kan flyttas fram (nyhet 2026-09-30)',
