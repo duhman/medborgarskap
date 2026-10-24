@@ -12,6 +12,7 @@ const siblingSites = [
 ] as const
 
 const siteLinks = [
+  { to: '/vanliga-fragor', label: 'Vanliga frågor' },
   { to: '/om', label: 'Om' },
   { to: '/integritet', label: 'Integritet' },
   { to: '/villkor', label: 'Villkor' },
