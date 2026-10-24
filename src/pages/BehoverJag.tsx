@@ -56,7 +56,7 @@ export function BehoverJag() {
 
         <fieldset className="surface-raised space-y-3 p-5">
           <legend className="px-1 font-medium">
-            Har du godkända betyg i samhällskunskap från svensk skola?
+            Har du godkänt betyg i samhällskunskap från årskurs 9 eller gymnasiet i Sverige?
           </legend>
           {(['yes', 'no', 'unsure'] as const).map((v) => (
             <label key={v} className="flex min-h-11 items-center gap-3">
@@ -74,7 +74,7 @@ export function BehoverJag() {
 
         <fieldset className="surface-raised space-y-3 p-5">
           <legend className="px-1 font-medium">
-            Har du motsvarande utbildning via komvux eller folkhögskola?
+            Har du godkänt betyg i samhällskunskap från komvux eller folkhögskola på gymnasial nivå?
           </legend>
           {(['yes', 'no', 'unsure'] as const).map((v) => (
             <label key={v} className="flex min-h-11 items-center gap-3">
@@ -91,34 +91,12 @@ export function BehoverJag() {
         </fieldset>
 
         <fieldset className="surface-raised space-y-3 p-5">
-          <legend className="px-1 font-medium">
-            Kan du visa samhällskunskap via SFI kurs D, motsvarande, eller annat sätt som
-            Migrationsverket dokumenterar?
-          </legend>
+          <legend className="px-1 font-medium">Läser du eller har du läst SFI?</legend>
           <p className="text-sm text-ink-2">
-            Det här gäller kunskapskravet, inte språkkravet. Migrationsverket avgör om din
-            dokumentation räcker.
-          </p>
-          {(['yes', 'no', 'unsure'] as const).map((v) => (
-            <label key={v} className="flex min-h-11 items-center gap-3">
-              <input
-                type="radio"
-                name="sfiKnowledge"
-                checked={answers.sfiKnowledgeAlternate === v}
-                onChange={() => setAnswers((a) => ({ ...a, sfiKnowledgeAlternate: v }))}
-              />
-              {v === 'yes' ? 'Ja' : v === 'no' ? 'Nej' : 'Osäker'}
-            </label>
-          ))}
-          <OfficialSourceCitation sources={pathwaySources.sfiKnowledge} />
-        </fieldset>
-
-        <fieldset className="surface-raised space-y-3 p-5">
-          <legend className="px-1 font-medium">Studerar du SFI just nu?</legend>
-          <p className="text-sm text-ink-2">
-            SFI handlar om svenska språket. Språkkrav och samhällskunskap är separata spår i
-            medborgarskapsprocessen. Att studera SFI språk ger inte automatiskt undantag från
-            medborgarskapsprovet.
+            SFI gäller språkkravet, inte samhällskunskap. Godkänt betyg i den högsta kursen i SFI
+            kan visa dina kunskaper i svenska, men ger inte undantag från provet i samhällskunskap.
+            Provet i svenska kan införas senare än planerat. Tills vidare visar du språket med till
+            exempel betyg från komvux, högsta SFI-kursen eller Tisus.
           </p>
           <label className="flex min-h-11 items-center gap-3">
             <input
@@ -153,8 +131,9 @@ export function BehoverJag() {
         )}
         {outcome === 'maybe-exempt' && (
           <p className="mt-2">
-            Du kan kanske visa kunskap på annat sätt (betyg, utbildning, SFI D eller motsvarande,
-            eller ålder). Kontrollera alltid mot Migrationsverkets aktuella regler.
+            Du kan kanske visa kunskap om samhället på annat sätt (betyg i samhällskunskap från
+            grundskola, gymnasium, folkhögskola eller komvux, eller ålder). Kontrollera alltid mot
+            Migrationsverkets aktuella regler.
           </p>
         )}
         {outcome === 'unclear' && (

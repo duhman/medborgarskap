@@ -84,8 +84,9 @@ export const lagOchRatt: ChapterContent = {
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Straffmyndighetsåldern är 15 år. Yngre barn som begår brott hanteras främst av socialtjänsten.',
-      explanationEn: 'Criminal responsibility begins at age 15 in Sweden.',
+        'Huvudregeln är att man är straffmyndig från 15 år, och det är vad Sverige i fokus lär ut. När ett yngre barn begår brott bestämmer socialtjänsten vad som ska hända. Sedan 10 september 2026 gäller en tillfällig sänkning till 14 år för vissa allvarliga brott (materialet nämner bara det tidigare förslaget om 13 år).',
+      explanationEn:
+        'The general age of criminal responsibility is 15. Since 10 September 2026 a temporary lower limit of 14 applies to certain serious crimes.',
       source: { chapter: 5, page: 19 },
     },
     {

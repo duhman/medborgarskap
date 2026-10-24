@@ -61,7 +61,7 @@ export const enSekularStatOchEttMangreligiostLand: ChapterContent = {
     },
     {
       id: 'k12-q4',
-      prompt: 'Ungefär hur många medeltida kyrkor och kyrkoruin finns kvar enligt materialet?',
+      prompt: 'Ungefär hur många medeltida kyrkor och kyrkoruiner finns kvar enligt materialet?',
       options: [
         { id: 'A', text: 'Cirka 140' },
         { id: 'B', text: 'Cirka 1 400' },
@@ -70,7 +70,7 @@ export const enSekularStatOchEttMangreligiostLand: ChapterContent = {
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Materialet nämner cirka 1 400 bevarade kyrkor och ruiner med medeltida ursprung, ett känt UHR-exempel.',
+        'Sverige har cirka 1 400 bevarade kyrkor och kyrkoruiner med medeltida ursprung. UHR rättade siffran i materialet i augusti 2026, så kontrollera att du läser den korrigerade versionen.',
       explanationEn: 'The material cites roughly 1,400 medieval churches and ruins.',
       source: { chapter: 12, page: 43 },
     },

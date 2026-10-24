@@ -26,7 +26,7 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Rösträtt i riksdagsval och EU-val har 18 år som gräns.',
       explanationEn: 'You must be 18 to vote in national and EU elections.',
-      source: { chapter: 2, page: 6 },
+      source: { chapter: 4, page: 14 },
     },
     {
       id: 'k2-q2',
@@ -41,7 +41,7 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       explanationSv:
         'I en representativ demokrati väljer medborgarna folkvalda som representerar dem i riksdag och fullmäktige.',
       explanationEn: 'Citizens elect representatives to decide on their behalf.',
-      source: { chapter: 2, page: 4 },
+      source: { chapter: 3, page: 12 },
     },
     {
       id: 'k2-q3',
@@ -56,7 +56,7 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       explanationSv:
         'Regeringsformen är en av Sveriges grundlagar och beskriver grundläggande fri- och rättigheter.',
       explanationEn: 'The Instrument of Government is one of Sweden’s fundamental laws.',
-      source: { chapter: 2, page: 8 },
+      source: { chapter: 5, page: 16 },
     },
     {
       id: 'k2-q4',
@@ -70,21 +70,21 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Riksdagsval hålls vart fjärde år, vanligtvis i september.',
       explanationEn: 'General elections are held every four years.',
-      source: { chapter: 2, page: 10 },
+      source: { chapter: 4, page: 14 },
     },
     {
       id: 'k2-q5',
-      prompt: 'Vad krävs normalt för att ett parti ska få plats i riksdagen?',
+      prompt: 'Vad beskriver materialet som ett hot mot demokratin?',
       options: [
-        { id: 'A', text: 'Minst 2 procent av rösterna' },
-        { id: 'B', text: 'Minst 4 procent av rösterna' },
-        { id: 'C', text: 'Minst 10 procent av rösterna' },
-        { id: 'D', text: 'Minst 50 mandat direkt' },
+        { id: 'A', text: 'Att många röstar i valen' },
+        { id: 'B', text: 'Att det finns flera partier att välja mellan' },
+        { id: 'C', text: 'Lågt valdeltagande och spridning av falsk information' },
+        { id: 'D', text: 'Att valen är hemliga' },
       ],
-      correctOptionId: 'B',
+      correctOptionId: 'C',
       explanationSv:
-        'Spärregeln på 4 procent gäller riksdagsvalet, med undantag om partiet vinner ett valkretsmandat.',
-      explanationEn: 'The 4% threshold applies in parliamentary elections.',
+        'Lågt valdeltagande, falsk information och hat på sociala medier samt hot mot politiker och journalister kan försvaga demokratin.',
+      explanationEn: 'Low turnout, false information and threats against politicians and journalists can weaken democracy.',
       source: { chapter: 2, page: 11 },
     },
     {
@@ -92,15 +92,16 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       prompt: 'Vem har rösträtt i kommun- och regionval?',
       options: [
         { id: 'A', text: 'Endast svenska medborgare' },
-        { id: 'B', text: 'EU-medborgare folkbokförda i kommunen och svenska medborgare' },
+        { id: 'B', text: 'Även den som inte är svensk medborgare, om hen är folkbokförd i Sverige och uppfyller kraven' },
         { id: 'C', text: 'Alla som besökt Sverige minst en vecka' },
         { id: 'D', text: 'Endast personer över 21 år' },
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Svenska medborgare och folkbokförda EU-medborgare får rösta i kommun- och regionval från 18 år.',
-      explanationEn: 'Swedish citizens and registered EU citizens may vote in local elections.',
-      source: { chapter: 2, page: 7 },
+        'Man behöver inte vara svensk medborgare. Man ska ha fyllt 18 år och ha varit folkbokförd i Sverige i tre år i följd före valdagen. EU-medborgare och nordiska medborgare behöver bara vara folkbokförda. (Sverige i fokus skriver "sammanlagt tre år", men Valmyndigheten anger tre år i följd.)',
+      explanationEn:
+        'You do not need to be a Swedish citizen. You must be 18 and have been registered in Sweden for three consecutive years before election day. EU and Nordic citizens only need to be registered.',
+      source: { chapter: 4, page: 14 },
     },
   ],
 }

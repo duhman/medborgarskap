@@ -20,6 +20,23 @@ const UHR = 'https://www.uhr.se/globalassets/_uhr.se/medborgarskapsprovet/utbild
 
 export const sverigeIFokusPdfUrl = PDF
 
+/** Sidintervall per kapitel enligt innehållsförteckningen i Sverige i fokus (korr. 2026-08-10). */
+export const chapterPageRanges: Record<number, [first: number, last: number]> = {
+  1: [5, 9],
+  2: [10, 11],
+  3: [12, 13],
+  4: [14, 15],
+  5: [16, 19],
+  6: [20, 21],
+  7: [22, 26],
+  8: [27, 29],
+  9: [30, 31],
+  10: [32, 38],
+  11: [39, 41],
+  12: [42, 44],
+  13: [45, 48],
+}
+
 type ChapterMeta = Pick<
   ChapterContent,
   'slug' | 'number' | 'title' | 'mp3Url'

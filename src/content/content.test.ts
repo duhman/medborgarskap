@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getAllChapters, getChapterBySlug } from './chapters/meta'
+import { chapterPageRanges, getAllChapters, getChapterBySlug } from './chapters/meta'
 import { officialSampleQuestions } from './officialSamples'
 import { validateChapterQuestions } from './types'
 
@@ -18,6 +18,31 @@ describe('chapter catalog', () => {
       expect(ch.questions.length).toBeGreaterThanOrEqual(5)
       expect(validateChapterQuestions(ch.questions)).toEqual([])
     }
+  })
+
+  it('cites pages that fall inside the cited chapter in Sverige i fokus', () => {
+    for (const ch of getAllChapters()) {
+      for (const q of ch.questions) {
+        if (q.source.page == null) continue
+        const [first, last] = chapterPageRanges[q.source.chapter]
+        expect(q.source.page, q.id).toBeGreaterThanOrEqual(first)
+        expect(q.source.page, q.id).toBeLessThanOrEqual(last)
+      }
+    }
+  })
+
+  it('does not reuse UHR sample question prompts as original questions', () => {
+    const official = new Set(officialSampleQuestions.map((q) => q.prompt.trim().toLowerCase()))
+    for (const ch of getAllChapters()) {
+      for (const q of ch.questions) {
+        expect(official.has(q.prompt.trim().toLowerCase()), q.id).toBe(false)
+      }
+    }
+  })
+
+  it('has unique question prompts', () => {
+    const prompts = getAllChapters().flatMap((ch) => ch.questions.map((q) => q.prompt))
+    expect(new Set(prompts).size).toBe(prompts.length)
   })
 
   it('resolves every slug through getChapterBySlug', () => {

@@ -16,18 +16,19 @@ export const saHarStyrsSverige: ChapterContent = {
   questions: [
     {
       id: 'k3-q1',
-      prompt: 'Vilken titel har Sveriges statschef?',
+      prompt: 'Vad innebär det att Sverige är en konstitutionell monarki?',
       options: [
-        { id: 'A', text: 'Talman' },
-        { id: 'B', text: 'Kung' },
-        { id: 'C', text: 'Landshövding' },
-        { id: 'D', text: 'Statsminister' },
+        { id: 'A', text: 'Kungen leder regeringen och stiftar lagarna' },
+        { id: 'B', text: 'Riksdagen väljer en ny kung vart fjärde år' },
+        { id: 'C', text: 'Statschefen är en kung eller drottning som inte har någon politisk makt' },
+        { id: 'D', text: 'Kungen är ordförande i riksdagen' },
       ],
-      correctOptionId: 'B',
+      correctOptionId: 'C',
       explanationSv:
-        'Kungen är statschef men utövar inte politisk makt. Statsministern leder regeringen.',
-      explanationEn: 'The monarch is head of state; the prime minister leads government.',
-      source: { chapter: 3, page: 5 },
+        'Statschefen är en kung eller drottning utan politisk makt. Kungen är en symbol för Sverige och gör statsbesök. Statsministern leder regeringen.',
+      explanationEn:
+        'The head of state is a king or queen with no political power. The prime minister leads the government.',
+      source: { chapter: 3, page: 13 },
     },
     {
       id: 'k3-q2',
@@ -40,9 +41,9 @@ export const saHarStyrsSverige: ChapterContent = {
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Riksdagen väljer statsminister. Kungen utser sedan statsministern enligt riksdagens beslut.',
+        'Riksdagen väljer statsminister, som får i uppdrag att bilda regering. Statsministern väljer sedan ministrarna. Kungen deltar inte i beslutet.',
       explanationEn: 'Parliament elects the prime minister.',
-      source: { chapter: 3, page: 6 },
+      source: { chapter: 3, page: 12 },
     },
     {
       id: 'k3-q3',
@@ -56,7 +57,7 @@ export const saHarStyrsSverige: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Riksdagen lagstiftar, godkänner budget och kontrollerar regeringen.',
       explanationEn: 'Parliament legislates, approves the budget, and scrutinises government.',
-      source: { chapter: 3, page: 8 },
+      source: { chapter: 3, page: 12 },
     },
     {
       id: 'k3-q4',
@@ -70,7 +71,7 @@ export const saHarStyrsSverige: ChapterContent = {
       correctOptionId: 'C',
       explanationSv: 'Kommuner ansvarar för förskola och grundskola, medan staten sätter ramar.',
       explanationEn: 'Municipalities run preschool and compulsory school.',
-      source: { chapter: 3, page: 14 },
+      source: { chapter: 3, page: 13 },
     },
     {
       id: 'k3-q5',
@@ -84,22 +85,22 @@ export const saHarStyrsSverige: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Regionerna ansvarar för sjukvård och regional utveckling, med valda politiker.',
       explanationEn: 'Regions handle health care and regional development.',
-      source: { chapter: 3, page: 15 },
+      source: { chapter: 3, page: 13 },
     },
     {
       id: 'k3-q6',
-      prompt: 'Hur blir EU-lagar bindande i Sverige?',
+      prompt: 'Hur påverkar EU hur Sverige styrs?',
       options: [
-        { id: 'A', text: 'De gäller direkt utan att riksdagen gör något' },
-        { id: 'B', text: 'Riksdagen måste alltid skriva om hela grundlagen först' },
-        { id: 'C', text: 'Endast om kungen skriver under varje förordning' },
-        { id: 'D', text: 'De gäller bara i Stockholm' },
+        { id: 'A', text: 'EU-länderna fattar gemensamma beslut och tar fram lagar som gäller i alla medlemsländer' },
+        { id: 'B', text: 'EU utser Sveriges statsminister' },
+        { id: 'C', text: 'EU:s lagar gäller bara i Bryssel' },
+        { id: 'D', text: 'EU bestämmer kommunalskatten i varje kommun' },
       ],
       correctOptionId: 'A',
       explanationSv:
-        'Vissa EU-rättsakter är direkt tillämpliga. Andra kräver att Sverige inför dem i svensk lag.',
-      explanationEn: 'Some EU acts apply directly; others must be transposed into Swedish law.',
-      source: { chapter: 3, page: 18 },
+        'Utöver stat, regioner och kommuner påverkas Sverige av beslut i EU. EU-länderna fattar gemensamma beslut och tar fram lagar som gäller i alla medlemsländer.',
+      explanationEn: 'EU member states make joint decisions and adopt laws that apply in all member states.',
+      source: { chapter: 11, page: 39 },
     },
   ],
 }

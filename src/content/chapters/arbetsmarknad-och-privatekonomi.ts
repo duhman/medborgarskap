@@ -31,17 +31,18 @@ export const arbetsmarknadOchPrivatekonomi: ChapterContent = {
     },
     {
       id: 'k8-q2',
-      prompt: 'Vilken organisation representerar främst arbetstagare i LO-förbund?',
+      prompt: 'Vilken organisation representerar arbetsgivare i privata företag?',
       options: [
-        { id: 'A', text: 'Svenskt näringsliv' },
-        { id: 'B', text: 'Landsorganisationen i Sverige (LO)' },
-        { id: 'C', text: 'Arbetsgivarverket' },
-        { id: 'D', text: 'Skatteverket' },
+        { id: 'A', text: 'Landsorganisationen i Sverige (LO)' },
+        { id: 'B', text: 'Tjänstemännens centralorganisation (TCO)' },
+        { id: 'C', text: 'Svenskt näringsliv' },
+        { id: 'D', text: 'Sveriges akademikers centralorganisation (SACO)' },
       ],
-      correctOptionId: 'B',
+      correctOptionId: 'C',
       explanationSv:
-        'LO, TCO och SACO är de stora fackliga centralorganisationerna. LO samlar många arbetarförbund.',
-      explanationEn: 'LO is a major trade union confederation for employees.',
+        'Svenskt näringsliv representerar privata arbetsgivare. Arbetsgivarverket och SKR representerar offentliga arbetsplatser. LO, TCO och SACO är fackliga centralorganisationer för arbetstagare.',
+      explanationEn:
+        'Svenskt näringsliv represents private employers. LO, TCO and SACO are trade union confederations.',
       source: { chapter: 8, page: 28 },
     },
     {

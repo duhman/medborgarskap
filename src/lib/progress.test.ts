@@ -11,7 +11,7 @@ describe('derivePathwayOutcome', () => {
     expect(derivePathwayOutcome({ komvuxFolk: 'yes' })).toBe('maybe-exempt')
   })
 
-  it('treats SFI D / Mig knowledge alternate yes as maybe exempt', () => {
+  it('ignores a stored SFI D answer, since SFI only counts for the language requirement', () => {
     expect(
       derivePathwayOutcome({
         ageBracket: '16-66',
@@ -19,7 +19,7 @@ describe('derivePathwayOutcome', () => {
         komvuxFolk: 'no',
         sfiKnowledgeAlternate: 'yes',
       }),
-    ).toBe('maybe-exempt')
+    ).toBe('likely-needed')
   })
 
   it('does not exempt from studying SFI language alone', () => {
@@ -58,8 +58,7 @@ describe('derivePathwayOutcome', () => {
       derivePathwayOutcome({
         ageBracket: '16-66',
         schoolSamhall: 'no',
-        komvuxFolk: 'no',
-        sfiKnowledgeAlternate: 'unsure',
+        komvuxFolk: 'unsure',
       }),
     ).toBe('unclear')
   })
