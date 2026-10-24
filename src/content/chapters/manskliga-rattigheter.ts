@@ -102,7 +102,7 @@ export const manskligaRattigheter: ChapterContent = {
   ],
   questions: [
     {
-      id: 'k7-q1',
+      id: 'k7-q37',
       prompt: 'Vilket alternativ beskriver bäst vad våld i nära relationer kan vara?',
       options: [
         { id: 'A', text: 'Att någon blir rånad av en främling på gatan' },

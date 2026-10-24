@@ -82,7 +82,7 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
   ],
   questions: [
     {
-      id: 'k2-q5',
+      id: 'k2-q30',
       prompt: 'I en stad bor människor med olika inkomst och bakgrund i helt olika områden. Vad kan det leda till, enligt materialet?',
       options: [
         { id: 'A', text: 'Att alla stadens områden upplevs som lika trygga och säkra' },

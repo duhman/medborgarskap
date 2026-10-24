@@ -326,7 +326,7 @@ export const valfardssamhallet: ChapterContent = {
       prompt:
         'Förskolan där Lina lämnar sin son drivs av ett privat företag. Hur finansieras en sådan välfärdstjänst enligt materialet?',
       options: [
-        { id: 'A', text: 'Med avgifter som föräldrarna betalar' },
+        { id: 'A', text: 'Med pengar från EU:s gemensamma budget' },
         { id: 'B', text: 'Med pengar från fackförbunden' },
         { id: 'C', text: 'Fortfarande med skattemedel' },
         { id: 'D', text: 'Med lån som företaget tar från banken' },

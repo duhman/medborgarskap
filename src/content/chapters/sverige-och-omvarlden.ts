@@ -17,7 +17,7 @@ export const sverigeOchOmvarlden: ChapterContent = {
   ],
   summaryEasy: [
     'Sverige samarbetar med andra länder. De nordiska länderna är Sverige, Danmark, Finland, Island och Norge. De samarbetar i Nordiska rådet och Nordiska ministerrådet.',
-    'EU betyder Europeiska unionen. Det är ett samarbete mellan många länder i Europa. Sverige är med i EU sedan 1995. EU-länderna gör lagar tillsammans. Människor kan studera, flytta och arbeta i andra EU-länder. Det kallas de fyra friheterna.',
+    'EU betyder Europeiska unionen. Det är ett samarbete mellan många länder i Europa. Sverige är med i EU sedan 1995. EU-länderna gör lagar tillsammans. Människor kan studera, flytta och arbeta i andra EU-länder. Varor kan säljas fritt mellan länderna. Det är en del av de fyra friheterna: fri rörlighet för varor, tjänster, personer och kapital.',
     'Sverige är också med i Europarådet. Europarådet arbetar för mänskliga rättigheter och demokrati. Sverige är med i FN. FN arbetar för fred i världen. Myndigheten Sida hjälper andra länder. Sida arbetar mot fattigdom och förtryck.',
     'Sverige har inte haft krig sedan början av 1800-talet. Det är mycket länge. Under det kalla kriget var Sverige neutralt. Neutralt betyder att landet inte valde sida. Ryssland anföll Ukraina 2022. Då sökte Sverige medlemskap i Nato. Nato är en försvarsallians. Sverige blev medlem 2024.',
     'Alla som bor i Sverige och är 16-70 år kan behöva hjälpa till att försvara landet. Det kallas totalförsvarsplikt. Totalförsvaret har två delar: det militära försvaret och det civila försvaret.',
@@ -36,8 +36,8 @@ export const sverigeOchOmvarlden: ChapterContent = {
     },
     {
       term: 'de fyra friheterna',
-      sv: 'Rätten att studera, flytta, arbeta och sälja varor fritt mellan EU-länderna.',
-      en: 'The four freedoms: free movement to study, move, work and sell goods within the EU.',
+      sv: 'Fri rörlighet för varor, tjänster, personer och kapital mellan EU-länderna. Man kan till exempel studera, flytta och arbeta i ett annat EU-land.',
+      en: 'The four freedoms: free movement of goods, services, people and capital within the EU, for example to study, move or work in another EU country.',
     },
     {
       term: 'Europarådet',
@@ -118,7 +118,7 @@ export const sverigeOchOmvarlden: ChapterContent = {
     },
     {
       id: 'k11-q2',
-      prompt: 'Vad kallas det att människor fritt kan studera, flytta, arbeta och sälja varor mellan EU-länderna?',
+      prompt: 'Inom EU kan människor studera, flytta och arbeta i andra länder, och varor kan säljas fritt. Vad kallas den fria rörligheten?',
       options: [
         { id: 'A', text: 'Allemansrätten' },
         { id: 'B', text: 'Offentlighetsprincipen' },
@@ -126,8 +126,8 @@ export const sverigeOchOmvarlden: ChapterContent = {
         { id: 'D', text: 'Religionsfriheten' },
       ],
       correctOptionId: 'C',
-      explanationSv: 'Rätten att studera, flytta, arbeta och sälja varor fritt mellan EU-länderna kallas för de fyra friheterna.',
-      explanationEn: 'The right to study, move, work and sell goods freely between EU countries is called the four freedoms.',
+      explanationSv: 'Materialet kallar rätten att studera, flytta, arbeta och sälja varor fritt mellan EU-länderna för de fyra friheterna. De fyra friheterna är fri rörlighet för varor, tjänster, personer och kapital.',
+      explanationEn: 'The material calls the right to study, move, work and sell goods freely between EU countries the four freedoms. The four freedoms are free movement of goods, services, people and capital.',
       source: { chapter: 11, page: 39, quote: 'studera, flytta, arbeta och sälja varor fritt mellan länderna. Det kallas för de fyra friheterna' },
     },
     {
@@ -336,8 +336,8 @@ export const sverigeOchOmvarlden: ChapterContent = {
         { id: 'D', text: 'Politiken har varit inriktad på att bygga ett imperium' },
       ],
       correctOptionId: 'B',
-      explanationSv: 'Efter förlusten av Finland och unionen med Norge har politiken i Sverige varit inriktad på att undvika nya krig.',
-      explanationEn: 'After losing Finland and the union with Norway, Swedish policy has focused on avoiding new wars.',
+      explanationSv: 'Sverige förlorade Finland 1809. Några år senare tvingades Norge in i en union med Sverige efter Napoleonkrigen. Efter dessa händelser har politiken varit inriktad på att undvika nya krig.',
+      explanationEn: 'Sweden lost Finland in 1809. A few years later, Norway was forced into a union with Sweden after the Napoleonic Wars. Since then, Swedish policy has focused on avoiding new wars.',
       source: { chapter: 11, page: 40, quote: 'Efter dessa händelser har politiken i Sverige varit inriktad på att undvika nya krig.' },
     },
     {

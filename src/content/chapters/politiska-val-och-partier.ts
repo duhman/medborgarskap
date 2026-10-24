@@ -201,18 +201,18 @@ export const politiskaValOchPartier: ChapterContent = {
     },
     {
       id: 'k4-q6',
-      prompt: 'I vilket land röstar en EU-medborgare i valet till EU-parlamentet?',
+      prompt: 'Marta är medborgare i Polen och folkbokförd i Sverige. Kan hon rösta i Sverige i valet till EU-parlamentet?',
       options: [
-        { id: 'A', text: 'I det land där hen är född' },
-        { id: 'B', text: 'I det land där hen är folkbokförd' },
-        { id: 'C', text: 'I det land där EU-parlamentet ligger' },
-        { id: 'D', text: 'I det land där hen har flest släktingar' },
+        { id: 'A', text: 'Nej, hon måste rösta i det land där hon är medborgare' },
+        { id: 'B', text: 'Ja, EU-medborgare kan rösta i det land där de är folkbokförda' },
+        { id: 'C', text: 'Ja, om hon har varit folkbokförd i Sverige i minst tio år' },
+        { id: 'D', text: 'Nej, inte förrän hon har blivit svensk medborgare' },
       ],
       correctOptionId: 'B',
       explanationSv:
-        'EU-medborgare röstar till EU-parlamentet i det land där de är folkbokförda.',
+        'Enligt materialet röstar EU-medborgare till EU-parlamentet i det land där de är folkbokförda. Den som bor i ett annat EU-land kan i stället välja att rösta i sitt hemland, men man får bara rösta en gång.',
       explanationEn:
-        'EU citizens vote in the European Parliament election in the country where they are registered as residents.',
+        'According to the material, EU citizens vote in the European Parliament election in the country where they are registered as residents. Someone living in another EU country can choose to vote in their home country instead, but may only vote once.',
       source: {
         chapter: 4,
         page: 14,
