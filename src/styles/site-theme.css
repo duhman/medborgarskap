@@ -50,3 +50,20 @@ h1 {
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/*
+ * Dark mode follows the system setting. The light green fill is too dark on
+ * the dark ground, so dark mode uses a pale green fill with ink text on it,
+ * the same pattern Grundform uses for its other dark themes.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode='light']) {
+    --site-accent: #8fc4a8;
+    --site-accent-on: #1c1a17;
+    --site-accent-text: #8fc4a8;
+    --site-accent-deep: #a9d4bd;
+    --site-accent-soft: rgba(143, 196, 168, 0.16);
+    --site-accent-soft-alpha: rgba(143, 196, 168, 0.16);
+    --site-accent-ring: #8fc4a8;
+  }
+}

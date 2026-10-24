@@ -69,26 +69,30 @@ async function run() {
       violationCount: 0,
     }
 
-    for (const route of ROUTES) {
-      const context = await browser.newContext()
-      const page = await context.newPage()
-      const url = `${BASE_URL}${route}`
-      await page.goto(url, { waitUntil: 'load' })
-      await page.waitForSelector('#main-content', { state: 'visible' })
-      const results = await new AxeBuilder({ page }).analyze()
-      const colorContrast = results.violations.filter((v) => v.id === 'color-contrast')
-      summary.routes[route] = {
-        violations: results.violations.length,
-        colorContrast: colorContrast.length,
-        colorContrastNodes: colorContrast.reduce((n, v) => n + (v.nodes?.length ?? 0), 0),
-        violationIds: results.violations.map((v) => v.id),
+    // The site follows the system colour scheme, so check both.
+    for (const colorScheme of ['light', 'dark']) {
+      for (const route of ROUTES) {
+        const context = await browser.newContext({ colorScheme })
+        const page = await context.newPage()
+        const url = `${BASE_URL}${route}`
+        await page.goto(url, { waitUntil: 'load' })
+        await page.waitForSelector('#main-content', { state: 'visible' })
+        const results = await new AxeBuilder({ page }).analyze()
+        const colorContrast = results.violations.filter((v) => v.id === 'color-contrast')
+        const key = colorScheme === 'light' ? route : `${route} (dark)`
+        summary.routes[key] = {
+          violations: results.violations.length,
+          colorContrast: colorContrast.length,
+          colorContrastNodes: colorContrast.reduce((n, v) => n + (v.nodes?.length ?? 0), 0),
+          violationIds: results.violations.map((v) => v.id),
+        }
+        summary.violationCount += results.violations.length
+        writeFileSync(
+          `${OUT_DIR}/${LABEL}-${routeFileSlug(route)}${colorScheme === 'dark' ? '-dark' : ''}.json`,
+          JSON.stringify(results, null, 2),
+        )
+        await context.close()
       }
-      summary.violationCount += results.violations.length
-      writeFileSync(
-        `${OUT_DIR}/${LABEL}-${routeFileSlug(route)}.json`,
-        JSON.stringify(results, null, 2),
-      )
-      await context.close()
     }
 
     await browser.close()
