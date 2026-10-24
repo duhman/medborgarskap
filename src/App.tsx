@@ -8,6 +8,7 @@ import { KapitelIndex } from './pages/KapitelIndex'
 import { KapitelStudy } from './pages/KapitelStudy'
 import { Integritet } from './pages/Integritet'
 import { Om } from './pages/Om'
+import { VanligaFragor } from './pages/VanligaFragor'
 import { Villkor } from './pages/Villkor'
 import { applyRouteDocumentMeta } from './lib/routeDocumentMeta'
 import { syncRouteJsonLd } from './seo/syncJsonLd'
@@ -77,6 +78,7 @@ export function AppRoutes() {
           <Route path="ovning/mina-fel" element={<OvningMinaFel />} />
           <Route path="ovning/:slug" element={<OvningQuiz />} />
           <Route path="provfragor" element={<Provfragor />} />
+          <Route path="vanliga-fragor" element={<VanligaFragor />} />
           <Route path="om" element={<Om />} />
           <Route path="integritet" element={<Integritet />} />
           <Route path="villkor" element={<Villkor />} />

@@ -18,7 +18,7 @@ describe('getDocumentTitle', () => {
       'Kapitel 4: Politiska val och partier | Medborgarskap',
     )
     expect(getDocumentTitle('/ovning/politiska-val-och-partier')).toBe(
-      'Övning, Kapitel 4: Politiska val och partier | Medborgarskap',
+      'Övningsfrågor kapitel 4: Politiska val och partier | Medborgarskap',
     )
   })
 

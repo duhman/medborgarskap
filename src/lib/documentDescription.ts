@@ -13,6 +13,8 @@ const staticPageDescriptions: Record<string, string> = {
   '/ovning/blandat':
     'Gratis blandade övningsfrågor till medborgarskapsprovet, slumpade från alla 13 kapitel i Sverige i fokus.',
   '/ovning/mina-fel': 'Öva på frågorna du svarat fel på. Sparas bara i din webbläsare.',
+  '/vanliga-fragor':
+    'När är nästa medborgarskapsprov, hur ser det ut och vem måste skriva det? Korta svar med källor från UHR och Migrationsverket.',
   '/om': 'Om Medborgarskap, källor och hur sidan hänger ihop med UHR:s officiella material.',
   '/integritet': 'Integritetspolicy för Medborgarskap: analys, cookies och hur du väljer bort spårning.',
   '/villkor': 'Användarvillkor för Medborgarskap, fristående studiehjälp till medborgarskapsprovet.',
@@ -54,7 +56,9 @@ export function getDocumentDescription(pathname: string): string {
     if (!chapter) {
       return 'Övningen hittades inte. Välj ett kapitel från kapitelöversikten.'
     }
-    return `Flervalsövning till kapitel ${chapter.number}: ${chapter.title}. Baserat på UHR:s Sverige i fokus.`
+    return truncateMetaDescription(
+      `Gratis övningsfrågor till medborgarskapsprovet, kapitel ${chapter.number}: ${chapter.title}. Med förklaring och citat ur UHR:s Sverige i fokus.`,
+    )
   }
 
   return DEFAULT_SITE_DESCRIPTION

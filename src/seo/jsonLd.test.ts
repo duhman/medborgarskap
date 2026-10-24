@@ -30,3 +30,14 @@ describe('routeJsonLd', () => {
     expect(all).not.toMatch(/[\u2013\u2014]/)
   })
 })
+
+describe('FAQ structured data', () => {
+  it('mirrors every visible question and answer', async () => {
+    const { faqEntries } = await import('../content/faq')
+    const [faq] = routeJsonLd('/vanliga-fragor') as [{ '@type': string; mainEntity: { name: string; acceptedAnswer: { text: string } }[] }]
+    expect(faq['@type']).toBe('FAQPage')
+    expect(faq.mainEntity.map((q) => q.name)).toEqual(faqEntries.map((f) => f.question))
+    expect(faq.mainEntity[0].acceptedAnswer.text).toBe(faqEntries[0].answer.join(' '))
+  })
+})
+

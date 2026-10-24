@@ -20,6 +20,7 @@ const pages = [
   ['/provfragor', ['src/pages/Provfragor.tsx', 'src/content/officialSamples.ts']],
   ['/ovning/blandat', ['src/pages/OvningBlandat.tsx', 'src/content/chapters']],
   ['/ovning/mina-fel', ['src/pages/OvningMinaFel.tsx']],
+  ['/vanliga-fragor', ['src/pages/VanligaFragor.tsx', 'src/content/faq.ts']],
   ['/om', ['src/pages/Om.tsx']],
   ['/integritet', ['src/pages/Integritet.tsx']],
   ['/villkor', ['src/pages/Villkor.tsx']],
