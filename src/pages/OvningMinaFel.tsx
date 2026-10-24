@@ -35,11 +35,11 @@ export function OvningMinaFel() {
       {saved === null ? null : mistakes.length === 0 ? (
         <p className="surface-raised p-5">
           Du har inga sparade fel just nu. Gör en{' '}
-          <Link to="/ovning/blandat" className="text-accent hover:underline">
+          <Link to="/ovning/blandat" className="text-accent underline underline-offset-2">
             blandad övning
           </Link>{' '}
           eller öva ett{' '}
-          <Link to="/kapitel" className="text-accent hover:underline">
+          <Link to="/kapitel" className="text-accent underline underline-offset-2">
             kapitel
           </Link>
           .
