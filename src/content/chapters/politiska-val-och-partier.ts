@@ -100,7 +100,7 @@ export const politiskaValOchPartier: ChapterContent = {
       ],
       correctOptionId: 'B',
       explanationSv:
-        'EU-medborgare röstar till EU-parlamentet i det land där de är folkbokförda, inte automatiskt i hemlandet.',
+        'Enligt Sverige i fokus röstar EU-medborgare till EU-parlamentet i det land där de är folkbokförda. Kommun- och regionval har andra regler än riksdagsvalet.',
       explanationEn: 'EU citizens vote for the European Parliament in their country of residence.',
       source: { chapter: 4, page: 14 },
     },

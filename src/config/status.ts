@@ -4,12 +4,15 @@ export type UhrStatusConfig = {
   notes: string
 }
 
-/** Uppdatera här när UHR publicerar ny information. Hitta aldrig på provdatum. */
+/**
+ * Uppdatera här när UHR publicerar ny information. Hitta aldrig på provdatum.
+ * Källa: uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/ (uppdaterad 2026-10-22, kontrollerad 2026-10-24).
+ */
 export const uhrStatus: UhrStatusConfig = {
-  nextSitting: 'Information kommer på uhr.se',
+  nextSitting: 'planeras april-maj 2027 enligt UHR, datum och plats kommer',
   registrationOpen: false,
   notes:
-    'Första tillfället aug 2026 var utprövningsprov. Godkäntgräns sätts i efterhand.',
+    'Provet 15 augusti 2026 var ett utprövningsprov. UHR har ännu inte publicerat provtid, antal frågor eller avgift för nästa tillfälle.',
 }
 
 export const officialLinks = {

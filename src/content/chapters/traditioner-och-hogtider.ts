@@ -7,7 +7,7 @@ export const traditionerOchHogtider: ChapterContent = {
   mp3Url:
     'https://www.uhr.se/globalassets/_uhr.se/medborgarskapsprovet/utbildningsmaterial/14_traditioner-och-hogtider.mp3',
   intro:
-    'Högtider och traditioner förbinder generationer. Många firas fortfarande i Sverige, ofta med kristna rötter men också med nya inslag från invandring och secularisering.',
+    'Högtider och traditioner förbinder generationer. Många firas fortfarande i Sverige, ofta med kristna rötter men också med nya inslag från invandring och sekularisering.',
   bullets: [
     'Jul, påsk och pingst har kristna rötter men firas ofta som kultur.',
     'Nationaldagen är den 6 juni och blev helgdag 2005.',

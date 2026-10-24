@@ -94,7 +94,7 @@ export const sverigesModernaHistoria: ChapterContent = {
       prompt: 'Vad innebar du-reformen på 1960-talet?',
       options: [
         { id: 'A', text: 'Att man måste säga "ni" till alla' },
-        { id: 'B', text: 'Att man började tuta varandra oftare med "du"' },
+        { id: 'B', text: 'Att man började säga "du" till varandra i stället för titlar eller "ni"' },
         { id: 'C', text: 'Att kungen abdikerade' },
         { id: 'D', text: 'Att skolplikten avskaffades' },
       ],

@@ -9,7 +9,7 @@ export const sverigeOchOmvarlden: ChapterContent = {
   intro:
     'Sverige samarbetar nordiskt, europeiskt och globalt. Kapitlet tar upp EU, FN, bistånd via Sida samt försvar, totalförsvar och Sveriges medlemskap i NATO.',
   bullets: [
-    'Sverige är medlem i EU sedan 1995 och i FN sedan 1945.',
+    'Sverige är medlem i EU sedan 1995 och i Nato sedan 2024.',
     'Nordiska rådet samordnar samarbete med grannländerna.',
     'Totalförsvaret omfattar både militärt och civilt försvar.',
   ],
@@ -45,17 +45,19 @@ export const sverigeOchOmvarlden: ChapterContent = {
     },
     {
       id: 'k11-q3',
-      prompt: 'Vilket år grundades FN enligt utbildningsmaterialet?',
+      prompt:
+        'Vilken europeisk organisation bildades 1949 och arbetar för mänskliga rättigheter, demokrati och rättsstatens principer?',
       options: [
-        { id: 'A', text: '1919' },
-        { id: 'B', text: '1945' },
-        { id: 'C', text: '1949' },
-        { id: 'D', text: '1991' },
+        { id: 'A', text: 'Nato' },
+        { id: 'B', text: 'Nordiska rådet' },
+        { id: 'C', text: 'Europarådet' },
+        { id: 'D', text: 'Sida' },
       ],
-      correctOptionId: 'B',
+      correctOptionId: 'C',
       explanationSv:
-        'FN grundades 1945 efter andra världskriget. Sverige är medlem och stödjer fred och mänskliga rättigheter.',
-      explanationEn: 'The UN was founded in 1945.',
+        'Sverige är medlem i Europarådet, som bildades 1949. Där finns Europeiska domstolen för de mänskliga rättigheterna (Europadomstolen).',
+      explanationEn:
+        'Sweden is a member of the Council of Europe, founded in 1949, which includes the European Court of Human Rights.',
       source: { chapter: 11, page: 39 },
     },
     {

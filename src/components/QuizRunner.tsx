@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { QuizQuestion } from '../content/types'
-import { scoreQuiz } from '../lib/quiz'
+import { displayOptions, scoreQuiz } from '../lib/quiz'
 import { saveQuizResult } from '../lib/progress'
 import { GfNum } from './GfNum'
 import { SourceCitation } from './SourceCitation'
@@ -46,6 +46,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
         const chosen = answers[q.id]
         const isCorrect = submitted && chosen === q.correctOptionId
         const isWrong = submitted && chosen != null && chosen !== q.correctOptionId
+        const options = displayOptions(q)
 
         return (
           <fieldset key={q.id} className="surface-raised p-5">
@@ -53,7 +54,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
               <GfNum value={index + 1} />. {q.prompt}
             </legend>
             <div className="space-y-2">
-              {q.options.map((opt) => {
+              {options.map((opt, position) => {
                 const id = `${q.id}-${opt.id}`
                 const showResult =
                   submitted &&
@@ -79,7 +80,7 @@ export function QuizRunner({ slug, chapterTitle, questions }: Props) {
                       className="size-4 shrink-0 accent-accent"
                     />
                     <span>
-                      <span className="font-medium">{opt.id}.</span> {opt.text}
+                      <span className="font-medium">{'ABCD'[position]}.</span> {opt.text}
                     </span>
                   </label>
                 )

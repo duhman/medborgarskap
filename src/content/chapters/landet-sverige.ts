@@ -27,22 +27,22 @@ export const landetSverige: ChapterContent = {
       explanationSv:
         'Sveriges västkust vetter mot Kattegatt och Skagerrak, som förbinder Östersjön med Nordsjön.',
       explanationEn: 'Sweden’s west coast faces the Kattegat and Skagerrak.',
-      source: { chapter: 1, page: 8 },
+      source: { chapter: 1, page: 5 },
     },
     {
       id: 'k1-q2',
-      prompt: 'Vilken naturresurs har historiskt haft stor betydelse för Sveriges ekonomi?',
+      prompt: 'Var finns Sveriges största järnmalmsgruvor?',
       options: [
-        { id: 'A', text: 'Olja' },
-        { id: 'B', text: 'Skog' },
-        { id: 'C', text: 'Kol' },
-        { id: 'D', text: 'Guld' },
+        { id: 'A', text: 'I Skåne' },
+        { id: 'B', text: 'I Norrbotten' },
+        { id: 'C', text: 'På Gotland' },
+        { id: 'D', text: 'I Stockholms skärgård' },
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Skogen har länge varit central för export, industri och sysselsättning i Sverige.',
-      explanationEn: 'Forests have long been central to Sweden’s economy.',
-      source: { chapter: 1, page: 14 },
+        'De största gruvorna finns i Norrbottens län, till exempel i Kiruna och Malmberget. Malmen fraktas därifrån med tåg.',
+      explanationEn: 'The largest iron ore mines are in Norrbotten, for example in Kiruna and Malmberget.',
+      source: { chapter: 1, page: 7 },
     },
     {
       id: 'k1-q3',
@@ -56,7 +56,7 @@ export const landetSverige: ChapterContent = {
       correctOptionId: 'B',
       explanationSv: 'Sverige är indelat i 21 län. 25 landskap är en äldre historisk indelning.',
       explanationEn: 'Sweden has 21 counties (län).',
-      source: { chapter: 1, page: 10 },
+      source: { chapter: 1, page: 6 },
     },
     {
       id: 'k1-q4',
@@ -70,7 +70,7 @@ export const landetSverige: ChapterContent = {
       correctOptionId: 'C',
       explanationSv: 'Sverige gränsar till Norge och Finland. Danmark nås via Öresundsbron.',
       explanationEn: 'Sweden borders Norway and Finland.',
-      source: { chapter: 1, page: 9 },
+      source: { chapter: 1, page: 5 },
     },
     {
       id: 'k1-q5',
@@ -83,9 +83,9 @@ export const landetSverige: ChapterContent = {
       ],
       correctOptionId: 'C',
       explanationSv:
-        'Norrland omfattar ungefär de norra tre femtedelarna av landet och har relativt få invånare per kvadratkilometer.',
+        'Norrland omfattar mer än hälften av Sveriges yta men har relativt få invånare. De flesta bor i södra Sverige och längs kusterna.',
       explanationEn: 'Norrland covers much of northern Sweden.',
-      source: { chapter: 1, page: 11 },
+      source: { chapter: 1, page: 6 },
     },
     {
       id: 'k1-q6',
@@ -99,7 +99,7 @@ export const landetSverige: ChapterContent = {
       correctOptionId: 'C',
       explanationSv: 'Stockholm är Sveriges huvudstad och säte för riksdag och regering.',
       explanationEn: 'Stockholm is the capital of Sweden.',
-      source: { chapter: 1, page: 12 },
+      source: { chapter: 1, page: 7 },
     },
   ],
 }
