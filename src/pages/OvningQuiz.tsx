@@ -34,7 +34,7 @@ export function OvningQuiz() {
         </p>
       </header>
 
-      <QuizRunner slug={chapter.slug} chapterTitle={chapter.title} questions={chapter.questions} />
+      <QuizRunner key={chapter.slug} slug={chapter.slug} chapterTitle={chapter.title} questions={chapter.questions} />
 
       {chapter.questions.length > 0 && (
         <details className="group border-t border-line-strong pt-2">

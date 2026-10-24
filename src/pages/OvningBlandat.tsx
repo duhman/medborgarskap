@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
@@ -11,6 +11,15 @@ const SIZES = [10, 20, 40] as const
 export function OvningBlandat() {
   const pool = getAllQuestions()
   const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
+  const sizeHeadingRef = useRef<HTMLHeadingElement>(null)
+  const returningToPicker = useRef(false)
+
+  useEffect(() => {
+    if (set === null && returningToPicker.current) {
+      returningToPicker.current = false
+      sizeHeadingRef.current?.focus()
+    }
+  }, [set])
 
   function start(count: number) {
     setSet((prev) => ({ questions: pickQuestions(pool, count), round: (prev?.round ?? 0) + 1 }))
@@ -30,7 +39,7 @@ export function OvningBlandat() {
 
       {!set ? (
         <section aria-labelledby="size-heading" className="space-y-3">
-          <h2 id="size-heading" className="mb-section-head">
+          <h2 id="size-heading" ref={sizeHeadingRef} tabIndex={-1} className="mb-section-head outline-none">
             Hur många frågor?
           </h2>
           <div className="grid grid-cols-3 gap-3">
@@ -55,10 +64,14 @@ export function OvningBlandat() {
             chapterTitle="blandade frågor"
             questions={set.questions}
             saveResult={false}
+            autoFocus
           />
           <button
             type="button"
-            onClick={() => setSet(null)}
+            onClick={() => {
+              returningToPicker.current = true
+              setSet(null)
+            }}
             className="mb-link-quiet inline-flex min-h-11 items-center"
           >
             Börja om med ett annat antal frågor

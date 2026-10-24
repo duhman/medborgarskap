@@ -14,6 +14,8 @@ type Props = {
   questions: QuizQuestion[]
   /** Save the score as this chapter's latest result. Off for mixed and mistakes sets. */
   saveResult?: boolean
+  /** Focus the first question on mount, for runners that appear after a button press. */
+  autoFocus?: boolean
 }
 
 type OptionId = QuizQuestion['correctOptionId']
@@ -23,13 +25,19 @@ const LETTERS = 'ABCD'
 /** Meter blocks get too thin past this many questions; use a plain bar instead. */
 const MAX_METER_BLOCKS = 20
 
-export function QuizRunner({ slug, chapterTitle, questions, saveResult = true }: Props) {
+export function QuizRunner({
+  slug,
+  chapterTitle,
+  questions,
+  saveResult = true,
+  autoFocus = false,
+}: Props) {
   const rootRef = useRef<HTMLDivElement>(null)
   const counterRef = useRef<HTMLParagraphElement>(null)
   const feedbackRef = useRef<HTMLDivElement>(null)
   const resultRef = useRef<HTMLHeadingElement>(null)
-  // Focus moves only after the visitor acts, never on first render.
-  const focusTarget = useRef<'counter' | 'feedback' | 'result' | null>(null)
+  // Focus moves only after the visitor acts, so on first render only when asked to.
+  const focusTarget = useRef<'counter' | 'feedback' | 'result' | null>(autoFocus ? 'counter' : null)
 
   const [attempt, setAttempt] = useState(0)
   const [index, setIndex] = useState(0)
@@ -151,7 +159,7 @@ export function QuizRunner({ slug, chapterTitle, questions, saveResult = true }:
             <button type="button" onClick={handleRetry} className="mb-btn mb-btn--primary">
               Gör om i ny ordning
             </button>
-            {missed.length > 0 && (
+            {missed.length > 0 && slug !== 'mina-fel' && (
               <Link to="/ovning/mina-fel" className="mb-btn mb-btn--secondary">
                 Öva dina fel
               </Link>
@@ -204,7 +212,7 @@ export function QuizRunner({ slug, chapterTitle, questions, saveResult = true }:
   const isLast = index + 1 === total
 
   return (
-    <div ref={rootRef} className="scroll-mt-4 space-y-4">
+    <div ref={rootRef} onKeyDown={handleKeyDown} className="scroll-mt-4 space-y-4">
       <div className="space-y-2">
         <div className="flex items-baseline justify-between gap-4 text-sm">
           <p ref={counterRef} tabIndex={-1} className="font-medium text-ink outline-none">
@@ -226,7 +234,7 @@ export function QuizRunner({ slug, chapterTitle, questions, saveResult = true }:
         )}
       </div>
 
-      <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} noValidate className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <fieldset key={`${attempt}-${q.id}`} className="surface-raised space-y-2 p-4 sm:p-5">
           <legend className="text-lg font-semibold leading-snug sm:text-xl">{q.prompt}</legend>
           {options.map((opt, position) => {

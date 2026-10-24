@@ -69,6 +69,7 @@ export function OvningMinaFel() {
           chapterTitle="dina fel"
           questions={set.questions}
           saveResult={false}
+          autoFocus
         />
       )}
 
