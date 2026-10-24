@@ -27,16 +27,16 @@ describe.skipIf(!available)('quotes match Sverige i fokus', () => {
       for (const q of ch.questions) {
         if (!q.source.quote) continue
         const needle = normalizeForQuote(q.source.quote)
-        let found = normalized.filter(([, text]) => text.includes(needle)).map(([n]) => n)
-        if (found.length === 0) {
-          // A quote may run over a page break: accept either page.
-          found = normalized
-            .filter(([n, text]) => (text + (normalized.find(([m]) => m === n + 1)?.[1] ?? '')).includes(needle))
-            .flatMap(([n]) => [n, n + 1])
+        // Whole-page matches plus matches that run over a page break (either page may be cited).
+        const found = new Set(normalized.filter(([, text]) => text.includes(needle)).map(([n]) => n))
+        for (const [n, text] of normalized) {
+          const next = normalized.find(([m]) => m === n + 1)?.[1]
+          if (!next || text.includes(needle) || next.includes(needle)) continue
+          if ((text + next).includes(needle)) found.add(n).add(n + 1)
         }
-        if (found.length === 0) problems.push(`${q.id}: quote not found in the PDF: "${q.source.quote}"`)
-        else if (q.source.page != null && !found.includes(q.source.page))
-          problems.push(`${q.id}: cited page ${q.source.page}, quote is on page ${found.join(', ')}`)
+        if (found.size === 0) problems.push(`${q.id}: quote not found in the PDF: "${q.source.quote}"`)
+        else if (q.source.page != null && !found.has(q.source.page))
+          problems.push(`${q.id}: cited page ${q.source.page}, quote is on page ${[...found].join(', ')}`)
       }
       expect(problems).toEqual([])
     })

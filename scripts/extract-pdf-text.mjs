@@ -11,7 +11,7 @@
  * the quote test is then skipped. The weekly source check runs with --strict.
  */
 import { createHash } from 'node:crypto'
-import { readFile, writeFile } from 'node:fs/promises'
+import { readFile, rm, writeFile } from 'node:fs/promises'
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs'
 
 const DEFAULT_PDF =
@@ -43,6 +43,8 @@ try {
     console.error(message)
     process.exit(1)
   }
+  // Remove an earlier extract so the quote test skips instead of checking stale text.
+  await rm(out, { force: true })
   console.warn(`${message} (skipping the quote check)`)
   process.exit(0)
 }

@@ -70,8 +70,11 @@ jobs:
         id: diff
         run: |
           set +e
-          git diff --no-index --unified=1 prev current -- ':!*.git' > changes.diff 2>/dev/null
-          git diff --no-index --quiet prev current; changed=$?
+          # Compare copies without git metadata, so only snapshot files count.
+          mkdir -p "$RUNNER_TEMP/before"
+          rsync -a --exclude .git prev/ "$RUNNER_TEMP/before/"
+          git diff --no-index --unified=1 "$RUNNER_TEMP/before" current > changes.diff
+          changed=$?
           [ "${{ steps.prev.outputs.baseline }}" = "true" ] && changed=0
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
@@ -100,8 +103,10 @@ jobs:
             gh issue create --title "$title" --body-file body.md
           fi
 
+      # Only complete snapshots are saved: every watched page fetched (status 0, or 2 for link
+      # warnings) and the PDF hashed. Otherwise last week's stay the baseline.
       - name: Save snapshots
-        if: steps.pages.outputs.status != '1'
+        if: steps.pages.outputs.status != '1' && steps.pdf.outputs.status == '0'
         run: |
           rsync -a --delete --exclude .git current/ prev/
           cd prev

@@ -6,6 +6,8 @@
  * that every official URL in src/ still answers, and prints a Markdown report.
  *
  * Usage: node scripts/check-sources.mjs [--out <dir>] [--report <file>]
+ * Exit code: 0 all fine, 1 a watched page could not be fetched (snapshots incomplete),
+ * 2 snapshots complete but a link is broken or redirects.
  */
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -54,7 +56,21 @@ export function pageText(html) {
 }
 
 async function get(url, method = 'GET') {
-  return fetch(url, { method, redirect: 'follow', headers: { 'user-agent': UA }, signal: AbortSignal.timeout(30_000) })
+  return fetch(url, { method, redirect: 'follow', headers: { 'user-agent': UA }, signal: AbortSignal.timeout(20_000) })
+}
+
+/** Run tasks with at most `limit` in flight, so an outage costs one timeout per batch, not per URL. */
+async function pool(items, limit, task) {
+  const results = new Array(items.length)
+  let next = 0
+  async function worker() {
+    while (next < items.length) {
+      const i = next++
+      results[i] = await task(items[i])
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker))
+  return results
 }
 
 function sourceFiles(dir) {
@@ -83,34 +99,36 @@ mkdirSync(outDir, { recursive: true })
 const lines = ['## Källbevakning', '']
 let failures = 0
 
-for (const page of WATCHED) {
+const pageLines = await pool(WATCHED, 5, async (page) => {
   try {
     const res = await get(page.url)
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     writeFileSync(join(outDir, `${page.id}.txt`), pageText(await res.text()) + '\n')
-    lines.push(`- ${page.id}: hämtad`)
+    return `- ${page.id}: hämtad`
   } catch (err) {
     failures++
-    lines.push(`- **${page.id}: kunde inte hämtas** (${err instanceof Error ? err.message : err}) ${page.url}`)
+    return `- **${page.id}: kunde inte hämtas** (${err instanceof Error ? err.message : err}) ${page.url}`
   }
-}
+})
+lines.push(...pageLines)
 
 lines.push('', '### Länkar i koden', '')
-const broken = []
-for (const url of officialUrls()) {
+const linkResults = await pool(officialUrls(), 6, async (url) => {
   try {
     let res = await get(url, 'HEAD')
     if (res.status === 405 || res.status === 403) res = await get(url)
-    if (!res.ok) broken.push(`- ${url}: HTTP ${res.status}`)
-    else if (res.redirected) broken.push(`- ${url}: omdirigeras till ${res.url} (uppdatera länken)`)
+    if (!res.ok) return `- ${url}: HTTP ${res.status}`
+    if (res.redirected) return `- ${url}: omdirigeras till ${res.url} (uppdatera länken)`
+    return null
   } catch (err) {
-    broken.push(`- ${url}: ${err instanceof Error ? err.message : err}`)
+    return `- ${url}: ${err instanceof Error ? err.message : err}`
   }
-}
+})
+const broken = linkResults.filter(Boolean)
 lines.push(...(broken.length ? broken : ['Alla länkar svarar utan omdirigering.']))
 
 const report = lines.join('\n') + '\n'
 if (reportFile) writeFileSync(reportFile, report)
 console.log(report)
 console.log(`check-sources done (${WATCHED.length - failures}/${WATCHED.length} pages, ${broken.length} link problems).`)
-if (broken.some((b) => !b.includes('omdirigeras'))) process.exitCode = 2
+process.exitCode = failures > 0 ? 1 : broken.length > 0 ? 2 : 0
