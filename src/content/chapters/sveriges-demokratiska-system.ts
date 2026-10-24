@@ -98,9 +98,9 @@ export const sverigesDemokratiskaSystem: ChapterContent = {
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Man behöver inte vara svensk medborgare. Man ska ha fyllt 18 år och ha varit folkbokförd i Sverige i sammanlagt tre år. EU-medborgare och nordiska medborgare behöver bara vara folkbokförda.',
+        'Man behöver inte vara svensk medborgare. Man ska ha fyllt 18 år och ha varit folkbokförd i Sverige i tre år i följd före valdagen. EU-medborgare och nordiska medborgare behöver bara vara folkbokförda. (Sverige i fokus skriver "sammanlagt tre år", men Valmyndigheten anger tre år i följd.)',
       explanationEn:
-        'You do not need to be a Swedish citizen. You must be 18 and have been registered in Sweden for three years in total. EU and Nordic citizens only need to be registered.',
+        'You do not need to be a Swedish citizen. You must be 18 and have been registered in Sweden for three consecutive years before election day. EU and Nordic citizens only need to be registered.',
       source: { chapter: 4, page: 14 },
     },
   ],
