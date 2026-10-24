@@ -45,6 +45,19 @@ const steps = [
   },
 ] as const
 
+const practice = [
+  {
+    to: '/ovning/blandat',
+    title: 'Blandade frågor',
+    text: 'Frågor från alla kapitel i slumpad ordning.',
+  },
+  {
+    to: '/ovning/mina-fel',
+    title: 'Öva dina fel',
+    text: 'Frågor som du har svarat fel på. De sparas bara i din webbläsare.',
+  },
+] as const
+
 export function Home() {
   const progress = getStudyProgress()
 
@@ -137,6 +150,33 @@ export function Home() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section aria-labelledby="practice-heading" className="space-y-4">
+        <h2 id="practice-heading" className="mb-section-head">
+          Öva mer
+        </h2>
+        <ul className="divide-y divide-line-strong">
+          {practice.map((item) => (
+            <li key={item.to}>
+              <Link
+                to={item.to}
+                className="group flex items-start gap-4 py-4 text-ink no-underline hover:text-ink"
+              >
+                <span className="flex-1">
+                  <span className="block font-semibold">{item.title}</span>
+                  <span className="mt-1 block text-ink-2">{item.text}</span>
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="pt-0.5 text-xl transition-transform duration-150 group-hover:translate-x-1"
+                >
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section aria-labelledby="official-heading" className="space-y-3">

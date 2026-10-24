@@ -108,6 +108,20 @@ export function KapitelIndex() {
           )
         })}
       </ol>
+
+      <section aria-labelledby="mixed-heading" className="space-y-3">
+        <h2 id="mixed-heading" className="mb-section-head">
+          Öva över alla kapitel
+        </h2>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Link to="/ovning/blandat" className="mb-btn mb-btn--secondary">
+            Blandade frågor
+          </Link>
+          <Link to="/ovning/mina-fel" className="mb-btn mb-btn--secondary">
+            Öva dina fel
+          </Link>
+        </div>
+      </section>
     </article>
   )
 }
