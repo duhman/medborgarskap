@@ -480,9 +480,8 @@ export const manskligaRattigheter: ChapterContent = {
         'Honour-related violence is not only aimed at women and girls. Boys, men and LGBTQI people can also be affected.',
       source: {
         chapter: 7,
-        page: 24,
-        quote:
-          'Detta riktas inte bara mot kvinnor och flickor utan även pojkar, män och hbtqi-personer kan vara utsatta.',
+        page: 23,
+        quote: 'Detta riktas inte bara mot kvinnor och flickor utan även pojkar, män',
       },
     },
     {

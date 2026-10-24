@@ -302,27 +302,6 @@ export const valfardssamhallet: ChapterContent = {
       },
     },
     {
-      id: 'k9-q11',
-      prompt: 'Vad är moms en förkortning av?',
-      options: [
-        { id: 'A', text: 'Medborgarskatt' },
-        { id: 'B', text: 'Marknadsskatt' },
-        { id: 'C', text: 'Medlemsskatt' },
-        { id: 'D', text: 'Mervärdesskatt' },
-      ],
-      correctOptionId: 'D',
-      explanationSv:
-        'Moms betyder mervärdesskatt. Det är en skatt som man betalar när man köper varor och tjänster.',
-      explanationEn:
-        'Moms stands for mervärdesskatt, value added tax. You pay it when you buy goods and services.',
-      source: {
-        chapter: 9,
-        page: 30,
-        quote:
-          'Moms (mervärdesskatt): Denna skatt betalar man när man köper varor och tjänster.',
-      },
-    },
-    {
       id: 'k9-q12',
       prompt: 'Vem finansierar högre utbildning och forskning vid högskolor och universitet?',
       options: [
@@ -383,69 +362,6 @@ export const valfardssamhallet: ChapterContent = {
         page: 30,
         quote:
           'Sjukvården bedrivs i huvudsak i offentlig regi men det finns även privata vårdgivare som finansieras med skattemedel.',
-      },
-    },
-    {
-      id: 'k9-q15',
-      prompt:
-        'Maria är gravid och går på kontroller på en mödravårdscentral. Vilken slags vård är det enligt materialet?',
-      options: [
-        { id: 'A', text: 'Primärvård' },
-        { id: 'B', text: 'Sjukhusvård' },
-        { id: 'C', text: 'Psykiatrisk vård' },
-        { id: 'D', text: 'Rehabilitering' },
-      ],
-      correctOptionId: 'A',
-      explanationSv:
-        'Primärvård är vårdcentraler, barnavårdscentraler och mödravårdscentraler. Mödravårdscentralen hör alltså till primärvården.',
-      explanationEn:
-        'Primary care means health centres, child health centres and maternity clinics. So the maternity clinic is part of primary care.',
-      source: {
-        chapter: 9,
-        page: 30,
-        quote: 'Primärvård: vårdcentraler, barnavårds- och mödravårdscentraler.',
-      },
-    },
-    {
-      id: 'k9-q16',
-      prompt: 'Var utförs till exempel operationer och avancerad behandling?',
-      options: [
-        { id: 'A', text: 'På vårdcentraler och mödravårdscentraler' },
-        { id: 'B', text: 'På akutsjukhus, länssjukhus och universitetssjukhus' },
-        { id: 'C', text: 'På boenden som kommunen har för äldre personer' },
-        { id: 'D', text: 'Hos socialtjänsten i den kommun där man bor' },
-      ],
-      correctOptionId: 'B',
-      explanationSv:
-        'Sjukhusvård ges på akutsjukhus, länssjukhus och universitetssjukhus. Där utförs till exempel operationer och avancerad behandling.',
-      explanationEn:
-        'Hospital care is given at emergency hospitals, county hospitals and university hospitals. That is where operations and advanced treatment take place.',
-      source: {
-        chapter: 9,
-        page: 30,
-        quote:
-          'Sjukhusvård: akutsjukhus, länssjukhus och universitetssjukhus där till exempel operationer och avancerad behandling utförs.',
-      },
-    },
-    {
-      id: 'k9-q17',
-      prompt:
-        'Vilka slags vård räknas också till sjukvården, förutom primärvård och sjukhusvård?',
-      options: [
-        { id: 'A', text: 'Förskola, fritidshem och grundskola' },
-        { id: 'B', text: 'Studiestöd, barnbidrag och pension' },
-        { id: 'C', text: 'Psykiatrisk vård, rehabilitering och tandvård' },
-        { id: 'D', text: 'Socialtjänst, äldreomsorg och barnomsorg' },
-      ],
-      correctOptionId: 'C',
-      explanationSv:
-        'Förutom primärvård och sjukhusvård nämner materialet psykiatrisk vård, rehabilitering och tandvård.',
-      explanationEn:
-        'Besides primary care and hospital care, the material mentions psychiatric care, rehabilitation and dental care.',
-      source: {
-        chapter: 9,
-        page: 30,
-        quote: 'Övrigt: psykiatrisk vård, rehabilitering och tandvård.',
       },
     },
     {

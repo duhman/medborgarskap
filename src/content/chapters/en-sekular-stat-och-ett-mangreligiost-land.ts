@@ -310,7 +310,7 @@ export const enSekularStatOchEttMangreligiostLand: ChapterContent = {
       correctOptionId: 'D',
       explanationSv: 'I takt med att invandringen har ökat har också antalet religioner som utövas i Sverige ökat. I dag finns så gott som alla världens religioner här.',
       explanationEn: 'As immigration has increased, so has the number of religions practised in Sweden. Today almost all the world\'s religions are represented.',
-      source: { chapter: 12, page: 43, quote: 'I takt med att invandringen har ökat har också mängden av religioner som utövas i Sverige ökat.' },
+      source: { chapter: 12, page: 42, quote: 'I takt med att invandringen har ökat har också mängden av religioner' },
     },
     {
       id: 'k12-q17',
