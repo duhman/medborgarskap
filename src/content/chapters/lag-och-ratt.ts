@@ -819,9 +819,9 @@ export const lagOchRatt: ChapterContent = {
       ],
       correctOptionId: 'D',
       explanationSv:
-        'Barn under 15 år är inte straffmyndiga. När ett yngre barn gör något brottsligt är det socialtjänsten som bestämmer vad som ska hända med barnet.',
+        'Som huvudregel är man straffmyndig från 15 år, och en tolvåring kan inte åtalas. När ett yngre barn gör något brottsligt är det socialtjänsten som bestämmer vad som ska hända med barnet.',
       explanationEn:
-        'Children under the age of criminal responsibility cannot be prosecuted. When a younger child commits a crime, social services decide what happens.',
+        'As a main rule, the age of criminal responsibility is 15, so a 12-year-old cannot be prosecuted. When a younger child commits a crime, social services decide what happens.',
       source: {
         chapter: 5,
         page: 19,

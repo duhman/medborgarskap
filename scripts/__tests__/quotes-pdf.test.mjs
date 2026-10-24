@@ -31,6 +31,7 @@ function closestMatch(needle, normalized) {
       best = { length: lo, page: n, after: text.slice(at, at + 30) }
     }
   }
+  if (best.length === 0) return 'no matching prefix'
   return `matches ${best.length} of ${needle.length} chars on page ${best.page}, then the PDF has "${best.after}"`
 }
 
