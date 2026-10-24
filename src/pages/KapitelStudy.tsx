@@ -45,6 +45,13 @@ export function KapitelStudy() {
         </p>
         <h1 className="text-3xl font-semibold sm:text-4xl">{chapter.title}</h1>
         <p className="text-lg leading-relaxed text-ink-2">{chapter.intro}</p>
+        {!chapter.isStub && (
+          <Link to={`/ovning/${chapter.slug}`} className="mb-btn mb-btn--secondary w-full sm:w-auto">
+            <span>
+              Öva direkt (<GfNum value={chapter.questions.length} /> frågor)
+            </span>
+          </Link>
+        )}
       </header>
 
       <section aria-labelledby="listen-read" className="space-y-4">
@@ -111,11 +118,27 @@ export function KapitelStudy() {
       )}
 
       {chapter.glossary && chapter.glossary.length > 0 && (
-        <section className="space-y-3" aria-labelledby="viktiga-ord">
-          <h2 id="viktiga-ord" className="mb-section-head">
-            Viktiga ord
-          </h2>
-          <dl className="divide-y divide-[var(--line)]">
+        <details className="group">
+          <summary
+            id="viktiga-ord"
+            className="mb-section-head flex min-h-11 list-none items-end justify-between gap-3"
+          >
+            <span>
+              Viktiga ord (<GfNum value={chapter.glossary.length} />)
+            </span>
+            <span className="flex items-center gap-1 normal-case tracking-normal text-ink-2">
+              <span className="group-open:hidden">Visa</span>
+              <span className="hidden group-open:inline">Dölj</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 12 12"
+                className="size-3 transition-transform duration-150 group-open:rotate-180"
+              >
+                <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            </span>
+          </summary>
+          <dl className="mt-3 divide-y divide-[var(--line)]">
             {chapter.glossary.map((g) => (
               <div key={g.term} className="space-y-0.5 py-3 first:pt-0">
                 <dt className="font-semibold">{g.term}</dt>
@@ -126,7 +149,7 @@ export function KapitelStudy() {
               </div>
             ))}
           </dl>
-        </section>
+        </details>
       )}
 
       <section aria-labelledby="practice" className="space-y-3 border border-ink bg-raised p-5 sm:p-6">

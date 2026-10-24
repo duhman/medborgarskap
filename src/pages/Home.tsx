@@ -197,6 +197,11 @@ export function Home() {
               UHR:s exempel på provfrågor
             </Link>
           </li>
+          <li>
+            <Link to="/vanliga-fragor" className="mb-link-quiet inline-flex min-h-11 items-center">
+              Vanliga frågor om provet och medborgarskap
+            </Link>
+          </li>
         </ul>
       </section>
     </article>
