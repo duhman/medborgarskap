@@ -15,6 +15,26 @@ function normalizeForQuote(s) {
   return s.replace(/[\s­\-‐-―]/g, '').replace(/[”“"]/g, '"').replace(/[’‘]/g, "'")
 }
 
+/** For a quote that is not found: how far it matches, and what the PDF has from that point. */
+function closestMatch(needle, normalized) {
+  let best = { length: 0, page: 0, after: '' }
+  for (const [n, text] of normalized) {
+    let lo = 0
+    let hi = needle.length
+    while (lo < hi) {
+      const mid = Math.ceil((lo + hi) / 2)
+      if (text.includes(needle.slice(0, mid))) lo = mid
+      else hi = mid - 1
+    }
+    if (lo > best.length) {
+      const at = text.indexOf(needle.slice(0, lo)) + lo
+      best = { length: lo, page: n, after: text.slice(at, at + 30) }
+    }
+  }
+  if (best.length === 0) return 'no matching prefix'
+  return `matches ${best.length} of ${needle.length} chars on page ${best.page}, then the PDF has "${best.after}"`
+}
+
 describe.skipIf(!available)('quotes match Sverige i fokus', () => {
   const { pages } = available
     ? JSON.parse(readFileSync(file, 'utf8'))
@@ -34,7 +54,8 @@ describe.skipIf(!available)('quotes match Sverige i fokus', () => {
           if (!next || text.includes(needle) || next.includes(needle)) continue
           if ((text + next).includes(needle)) found.add(n).add(n + 1)
         }
-        if (found.size === 0) problems.push(`${q.id}: quote not found in the PDF: "${q.source.quote}"`)
+        if (found.size === 0)
+          problems.push(`${q.id}: quote not found (${closestMatch(needle, normalized)}): "${q.source.quote}"`)
         else if (q.source.page != null && !found.has(q.source.page))
           problems.push(`${q.id}: cited page ${q.source.page}, quote is on page ${[...found].join(', ')}`)
       }

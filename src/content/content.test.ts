@@ -53,6 +53,59 @@ describe('chapter catalog', () => {
     }
   })
 
+  it('gives every chapter a review, an easy-Swedish summary and a glossary', () => {
+    for (const ch of getAllChapters()) {
+      expect(ch.review, ch.slug).toBeTruthy()
+      expect(ch.summaryEasy?.length ?? 0, ch.slug).toBeGreaterThanOrEqual(3)
+      expect(ch.glossary?.length ?? 0, ch.slug).toBeGreaterThanOrEqual(8)
+    }
+  })
+
+  it('gives every question a quote from the material and an English explanation', () => {
+    for (const ch of getAllChapters()) {
+      for (const q of ch.questions) {
+        const quote = q.source.quote ?? ''
+        expect(quote.length, `${q.id} quote`).toBeGreaterThanOrEqual(30)
+        expect(quote.length, `${q.id} quote`).toBeLessThanOrEqual(200)
+        expect(q.explanationEn?.trim(), `${q.id} explanationEn`).toBeTruthy()
+      }
+    }
+  })
+
+  it('has no en or em dashes in chapter text', () => {
+    const dash = /[–—]/
+    for (const ch of getAllChapters()) {
+      const strings = [
+        ch.intro,
+        ...(ch.bullets ?? []),
+        ...(ch.summaryEasy ?? []),
+        ...(ch.glossary ?? []).flatMap((g) => [g.term, g.sv, g.en]),
+        ...ch.questions.flatMap((q) => [
+          q.prompt,
+          q.explanationSv,
+          q.explanationEn ?? '',
+          q.source.quote ?? '',
+          ...q.options.map((o) => o.text),
+        ]),
+      ]
+      for (const s of strings) expect(dash.test(s), s).toBe(false)
+    }
+  })
+
+  // Om rätt svar ofta är det längsta alternativet kan man gissa rätt utan att kunna stoffet.
+  it('rarely makes the correct option clearly the longest', () => {
+    for (const ch of getAllChapters()) {
+      const flagged = ch.questions.filter((q) => {
+        const correct = q.options.find((o) => o.id === q.correctOptionId)!.text.length
+        const others = q.options.filter((o) => o.id !== q.correctOptionId).map((o) => o.text.length)
+        return correct > Math.max(...others) * 1.15
+      })
+      expect(flagged.length, `${ch.slug}: ${flagged.map((q) => q.id).join(', ')}`).toBeLessThanOrEqual(
+        Math.floor(ch.questions.length / 15),
+      )
+    }
+  })
+
   it('resolves every slug through getChapterBySlug', () => {
     for (const ch of getAllChapters()) {
       const loaded = getChapterBySlug(ch.slug)
