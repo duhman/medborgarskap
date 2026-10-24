@@ -30,6 +30,9 @@ function FocusMainOnNavigate() {
 
     previousPathnameRef.current = pathname
 
+    // A new page starts at the top. 'instant' skips the smooth scroll set on <html>.
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+
     const frame = window.requestAnimationFrame(() => {
       const main = document.getElementById('main-content')
       if (main instanceof HTMLElement) {

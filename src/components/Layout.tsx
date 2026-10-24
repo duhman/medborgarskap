@@ -11,6 +11,12 @@ const siblingSites = [
   { label: 'StockholmPuls', href: 'https://stockholm.adrianmarten.net' },
 ] as const
 
+const siteLinks = [
+  { to: '/om', label: 'Om' },
+  { to: '/integritet', label: 'Integritet' },
+  { to: '/villkor', label: 'Villkor' },
+] as const
+
 export function Layout() {
   return (
     <div className="flex min-h-dvh flex-col">
@@ -22,70 +28,60 @@ export function Layout() {
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 outline-none"
+        className="mx-auto w-full max-w-3xl flex-1 px-4 pt-8 pb-16 outline-none sm:pt-12"
       >
         <Outlet />
       </main>
-      <footer role="contentinfo" className="border-t border-line-strong bg-paper px-4 py-8">
-        <div className="mx-auto max-w-3xl space-y-6">
+      <footer role="contentinfo" className="border-t border-line-strong bg-paper-muted">
+        <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">
           <Disclaimer compact />
-          <p className="text-xs leading-relaxed text-ink-3">
-            Fristående övning till medborgarskapsprovet, baserad på UHR:s Sverige i fokus.
-          </p>
-          <div className="flex flex-col gap-6 sm:flex-row sm:justify-between sm:gap-8">
+          <div className="grid gap-8 sm:grid-cols-2">
             <div className="space-y-2">
-              <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink-3">
-                Medborgarskap
-              </p>
-              <nav
-                aria-label="Medborgarskap"
-                className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
-              >
-                <Link to="/integritet" className="text-accent hover:underline">
-                  Integritet
-                </Link>
-                <Link to="/villkor" className="text-accent hover:underline">
-                  Villkor
-                </Link>
-                <Link to="/om" className="text-accent hover:underline">
-                  Om
-                </Link>
+              <p className="mb-section-head">Medborgarskap</p>
+              <nav aria-label="Medborgarskap">
+                <ul className="flex flex-wrap gap-x-5 text-[15px]">
+                  {siteLinks.map((l) => (
+                    <li key={l.to}>
+                      <Link to={l.to} className="mb-link-quiet inline-flex min-h-11 items-center">
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </nav>
             </div>
             <div className="space-y-2">
-              <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink-3">
-                Fler projekt
-              </p>
-              <nav
-                aria-label="Fler projekt"
-                className="flex flex-wrap gap-x-4 gap-y-1 text-sm"
-              >
-                {siblingSites.map((site) => (
-                  <a
-                    key={site.href}
-                    href={site.href}
-                    className="text-ink/75 hover:text-accent hover:underline"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${site.label}, öppnas i ny flik`}
-                  >
-                    {site.label}
-                  </a>
-                ))}
+              <p className="mb-section-head">Fler projekt</p>
+              <nav aria-label="Fler projekt">
+                <ul className="flex flex-wrap gap-x-5 text-[15px]">
+                  {siblingSites.map((site) => (
+                    <li key={site.href}>
+                      <a
+                        href={site.href}
+                        className="mb-link-quiet inline-flex min-h-11 items-center"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {site.label}
+                        <span className="sr-only"> (öppnas i ny flik)</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </nav>
             </div>
           </div>
-          <p className="text-xs text-ink-3">
+          <p className="text-sm text-ink-3">
             <a
               href="https://adrianmarten.net"
-              className="text-accent underline decoration-accent/40 underline-offset-2 hover:decoration-accent"
+              className="mb-link-quiet"
               target="_blank"
-              rel="noreferrer"
-              aria-label="Made by Adrian Martén, öppnas i ny flik"
+              rel="noopener noreferrer"
             >
               Made by Adrian Martén
+              <span className="sr-only"> (öppnas i ny flik)</span>
             </a>{' '}
-            · © 2026 Medborgarskap
+            · © <span className="gf-num">2026</span> Medborgarskap
           </p>
         </div>
       </footer>

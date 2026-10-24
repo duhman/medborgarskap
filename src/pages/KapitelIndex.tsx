@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { getAllChapters, inledningMp3Url, sverigeIFokusPdfUrl } from '../content/chapters/meta'
 import { officialLinks } from '../config/status'
+import { ExternalLink } from '../components/ExternalLink'
 import { GfNum } from '../components/GfNum'
+import { ProgressMeter } from '../components/ProgressMeter'
 import { getProgressState, getQuizResult } from '../lib/progress'
 
 export function KapitelIndex() {
@@ -14,75 +16,98 @@ export function KapitelIndex() {
 
   return (
     <article className="space-y-8">
-      <header className="space-y-3">
-        <h1 className="text-3xl font-semibold">Kapitel i Sverige i fokus</h1>
-        <p className="text-ink/85">
-          Alla kapitel och ljudfiler kommer från UHR. Vi länkar till PDF och MP3, vi speglar inte
-          PDF:en här.
+      <header className="space-y-4">
+        <h1 className="text-3xl font-semibold sm:text-4xl">Kapitel i Sverige i fokus</h1>
+        <p className="text-lg leading-relaxed text-ink-2">
+          Boken har {totalChapters} kapitel. Välj ett kapitel för att läsa en sammanfattning,
+          lyssna och öva. Boken och ljudfilerna finns hos UHR.
         </p>
-        {(visitedCount > 0 || quizCount > 0) && (
-          <p className="text-sm text-ink-3">
-            <GfNum value={visitedCount} />/<GfNum value={totalChapters} /> kapitel besökta
-            {quizCount > 0 ? (
-              <>
-                {' '}
-                · <GfNum value={quizCount} /> quiz genomförda
-              </>
-            ) : (
-              ''
-            )}
-          </p>
-        )}
-        <p className="flex flex-wrap gap-3 text-sm">
-          <a href={sverigeIFokusPdfUrl} className="text-accent hover:underline" target="_blank" rel="noreferrer">
-            Hela PDF (UHR)
-          </a>
-          <a href={inledningMp3Url} className="text-accent hover:underline" target="_blank" rel="noreferrer">
-            Inledning (MP3)
-          </a>
-          <a href={officialLinks.utbildningsmaterial} className="text-accent hover:underline" target="_blank" rel="noreferrer">
-            Utbildningsmaterial
-          </a>
-        </p>
+        <ul className="flex flex-wrap gap-x-5 text-[15px]">
+          <li>
+            <ExternalLink href={sverigeIFokusPdfUrl} className="mb-link-quiet inline-flex min-h-11 items-center">
+              Hela boken (PDF)
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href={inledningMp3Url} className="mb-link-quiet inline-flex min-h-11 items-center">
+              Inledning (MP3)
+            </ExternalLink>
+          </li>
+          <li>
+            <ExternalLink
+              href={officialLinks.utbildningsmaterial}
+              className="mb-link-quiet inline-flex min-h-11 items-center"
+            >
+              Alla ljudfiler
+            </ExternalLink>
+          </li>
+        </ul>
       </header>
 
-      <ul className="surface-raised divide-y divide-line-strong">
+      {(visitedCount > 0 || quizCount > 0) && (
+        <section aria-label="Dina framsteg" className="space-y-2">
+          <p className="text-sm text-ink-2">
+            <GfNum value={quizCount} /> av <GfNum value={totalChapters} /> kapitel övade ·{' '}
+            <GfNum value={visitedCount} /> lästa
+          </p>
+          <ProgressMeter value={quizCount} max={totalChapters} />
+        </section>
+      )}
+
+      <ol className="surface-raised divide-y divide-line-strong">
         {chapters.map((ch) => {
           const result = getQuizResult(ch.slug)
+          const status = result
+            ? `Övat, senast ${result.score} av ${result.total} rätt`
+            : visitedChapters.includes(ch.slug)
+              ? 'Läst, inte övat'
+              : 'Inte påbörjat'
           return (
             <li key={ch.slug}>
               <Link
                 to={`/kapitel/${ch.slug}`}
-                className="flex flex-col gap-1 px-5 py-4 transition-colors hover:bg-paper-muted sm:flex-row sm:items-center sm:justify-between"
+                className="group flex items-center gap-4 px-4 py-4 text-ink no-underline transition-colors hover:bg-paper-muted hover:text-ink sm:px-5"
               >
-                <span>
-                  <span className="text-sm text-ink-3">
-                    Kapitel <GfNum value={ch.number} />
+                <GfNum
+                  value={ch.number}
+                  className="w-7 shrink-0 text-right text-xl leading-none text-ink-3"
+                />
+                <span className="min-w-0 flex-1">
+                  <span className="block font-medium leading-snug">{ch.title}</span>
+                  <span className="mt-1 flex items-center gap-2 text-sm text-ink-3">
+                    <span
+                      aria-hidden="true"
+                      className={`inline-block size-2.5 shrink-0 rounded-full border ${
+                        result ? 'border-accent bg-accent' : 'border-ink-3 bg-transparent'
+                      }`}
+                    />
+                    <span className="sr-only">{status}. </span>
+                    <span aria-hidden="true">
+                      {result ? (
+                        <>
+                          Senast <GfNum value={result.score} /> av <GfNum value={result.total} /> rätt
+                        </>
+                      ) : ch.isStub ? (
+                        'Frågor kommer snart'
+                      ) : (
+                        <>
+                          <GfNum value={ch.questions.length} /> frågor
+                        </>
+                      )}
+                    </span>
                   </span>
-                  <span className="mt-0.5 block font-medium">{ch.title}</span>
                 </span>
-                <span className="text-sm text-ink-3">
-                  {ch.isStub ? (
-                    'Länkar klara, quiz kommer'
-                  ) : (
-                    <>
-                      <GfNum value={ch.questions.length} /> övningsfrågor
-                    </>
-                  )}
-                  {result ? (
-                    <>
-                      {' '}
-                      · Senast <GfNum value={result.score} />/<GfNum value={result.total} />
-                    </>
-                  ) : (
-                    ''
-                  )}
+                <span
+                  aria-hidden="true"
+                  className="text-lg text-ink-3 transition-transform duration-150 group-hover:translate-x-1 group-hover:text-ink"
+                >
+                  →
                 </span>
               </Link>
             </li>
           )
         })}
-      </ul>
+      </ol>
     </article>
   )
 }

@@ -1,38 +1,43 @@
 import { Link } from 'react-router-dom'
 import { officialLinks, uhrStatus } from '../config/status'
+import { ExternalLink } from './ExternalLink'
 
 export function StatusStrip() {
   return (
-    <aside
-      className="border-b border-line-strong bg-paper-muted px-4 py-3 text-sm"
-      aria-label="UHR status"
-    >
-      <div className="mx-auto flex max-w-3xl flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          <span className="font-medium text-ink">Nästa provtillfälle:</span>{' '}
-          {uhrStatus.nextSitting}
-        </p>
-        <p className="text-ink/80">
-          Anmälan: {uhrStatus.registrationOpen ? 'öppen' : 'stängd enligt uhr.se'}
-        </p>
-      </div>
-      <p className="mx-auto mt-2 max-w-3xl text-ink/75">{uhrStatus.notes}</p>
-      <p className="mx-auto mt-1 max-w-3xl font-mono text-xs text-ink-3">
-        Bekräfta alltid datum och anmälan på{' '}
-        <a
-          href={officialLinks.medborgarskapsprov}
-          className="font-sans text-accent underline-offset-2 hover:underline"
-          target="_blank"
-          rel="noreferrer"
-        >
-          uhr.se
-        </a>
-        . Läs mer om statusremsan på{' '}
-        <Link to="/om" className="font-sans text-accent underline-offset-2 hover:underline">
-          Om-sidan
-        </Link>
-        .
-      </p>
+    <aside className="border-b border-line-strong bg-paper-muted text-sm" aria-label="Provstatus">
+      <details className="group mx-auto max-w-3xl px-4">
+        <summary className="flex min-h-11 list-none items-center justify-between gap-3 py-2">
+          <span>
+            <span className="font-medium text-ink">Nästa prov:</span>{' '}
+            <span className="text-ink-2">{uhrStatus.nextSitting}</span>
+          </span>
+          <span className="flex shrink-0 items-center gap-1 text-ink-2 group-hover:text-ink">
+            <span className="group-open:hidden">Mer</span>
+            <span className="hidden group-open:inline">Dölj</span>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 12 12"
+              className="size-3 transition-transform duration-150 group-open:rotate-180"
+            >
+              <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+          </span>
+        </summary>
+        <div className="space-y-2 pb-3 text-ink-2">
+          <p>
+            <span className="font-medium text-ink">Anmälan:</span>{' '}
+            {uhrStatus.registrationOpen ? 'öppen' : 'stängd enligt uhr.se'}
+          </p>
+          <p>{uhrStatus.notes}</p>
+          <p>
+            Kontrollera alltid datum och anmälan på{' '}
+            <ExternalLink href={officialLinks.medborgarskapsprov}>uhr.se</ExternalLink>.{' '}
+            <Link to="/om" className="mb-link-quiet">
+              Om statusen
+            </Link>
+          </p>
+        </div>
+      </details>
     </aside>
   )
 }

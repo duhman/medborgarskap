@@ -45,11 +45,13 @@ export function Om() {
                   <td className="px-4 py-2">
                     <a
                       href={s.url}
-                      className="break-all text-accent underline underline-offset-2"
+                      className="mb-link-quiet"
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                     >
-                      {s.url}
+                      {new URL(s.url).hostname.replace(/^www\./, '')}
+                      <span aria-hidden="true"> ↗</span>
+                      <span className="sr-only"> (öppnas i ny flik)</span>
                     </a>
                   </td>
                 </tr>
