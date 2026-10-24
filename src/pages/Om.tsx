@@ -143,6 +143,13 @@ export function Om() {
             .
           </li>
         </ul>
+        <p>
+          Svar om provdatum, format och krav finns samlade på{' '}
+          <Link to="/vanliga-fragor" className="text-accent underline underline-offset-2">
+            Vanliga frågor
+          </Link>
+          .
+        </p>
         <p className="text-ink-2">
           Sidan är inte en del av UHR, Skolverket eller Migrationsverket, och UHR har inte granskat
           frågorna. Läs alltid materialet själv: övningsfrågorna är ett komplement.

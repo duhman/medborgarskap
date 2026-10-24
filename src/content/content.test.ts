@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { chapterPageRanges, getAllChapters, getChapterBySlug, SOURCE_PDF_VERSION } from './chapters/meta'
+import { faqEntries } from './faq'
 import { officialSampleQuestions } from './officialSamples'
 import { validateChapterQuestions } from './types'
 
@@ -121,6 +122,18 @@ describe('official UHR samples', () => {
     for (const q of officialSampleQuestions) {
       expect(q.options).toHaveLength(4)
       expect(q.note.toLowerCase()).toContain('uhr')
+    }
+  })
+})
+
+describe('FAQ', () => {
+  it('has unique ids, an answer and a dated official source for every entry, and no long dashes', () => {
+    expect(new Set(faqEntries.map((f) => f.id)).size).toBe(faqEntries.length)
+    for (const f of faqEntries) {
+      expect(f.answer.length, f.id).toBeGreaterThan(0)
+      expect(f.sources.length, f.id).toBeGreaterThan(0)
+      for (const s of f.sources) expect(s.checkedAt, f.id).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      for (const text of [f.question, ...f.answer]) expect(/[\u2013\u2014]/.test(text), text).toBe(false)
     }
   })
 })

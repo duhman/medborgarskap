@@ -1,4 +1,5 @@
 import { chapterMetaList, sverigeIFokusPdfUrl } from '../content/chapters/meta'
+import { faqEntries } from '../content/faq'
 import { getDocumentDescription } from '../lib/documentDescription'
 import { getDocumentTitle, SITE_TITLE } from '../lib/documentTitle'
 import { canonicalPathname, canonicalUrl, SITE_ORIGIN } from '../lib/routeDocumentMeta'
@@ -71,6 +72,31 @@ export function routeJsonLd(pathname: string, lastModified?: string): JsonLd[] {
         isBasedOn: SOURCE,
         ...dates,
       },
+    ]
+  }
+
+  if (path === '/vanliga-fragor') {
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        name,
+        url,
+        description,
+        inLanguage: 'sv',
+        isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
+        author: AUTHOR,
+        ...dates,
+        mainEntity: faqEntries.map((f) => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: { '@type': 'Answer', text: f.answer.join(' ') },
+        })),
+      },
+      breadcrumbs([
+        { name: SITE_TITLE, path: '/' },
+        { name: 'Vanliga frågor', path },
+      ]),
     ]
   }
 

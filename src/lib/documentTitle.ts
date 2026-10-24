@@ -3,7 +3,7 @@ import { chapterMetaList } from '../content/chapters/meta'
 export const SITE_TITLE = 'Medborgarskap'
 
 /** Home and fallback title: names the exam so search and AI answers can match it. */
-export const HOME_TITLE = 'Medborgarskap: gratis övning till medborgarskapsprovet'
+export const HOME_TITLE = 'Medborgarskapsprovet: gratis övningsfrågor och studiehjälp'
 
 const staticPageNames: Record<string, string> = {
   '/behover-jag': 'Behöver jag provet?',
@@ -11,6 +11,7 @@ const staticPageNames: Record<string, string> = {
   '/provfragor': 'UHR:s exempel på provfrågor',
   '/ovning/blandat': 'Blandade övningsfrågor',
   '/ovning/mina-fel': 'Öva dina fel',
+  '/vanliga-fragor': 'Vanliga frågor om medborgarskapsprovet',
   '/om': 'Om Medborgarskap',
   '/integritet': 'Integritetspolicy',
   '/villkor': 'Användarvillkor',
@@ -30,8 +31,8 @@ function pageName(pathname: string): string | null {
 
   const quizMatch = path.match(/^\/ovning\/([^/]+)$/)
   if (quizMatch) {
-    const label = chapterLabel(quizMatch[1])
-    return label ? `Övning, ${label}` : 'Övningen hittades inte'
+    const chapter = chapterMetaList.find((c) => c.slug === quizMatch[1])
+    return chapter ? `Övningsfrågor kapitel ${chapter.number}: ${chapter.title}` : 'Övningen hittades inte'
   }
 
   return null
