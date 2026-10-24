@@ -60,6 +60,114 @@
     border: var(--border-hairline) solid var(--line-strong);
     background-color: var(--bg-raised);
   }
+
+  /*
+   * Buttons and button-like links. Unlike .gf-button they wrap, so long Swedish
+   * labels never overflow a 320 px screen. 48 px tall: the audience is mostly on phones.
+   */
+  .mb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 48px;
+    padding: 10px 20px;
+    border: var(--border-hairline) solid transparent;
+    border-radius: var(--radius-control);
+    font-family: var(--font-text);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      transform var(--dur-instant) var(--ease-out),
+      background-color var(--dur-quick) var(--ease-out),
+      border-color var(--dur-quick) var(--ease-out),
+      filter var(--dur-quick) var(--ease-out);
+  }
+
+  .mb-btn:active {
+    transform: translateY(1px) scale(0.98);
+  }
+
+  .mb-btn--primary {
+    background-color: var(--site-accent);
+    border-color: var(--site-accent);
+    color: var(--site-accent-on);
+  }
+
+  .mb-btn--primary:hover {
+    background-color: var(--site-accent-deep);
+    border-color: var(--site-accent-deep);
+    color: var(--site-accent-on);
+  }
+
+  .mb-btn--secondary {
+    background-color: var(--bg-raised);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .mb-btn--secondary:hover {
+    background-color: var(--bg-sunk);
+    color: var(--ink);
+  }
+
+  .mb-btn:disabled,
+  .mb-btn[aria-disabled='true'] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Answer and checklist rows: the whole row is the tap target. */
+  .mb-choice {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 52px;
+    padding: 12px 16px;
+    border: var(--border-hairline) solid var(--line-strong);
+    border-radius: var(--radius-control);
+    background-color: var(--bg-raised);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-quick) var(--ease-out),
+      background-color var(--dur-quick) var(--ease-out);
+  }
+
+  .mb-choice:hover {
+    border-color: var(--ink-3);
+  }
+
+  .mb-choice:has(input:checked) {
+    border-color: var(--ink);
+    background-color: var(--bg-sunk);
+  }
+
+  .mb-choice:has(input:focus-visible) {
+    outline: var(--border-focus) solid var(--accent-ring);
+    outline-offset: 2px;
+  }
+
+  .mb-choice input:focus-visible {
+    outline: none;
+  }
+
+  /* Mono section label with a 1 px ink rule below (Grundform section head). */
+  .mb-section-head {
+    padding-bottom: var(--space-2);
+    border-bottom: var(--border-hairline) solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
 }
 
 /* Site chrome: in `site` so it beats Grundform base but never a utility. */
@@ -94,5 +202,53 @@
 
   #main-content:focus:not(:focus-visible) {
     outline: none;
+  }
+
+  /* Long Swedish compounds (samhällskunskapsprovet) must not overflow a phone screen. */
+  body {
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  input[type='radio'],
+  input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin: 0;
+    accent-color: var(--site-accent);
+  }
+
+  /*
+   * A legend inside a bordered card sits on the border by default and breaks
+   * when it wraps. Floating it puts it inside the card like a heading.
+   */
+  fieldset.surface-raised > legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin-bottom: var(--space-3);
+  }
+
+  fieldset.surface-raised > legend + * {
+    clear: both;
+  }
+
+  summary {
+    cursor: pointer;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
   }
 }
