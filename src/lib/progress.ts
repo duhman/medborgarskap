@@ -66,10 +66,18 @@ function writeState(state: ProgressState): void {
   listeners.forEach((listener) => listener())
 }
 
-/** Subscribe to progress changes, for useSyncExternalStore. */
+/** Subscribe to progress changes in this tab and in other tabs, for useSyncExternalStore. */
 export function subscribeProgress(listener: () => void): () => void {
   listeners.add(listener)
-  return () => listeners.delete(listener)
+  const onStorage = (e: StorageEvent) => {
+    // key is null when another tab clears all storage.
+    if (e.key === STORAGE_KEY || e.key === null) listener()
+  }
+  if (typeof window !== 'undefined') window.addEventListener('storage', onStorage)
+  return () => {
+    listeners.delete(listener)
+    if (typeof window !== 'undefined') window.removeEventListener('storage', onStorage)
+  }
 }
 
 export function markChapterVisited(slug: string): void {

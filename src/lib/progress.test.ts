@@ -87,3 +87,17 @@ describe('derivePathwayOutcome', () => {
     ).toBe('unclear')
   })
 })
+
+describe('subscribeProgress', () => {
+  it('notifies on writes in another tab and stops after unsubscribe', async () => {
+    const { subscribeProgress } = await import('./progress')
+    let calls = 0
+    const off = subscribeProgress(() => calls++)
+    window.dispatchEvent(new StorageEvent('storage', { key: 'medborgarskap-progress-v1' }))
+    window.dispatchEvent(new StorageEvent('storage', { key: 'something-else' }))
+    expect(calls).toBe(1)
+    off()
+    window.dispatchEvent(new StorageEvent('storage', { key: null }))
+    expect(calls).toBe(1)
+  })
+})

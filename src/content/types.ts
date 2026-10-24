@@ -3,7 +3,7 @@ export type QuestionSource = {
   page?: number
   /**
    * Kort ordagrant utdrag ur Sverige i fokus (en mening eller del av en) som stöder rätt svar.
-   * scripts/check-quotes.mjs kontrollerar att det finns på angiven sida i PDF:en.
+   * scripts/__tests__/quotes-pdf.test.mjs kontrollerar i CI att det finns på angiven sida i PDF:en.
    */
   quote?: string
 }
