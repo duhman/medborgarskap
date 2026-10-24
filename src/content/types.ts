@@ -1,6 +1,26 @@
 export type QuestionSource = {
   chapter: number
   page?: number
+  /**
+   * Kort ordagrant utdrag ur Sverige i fokus (en mening eller del av en) som stöder rätt svar.
+   * scripts/check-quotes.mjs kontrollerar att det finns på angiven sida i PDF:en.
+   */
+  quote?: string
+}
+
+/** Granskning av ett kapitels frågor mot en viss version av Sverige i fokus. */
+export type ChapterReview = {
+  /** Datum (YYYY-MM-DD) då frågorna senast kontrollerades mot PDF:en. */
+  reviewedAt: string
+  /** Versionsdatum för PDF:en som frågorna granskades mot, t.ex. korrigerad version 2026-08-10. */
+  pdfVersion: string
+}
+
+export type GlossaryTerm = {
+  term: string
+  /** Förklaring på lätt svenska. */
+  sv: string
+  en: string
 }
 
 export type QuizOption = {
@@ -27,6 +47,10 @@ export type ChapterContent = {
   bullets?: string[]
   questions: QuizQuestion[]
   isStub?: boolean
+  /** Kort sammanfattning på lätt svenska, några stycken. */
+  summaryEasy?: string[]
+  glossary?: GlossaryTerm[]
+  review?: ChapterReview
 }
 
 export function validateQuestion(q: QuizQuestion): string[] {

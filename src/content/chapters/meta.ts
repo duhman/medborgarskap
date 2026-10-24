@@ -1,4 +1,4 @@
-import type { ChapterContent } from '../types'
+import type { ChapterContent, QuizQuestion } from '../types'
 import { arbetsmarknadOchPrivatekonomi } from './arbetsmarknad-och-privatekonomi'
 import { enSekularStatOchEttMangreligiostLand } from './en-sekular-stat-och-ett-mangreligiost-land'
 import { lagOchRatt } from './lag-och-ratt'
@@ -19,6 +19,17 @@ const PDF =
 const UHR = 'https://www.uhr.se/globalassets/_uhr.se/medborgarskapsprovet/utbildningsmaterial'
 
 export const sverigeIFokusPdfUrl = PDF
+
+/**
+ * Versionsdatum för den PDF som frågorna granskas mot (UHR: "Korrigerad version 2026-08-10").
+ * Byt bara när UHR publicerar en ny version. Testerna kräver då att varje kapitel granskas om.
+ */
+export const SOURCE_PDF_VERSION = '2026-08-10'
+
+/** Länk till en viss sida i PDF:en (webbläsarens PDF-visare följer #page=). */
+export function pdfPageUrl(page?: number): string {
+  return page != null ? `${PDF}#page=${page}` : PDF
+}
 
 /** Sidintervall per kapitel enligt innehållsförteckningen i Sverige i fokus (korr. 2026-08-10). */
 export const chapterPageRanges: Record<number, [first: number, last: number]> = {
@@ -189,3 +200,8 @@ export function getAllChapters(): ChapterContent[] {
 }
 
 export const inledningMp3Url = `${UHR}/01_inledning.mp3`
+
+/** Alla frågor från alla kapitel, i kapitelordning. */
+export function getAllQuestions(): QuizQuestion[] {
+  return fullChapters.flatMap((c) => c.questions)
+}

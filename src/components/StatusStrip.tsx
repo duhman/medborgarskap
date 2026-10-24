@@ -30,6 +30,7 @@ export function StatusStrip() {
           </p>
           <p>{uhrStatus.notes}</p>
           <p>
+            Senast kontrollerad mot uhr.se: <span className="gf-num">{uhrStatus.checkedAt}</span>.
             Kontrollera alltid datum och anmälan på{' '}
             <ExternalLink href={officialLinks.medborgarskapsprov}>uhr.se</ExternalLink>.{' '}
             <Link to="/om" className="mb-link-quiet">

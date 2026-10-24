@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { chapterPageRanges, getAllChapters, getChapterBySlug } from './chapters/meta'
+import { chapterPageRanges, getAllChapters, getChapterBySlug, SOURCE_PDF_VERSION } from './chapters/meta'
 import { officialSampleQuestions } from './officialSamples'
 import { validateChapterQuestions } from './types'
 
@@ -43,6 +43,14 @@ describe('chapter catalog', () => {
   it('has unique question prompts', () => {
     const prompts = getAllChapters().flatMap((ch) => ch.questions.map((q) => q.prompt))
     expect(new Set(prompts).size).toBe(prompts.length)
+  })
+
+  it('marks reviewed chapters as reviewed against the current PDF version', () => {
+    for (const ch of getAllChapters()) {
+      if (!ch.review) continue
+      expect(ch.review.pdfVersion, ch.slug).toBe(SOURCE_PDF_VERSION)
+      expect(ch.review.reviewedAt, ch.slug).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    }
   })
 
   it('resolves every slug through getChapterBySlug', () => {

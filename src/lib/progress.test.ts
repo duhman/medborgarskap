@@ -1,5 +1,29 @@
-import { describe, expect, it } from 'vitest'
-import { derivePathwayOutcome, type PathwayAnswers } from './progress'
+import { beforeEach, describe, expect, it } from 'vitest'
+import {
+  derivePathwayOutcome,
+  getMistakeIds,
+  recordAnswers,
+  resetProgressForTests,
+  type PathwayAnswers,
+} from './progress'
+
+describe('recordAnswers', () => {
+  beforeEach(() => resetProgressForTests())
+
+  it('adds wrong answers, removes them once answered right and ignores skipped questions', () => {
+    recordAnswers([
+      { id: 'a', correct: false },
+      { id: 'b', correct: false },
+      { id: 'c', correct: true },
+    ])
+    expect(getMistakeIds().sort()).toEqual(['a', 'b'])
+    recordAnswers([
+      { id: 'a', correct: true },
+      { id: 'b', correct: null },
+    ])
+    expect(getMistakeIds()).toEqual(['b'])
+  })
+})
 
 describe('derivePathwayOutcome', () => {
   it('treats age 67+ as maybe exempt', () => {
