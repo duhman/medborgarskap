@@ -27,5 +27,5 @@ export const officialLinks = {
   migrationsverket:
     'https://www.migrationsverket.se/du-vill-ansoka/svenskt-medborgarskap/medborgarskap-for-vuxna/medborgarskap-for-vuxna.html',
   reformNotice:
-    'https://www.migrationsverket.se/nyheter/nyhetsarkiv/2026-05-06-nya-regler-for-svenskt-medborgarskap-fran-6-juni-2026.html',
+    'https://www.migrationsverket.se/nyhetsarkiv/nyareglerforsvensktmedborgarskapfran6juni2026.5.4d7d222919d2a911cf7a35.html',
 } as const

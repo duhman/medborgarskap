@@ -10,7 +10,7 @@ export type PathwayQuestionKey = 'age' | 'school' | 'komvux' | 'sfi'
 const MV_VUXNA =
   'https://www.migrationsverket.se/du-vill-ansoka/svenskt-medborgarskap/medborgarskap-for-vuxna/medborgarskap-for-vuxna.html'
 const MV_SVENSKA_NYHET =
-  'https://www.migrationsverket.se/nyheter/nyhetsarkiv/2026-09-30-medborgarskapsprovet-i-svenska-kan-flyttas-fram.html'
+  'https://www.migrationsverket.se/nyhetsarkiv/medborgarskapsprovetisvenskakanflyttasfram.5.15b2309e1a04e5ed2071cc5.html'
 const UHR_FAQ = 'https://www.uhr.se/medborgarskapsprovet/fragor-och-svar/'
 
 const CHECKED = '2026-10-24'

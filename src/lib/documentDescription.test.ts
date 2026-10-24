@@ -35,7 +35,7 @@ describe('getDocumentDescription', () => {
 
   it('describes quiz pages with chapter title', () => {
     expect(getDocumentDescription('/ovning/politiska-val-och-partier')).toBe(
-      'Flervalsövning till kapitel 4: Politiska val och partier. Baserat på UHR:s Sverige i fokus.',
+      'Gratis övningsfrågor till medborgarskapsprovet, kapitel 4: Politiska val och partier. Med förklaring och citat ur UHR:s Sverige i fokus.',
     )
   })
 })
