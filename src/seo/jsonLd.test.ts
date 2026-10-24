@@ -20,6 +20,7 @@ describe('routeJsonLd', () => {
   it('marks exercises as quizzes and drops unknown chapters', () => {
     expect(routeJsonLd(`/ovning/${chapterMetaList[0].slug}`)[0]['@type']).toBe('Quiz')
     expect(routeJsonLd('/kapitel/finns-inte')).toEqual([])
+    expect(routeJsonLd('/ovning/blandat')[0]['@type']).toBe('WebPage')
   })
 
   it('keeps dashes out of every string', () => {

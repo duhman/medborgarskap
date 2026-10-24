@@ -18,6 +18,8 @@ const pages = [
   ['/behover-jag', ['src/pages/BehoverJag.tsx', 'src/config/pathwaySources.ts']],
   ['/kapitel', ['src/pages/KapitelIndex.tsx', 'src/content/chapters/meta.ts']],
   ['/provfragor', ['src/pages/Provfragor.tsx', 'src/content/officialSamples.ts']],
+  ['/ovning/blandat', ['src/pages/OvningBlandat.tsx', 'src/content/chapters']],
+  ['/ovning/mina-fel', ['src/pages/OvningMinaFel.tsx']],
   ['/om', ['src/pages/Om.tsx']],
   ['/integritet', ['src/pages/Integritet.tsx']],
   ['/villkor', ['src/pages/Villkor.tsx']],

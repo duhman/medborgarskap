@@ -1,4 +1,5 @@
 import type { OfficialSource } from '../config/pathwaySources'
+import { pdfPageUrl } from '../content/chapters/meta'
 import type { QuestionSource } from '../content/types'
 import { GfNum } from './GfNum'
 
@@ -8,17 +9,42 @@ type Props = {
 }
 
 export function SourceCitation({ source, className = 'text-ink-3' }: Props) {
-  if (source.page != null) {
-    return (
-      <p className={className}>
+  const label =
+    source.page != null ? (
+      <>
         Kapitel <GfNum value={source.chapter} />, sida <GfNum value={source.page} /> (Sverige i fokus)
-      </p>
+      </>
+    ) : (
+      <>
+        Kapitel <GfNum value={source.chapter} /> (Sverige i fokus)
+      </>
     )
-  }
+
+  if (!source.quote) return <p className={className}>{label}</p>
+
   return (
-    <p className={className}>
-      Kapitel <GfNum value={source.chapter} /> (Sverige i fokus)
-    </p>
+    <figure className={className}>
+      <blockquote className="border-l-2 border-line-strong pl-3 italic">
+        <p>”{source.quote}”</p>
+      </blockquote>
+      <figcaption className="mt-1">
+        Så står det i{' '}
+        <a
+          href={pdfPageUrl(source.page)}
+          className="mb-link-quiet"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Sverige i fokus, kapitel <GfNum value={source.chapter} />
+          {source.page != null && (
+            <>
+              , sida <GfNum value={source.page} />
+            </>
+          )}
+          <span className="sr-only">, öppnas i ny flik</span>
+        </a>
+      </figcaption>
+    </figure>
   )
 }
 

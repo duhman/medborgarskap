@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import type { QuizQuestion } from '../content/types'
 import { getAllChapters } from '../content/chapters/meta'
-import { displayOptions, formatSource, percentCorrect, scoreQuiz, shuffleOptionIds } from './quiz'
+import {
+  displayOptions,
+  formatSource,
+  percentCorrect,
+  pickQuestions,
+  scoreQuiz,
+  seededRandom,
+  shuffled,
+  shuffleOptionIds,
+} from './quiz'
 
 const sample: QuizQuestion[] = [
   {
@@ -57,5 +66,29 @@ describe('helpers', () => {
 
   it('computes percent', () => {
     expect(percentCorrect(4, 5)).toBe(80)
+  })
+})
+
+describe('practice sets', () => {
+  const pool = getAllChapters().flatMap((c) => c.questions)
+
+  it('shuffles a list without losing or duplicating items', () => {
+    const out = shuffled(pool, seededRandom('x'))
+    expect(out).toHaveLength(pool.length)
+    expect(new Set(out.map((q) => q.id))).toEqual(new Set(pool.map((q) => q.id)))
+  })
+
+  it('picks the requested number of distinct questions', () => {
+    const picked = pickQuestions(pool, 10, seededRandom('y'))
+    expect(picked).toHaveLength(10)
+    expect(new Set(picked.map((q) => q.id)).size).toBe(10)
+    expect(pickQuestions(pool.slice(0, 3), 10)).toHaveLength(3)
+  })
+
+  it('gives a new option order for a retry but keeps the first order stable', () => {
+    const q = pool[0]
+    expect(displayOptions(q).map((o) => o.id)).toEqual(displayOptions(q, '').map((o) => o.id))
+    const orders = new Set(['1', '2', '3', '4', '5'].map((s) => displayOptions(q, s).map((o) => o.id).join('')))
+    expect(orders.size).toBeGreaterThan(1)
   })
 })

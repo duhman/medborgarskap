@@ -10,6 +10,9 @@ const staticPageDescriptions: Record<string, string> = {
     'Svar på om du behöver medborgarskapsprov, med länkar till UHR och Migrationsverket.',
   '/kapitel': 'Alla kapitel i UHR:s Sverige i fokus, med ljud och studietips per kapitel.',
   '/provfragor': 'UHR:s exempel på provfrågor, samlade för egen övning utan inloggning.',
+  '/ovning/blandat':
+    'Gratis blandade övningsfrågor till medborgarskapsprovet, slumpade från alla 13 kapitel i Sverige i fokus.',
+  '/ovning/mina-fel': 'Öva på frågorna du svarat fel på. Sparas bara i din webbläsare.',
   '/om': 'Om Medborgarskap, källor och hur sidan hänger ihop med UHR:s officiella material.',
   '/integritet': 'Integritetspolicy för Medborgarskap: analys, cookies och hur du väljer bort spårning.',
   '/villkor': 'Användarvillkor för Medborgarskap, fristående studiehjälp till medborgarskapsprovet.',

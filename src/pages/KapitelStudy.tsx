@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getChapterBySlug, sverigeIFokusPdfUrl } from '../content/chapters/meta'
+import { getChapterBySlug, SOURCE_PDF_VERSION, sverigeIFokusPdfUrl } from '../content/chapters/meta'
 import { GfNum } from '../components/GfNum'
 import { getQuizResult, markChapterVisited } from '../lib/progress'
 
@@ -45,6 +45,40 @@ export function KapitelStudy() {
         )}
       </section>
 
+      {chapter.summaryEasy && chapter.summaryEasy.length > 0 && (
+        <section className="space-y-3" aria-labelledby="latt-svenska">
+          <h2 id="latt-svenska" className="text-xl font-semibold">
+            Kapitlet på lätt svenska
+          </h2>
+          {chapter.summaryEasy.map((p) => (
+            <p key={p}>{p}</p>
+          ))}
+          <p className="text-sm text-ink-3">
+            En kort sammanfattning med enkla ord. Läs också kapitlet i Sverige i fokus, eftersom
+            provet bygger på det.
+          </p>
+        </section>
+      )}
+
+      {chapter.glossary && chapter.glossary.length > 0 && (
+        <section className="space-y-3" aria-labelledby="viktiga-ord">
+          <h2 id="viktiga-ord" className="text-xl font-semibold">
+            Viktiga ord
+          </h2>
+          <dl className="space-y-3">
+            {chapter.glossary.map((g) => (
+              <div key={g.term}>
+                <dt className="font-medium">{g.term}</dt>
+                <dd>{g.sv}</dd>
+                <dd lang="en" className="text-sm text-ink-2">
+                  English: {g.en}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
       <section className="flex flex-col gap-3 sm:flex-row">
         <a
           href={sverigeIFokusPdfUrl}
@@ -76,6 +110,13 @@ export function KapitelStudy() {
                 </>
               )}
         </p>
+        {chapter.review && (
+          <p className="mt-1 text-sm text-ink-3">
+            {chapter.review.pdfVersion === SOURCE_PDF_VERSION
+              ? `Frågorna granskades senast ${chapter.review.reviewedAt} mot Sverige i fokus, version ${chapter.review.pdfVersion}.`
+              : `UHR har publicerat en ny version av materialet. Frågorna granskades mot version ${chapter.review.pdfVersion} och ses över.`}
+          </p>
+        )}
         {quizResult && (
           <p className="mt-1 text-sm text-ink-3">
             Ditt senaste resultat: <GfNum value={quizResult.score} /> av{' '}
