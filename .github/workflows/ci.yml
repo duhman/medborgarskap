@@ -30,6 +30,13 @@ jobs:
       - name: Unit and content tests
         run: npm run test
 
+      # Downloads Sverige i fokus from uhr.se and checks every question's quote is on its cited page.
+      # A failed download only warns (the test is then skipped); a wrong quote fails the build.
+      - name: Quotes match Sverige i fokus
+        run: |
+          node scripts/extract-pdf-text.mjs --out "$RUNNER_TEMP/sif.json"
+          SOURCE_PDF_TEXT="$RUNNER_TEMP/sif.json" npx vitest run scripts/__tests__/quotes-pdf.test.mjs
+
       - name: Route document meta
         run: npm run check:route-meta
 

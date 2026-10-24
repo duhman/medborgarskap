@@ -1,0 +1,118 @@
+# Weekly check of the official sources the site restates (UHR, Migrationsverket, Sverige i fokus).
+# Opens or updates one issue when a page, the PDF or a link changes, or when a quote no longer
+# matches the PDF. Snapshots live on the source-snapshots branch (page text from uhr.se and
+# migrationsverket.se, and only per-page hashes of the PDF, never its text).
+# Cost: about one runner minute a week; the repository is public, so Actions minutes are free.
+name: source-check
+
+on:
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: source-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    # Same pin as ci.yml: ubuntu-latest (26.04) cannot install the pinned Playwright.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+
+      - name: Previous snapshots
+        id: prev
+        run: |
+          if git fetch --depth=1 origin source-snapshots; then
+            git worktree add --detach prev FETCH_HEAD
+            echo "baseline=false" >> "$GITHUB_OUTPUT"
+          else
+            git worktree add --detach prev HEAD
+            (cd prev && git checkout --orphan source-snapshots && git rm -rfq .)
+            echo "baseline=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch pages and check links
+        id: pages
+        run: |
+          set +e
+          node scripts/check-sources.mjs --out current --report report.md
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch Sverige i fokus
+        id: pdf
+        run: |
+          set +e
+          node scripts/extract-pdf-text.mjs --strict --out "$RUNNER_TEMP/sif.json" --hashes current/sverige-i-fokus.sha256.txt
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Check quotes against the PDF
+        id: quotes
+        if: steps.pdf.outputs.status == '0'
+        run: |
+          set +e
+          SOURCE_PDF_TEXT="$RUNNER_TEMP/sif.json" npx vitest run scripts/__tests__/quotes-pdf.test.mjs > quotes.log 2>&1
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          tail -40 quotes.log
+
+      - name: Compare with last week
+        id: diff
+        run: |
+          set +e
+          # Compare copies without git metadata, so only snapshot files count.
+          mkdir -p "$RUNNER_TEMP/before"
+          rsync -a --exclude .git prev/ "$RUNNER_TEMP/before/"
+          git diff --no-index --unified=1 "$RUNNER_TEMP/before" current > changes.diff
+          changed=$?
+          [ "${{ steps.prev.outputs.baseline }}" = "true" ] && changed=0
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the issue
+        if: steps.diff.outputs.changed != '0' || steps.pages.outputs.status != '0' || steps.pdf.outputs.status != '0' || steps.quotes.outputs.status == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "Den veckovisa källkontrollen hittade något att granska ($(date -u +%F))."
+            echo
+            echo "Gör så här: läs ändringen, uppdatera src/config/status.ts, pathwaySources.ts eller kapitelfilerna vid behov, och stäng ärendet. Om PDF:en ändrats: granska frågorna och byt SOURCE_PDF_VERSION i src/content/chapters/meta.ts."
+            echo
+            cat report.md
+            if [ "${{ steps.pdf.outputs.status }}" != "0" ]; then echo; echo "**Sverige i fokus kunde inte hämtas.**"; fi
+            if [ "${{ steps.quotes.outputs.status }}" = "1" ]; then echo; echo "### Citat som inte stämmer med PDF:en"; echo '```'; grep -E "quote|cited page|✗|×|FAIL" quotes.log | head -60; echo '```'; fi
+            if [ "${{ steps.diff.outputs.changed }}" != "0" ]; then echo; echo "### Ändringar sedan förra veckan"; echo '```diff'; head -c 50000 changes.diff; echo '```'; fi
+            echo
+            echo "Körning: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } > body.md
+          title="Källbevakning: något har ändrats hos UHR eller Migrationsverket"
+          existing=$(gh issue list --state open --search "\"Källbevakning\" in:title" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file body.md
+          else
+            gh issue create --title "$title" --body-file body.md
+          fi
+
+      # Only complete snapshots are saved: every watched page fetched (status 0, or 2 for link
+      # warnings) and the PDF hashed. Otherwise last week's stay the baseline.
+      - name: Save snapshots
+        if: steps.pages.outputs.status != '1' && steps.pdf.outputs.status == '0'
+        run: |
+          rsync -a --delete --exclude .git current/ prev/
+          cd prev
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "No snapshot changes."; exit 0; fi
+          git commit -qm "Source snapshots $(date -u +%F)"
+          git push origin HEAD:source-snapshots

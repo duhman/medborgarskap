@@ -20,7 +20,9 @@
     "test:a11y:install-browser": "playwright install chromium",
     "test:grundform-contrast": "node scripts/grundform-contrast.mjs",
     "screenshots:a11y": "node scripts/a11y-screenshots.mjs",
-    "sitemap": "node scripts/generate-sitemap.mjs"
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "check:sources": "node scripts/check-sources.mjs",
+    "check:quotes": "node scripts/extract-pdf-text.mjs --out /tmp/sverige-i-fokus.pages.json && SOURCE_PDF_TEXT=/tmp/sverige-i-fokus.pages.json vitest run scripts/__tests__/quotes-pdf.test.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",
@@ -32,6 +34,7 @@
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.10.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
@@ -40,11 +43,11 @@
     "@vitest/coverage-v8": "^5.0.1",
     "jsdom": "^29.1.1",
     "oxlint": "^1.81.0",
+    "pdfjs-dist": "6.4.299",
+    "playwright": "1.55.1",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.3.4",
-    "vitest": "^5.0.1",
-    "@axe-core/playwright": "4.10.1",
-    "playwright": "1.55.1"
+    "vitest": "^5.0.1"
   }
 }
