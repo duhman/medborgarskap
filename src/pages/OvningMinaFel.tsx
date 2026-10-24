@@ -22,11 +22,11 @@ export function OvningMinaFel() {
   }
 
   return (
-    <article className="space-y-6">
-      <header className="space-y-2">
-        <p className="font-mono text-xs font-medium uppercase tracking-wide text-ink-3">Övning</p>
-        <h1 className="text-3xl font-semibold">Öva dina fel</h1>
-        <p className="text-sm text-ink-2">
+    <article className="space-y-8">
+      <header className="space-y-3">
+        <p className="font-mono text-xs font-medium uppercase tracking-[0.08em] text-ink-3">Övning</p>
+        <h1 className="text-3xl font-semibold sm:text-4xl">Öva dina fel</h1>
+        <p className="text-ink-2">
           Här samlas frågor som du har svarat fel på i övningarna. En fråga försvinner härifrån när
           du svarar rätt på den. Allt sparas bara i din egen webbläsare, inte hos oss.
         </p>
@@ -46,15 +46,15 @@ export function OvningMinaFel() {
         </p>
       ) : (
         !set && (
-          <div className="space-y-3">
-            <p>
+          <div className="surface-raised space-y-4 p-5">
+            <p className="text-lg">
               Du har <GfNum value={mistakes.length} /> {mistakes.length === 1 ? 'fråga' : 'frågor'}{' '}
               att öva på.
             </p>
             <button
               type="button"
               onClick={start}
-              className="rounded border border-accent bg-accent px-6 py-3 text-base font-medium text-white"
+              className="mb-btn mb-btn--primary"
             >
               Öva på dem nu
             </button>
@@ -72,9 +72,11 @@ export function OvningMinaFel() {
         />
       )}
 
-      <Link to="/kapitel" className="text-sm text-accent hover:underline">
-        Alla kapitel
-      </Link>
+      <p>
+        <Link to="/kapitel" className="mb-link-quiet inline-flex min-h-11 items-center">
+          Alla kapitel
+        </Link>
+      </p>
     </article>
   )
 }

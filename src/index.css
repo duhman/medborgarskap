@@ -156,6 +156,52 @@
     outline: none;
   }
 
+  /* After checking an answer. The tag text carries the meaning, colour only supports it. */
+  .mb-choice--correct,
+  .mb-choice--correct:has(input:checked) {
+    border-color: var(--ok);
+    background-color: color-mix(in srgb, var(--ok) 10%, var(--bg-raised));
+  }
+
+  .mb-choice--wrong,
+  .mb-choice--wrong:has(input:checked) {
+    border-color: var(--error);
+    background-color: color-mix(in srgb, var(--error) 8%, var(--bg-raised));
+  }
+
+  .mb-choice--muted {
+    color: var(--ink-3);
+  }
+
+  .mb-choice--correct,
+  .mb-choice--wrong,
+  .mb-choice--muted {
+    cursor: default;
+  }
+
+  .mb-choice--correct:hover {
+    border-color: var(--ok);
+  }
+
+  .mb-choice--wrong:hover {
+    border-color: var(--error);
+  }
+
+  .mb-choice--muted:hover {
+    border-color: var(--line-strong);
+  }
+
+  .mb-choice__tag {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
   /* Mono section label with a 1 px ink rule below (Grundform section head). */
   .mb-section-head {
     padding-bottom: var(--space-2);
