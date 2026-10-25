@@ -1,4 +1,4 @@
-import type { OfficialSource } from '../config/pathwaySources'
+import type { OfficialSource } from '../config/pathwaySources.js'
 
 export type FaqEntry = {
   id: string

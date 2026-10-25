@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.api.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist/mcp-runtime",
+    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.mcp-runtime.tsbuildinfo"
+  },
+  "exclude": ["src/**/*.test.ts"]
+}

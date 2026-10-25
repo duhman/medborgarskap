@@ -24,4 +24,14 @@ Primary guidance:
 
 ## Delivery evidence
 
-Pending deployment and account verification. Record actual observed results here after delivery.
+[PR #32](https://github.com/duhman/medborgarskap/pull/32) merged as `05ee9771ac53bc5cb624386fb0580e6dd0847f4e`. Vercel deployment `dpl_4aWSuTvABuZENNk1cFWeamo5DbWY` reported READY with the canonical custom domains attached. The production discovery check passed all 36 pages, six crawler requests, sitemap/robots/llms, five invalid paths and both permanent host redirects.
+
+Google Search Console accepted HTML-tag ownership verification and sitemap submission. [Ownership receipt](assets/discovery-2026-10-25/google-ownership-verified.png), [submission receipt](assets/discovery-2026-10-25/google-sitemap-submitted.png). Its first sitemap processing result was “Sitemap could not be read”, with zero discovered pages. Direct HTTP requests to the same XML, including Googlebot's user-agent, returned HTTP 200 and application/xml, and Google's public DNS resolved the domain. Submission is not proof that Google fetched or indexed the pages; live inspection and a follow-up processing check are separate.
+
+`npm run indexnow` submitted the 36 deployed canonical URLs and received HTTP 202. This is acceptance for processing, not indexing or a ranking guarantee.
+
+The first production MCP check failed 0/9: Vercel's emitted Node ESM could not resolve extensionless source imports. The static website/discovery checks still passed. The follow-up makes runtime imports explicit and adds a real emitted-JavaScript Node check so bundler-based local tests cannot mask that failure again. MCP completion is recorded in [chatgpt-plugin.md](chatgpt-plugin.md).
+
+Google's subsequent live homepage inspection reported **URL is available to Google** and **Page can be indexed**. That proves Google's live fetch succeeded for the homepage; it does not prove that the sitemap processing succeeded or that any page is indexed.
+
+Google accepted **Request indexing** for the canonical homepage and reported it added to a priority crawl queue. [Indexing request receipt](assets/discovery-2026-10-25/google-indexing-requested.png). No manual CAPTCHA interaction was needed. The queue confirmation is not an indexed-page confirmation.
