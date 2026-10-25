@@ -520,7 +520,7 @@ export const saHarStyrsSverige: ChapterContent = {
       ],
       correctOptionId: 'C',
       explanationSv:
-        'Den minsta kommunen är Dorotea i Västerbottens län, med färre än 3 000 invånare. Den största är Stockholm, där det bor nästan en miljon människor.',
+        'Den minsta kommunen är Dorotea i Västerbottens län, med färre än 3 000 invånare. Den största är Stockholm, där det bor nästan en miljon människor.',
       explanationEn:
         'The smallest municipality is Dorotea in Västerbotten county, with fewer than 3,000 residents. The largest is Stockholm, with almost one million.',
       source: {

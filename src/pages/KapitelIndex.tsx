@@ -22,7 +22,7 @@ export function KapitelIndex() {
           Boken har {totalChapters} kapitel. Välj ett kapitel för att läsa en sammanfattning,
           lyssna och öva. Boken och ljudfilerna finns hos UHR.
         </p>
-        <ul className="flex flex-wrap gap-x-5 text-[15px]">
+        <ul className="flex flex-wrap gap-x-5 text-[0.9375rem]">
           <li>
             <ExternalLink href={sverigeIFokusPdfUrl} className="mb-link-quiet inline-flex min-h-11 items-center">
               Hela boken (PDF)

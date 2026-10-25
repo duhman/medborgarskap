@@ -46,7 +46,7 @@ export function OvningQuiz() {
               ▾
             </span>
           </summary>
-          <ol className="list-decimal space-y-1 pb-2 pl-6 text-[15px] text-ink-2 marker:font-mono marker:text-ink-3">
+          <ol className="list-decimal space-y-1 pb-2 pl-6 text-[0.9375rem] text-ink-2 marker:font-mono marker:text-ink-3">
             {chapter.questions.map((q) => (
               <li key={q.id}>{q.prompt}</li>
             ))}

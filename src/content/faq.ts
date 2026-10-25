@@ -94,7 +94,7 @@ export const faqEntries: FaqEntry[] = [
     id: 'andra-krav',
     question: 'Vilka andra krav finns för att bli svensk medborgare?',
     answer: [
-      'Kunskapskraven är bara en del. Sedan 6 juni 2026 ska du som huvudregel ha bott i Sverige sammanhängande i minst åtta år. Du ska kunna styrka din identitet, kunna försörja dig (minst tre inkomstbasbelopp om året, 250 200 kronor före skatt för 2026) och ha levt ett skötsamt och hederligt liv.',
+      'Kunskapskraven är bara en del. Sedan 6 juni 2026 ska du som huvudregel ha bott i Sverige sammanhängande i minst åtta år. Du ska kunna styrka din identitet, kunna försörja dig (minst tre inkomstbasbelopp om året, 250 200 kronor före skatt för 2026) och ha levt ett skötsamt och hederligt liv.',
       'Du behöver också permanent uppehållstillstånd, uppehållsstatus, uppehållsrätt eller medborgarskap i ett annat nordiskt land, men det finns undantag. Kortare hemvisttid gäller i vissa fall, till exempel för nordiska medborgare. Läs vad som gäller just dig hos Migrationsverket innan du lägger tid på att plugga.',
     ],
     sources: [mvVuxna],
@@ -112,7 +112,7 @@ export const faqEntries: FaqEntry[] = [
     id: 'kostnad',
     question: 'Vad kostar det?',
     answer: [
-      'Att ansöka om svenskt medborgarskap kostar 2 900 kronor. UHR har ännu inte publicerat någon anmälningsavgift för provet.',
+      'Att ansöka om svenskt medborgarskap kostar 2 900 kronor. UHR har ännu inte publicerat någon anmälningsavgift för provet.',
       'Övningarna på den här sidan är gratis, utan konto och utan reklam.',
     ],
     sources: [mvVuxna, uhrOm],

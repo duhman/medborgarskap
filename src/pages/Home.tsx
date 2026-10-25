@@ -73,6 +73,9 @@ export function Home() {
           Förbered dig för medborgarskapsprovet. Läs och lyssna på UHR:s material och öva sedan med
           frågor. Varje svar visar var i boken du hittar det.
         </p>
+        <p className="max-w-2xl text-ink-2">
+          Varje kapitel finns också på lätt svenska, med en lista över viktiga ord.
+        </p>
         <div className="flex flex-col gap-3 pt-1 sm:flex-row">
           <Link to="/kapitel" className="mb-btn mb-btn--primary sm:px-8">
             Börja studera
@@ -83,6 +86,11 @@ export function Home() {
         </div>
         <p className="text-sm text-ink-3">
           Inte en officiell tjänst. Vi är inte knutna till UHR eller Migrationsverket.
+        </p>
+        <p lang="en" className="max-w-2xl border-l-2 border-line-strong pl-3 text-sm text-ink-2">
+          In English: the citizenship test is in Swedish, so this site is too. Every chapter has a
+          word list with English translations, and every practice question has an explanation in
+          English.
         </p>
       </header>
 

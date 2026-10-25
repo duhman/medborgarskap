@@ -1,18 +1,37 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
 import { useAllQuestions } from '../content/chapters/load'
 import type { QuizQuestion } from '../content/types'
+import { clearQuizSession, getQuizSessionRaw, parseQuizSession, subscribeProgress } from '../lib/progress'
 import { pickQuestions } from '../lib/quiz'
 
 const SIZES = [10, 20, 40] as const
+const SLUG = 'blandat'
+
+function questionsFromSession(raw: string, pool: QuizQuestion[]): QuizQuestion[] | null {
+  const ids = parseQuizSession(raw)?.ids
+  if (!ids || ids.length === 0) return null
+  const byId = new Map(pool.map((q) => [q.id, q]))
+  const questions = ids.map((id) => byId.get(id))
+  return questions.every((q) => q !== undefined) ? (questions as QuizQuestion[]) : null
+}
 
 export function OvningBlandat() {
   const pool = useAllQuestions()
   const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
   const sizeHeadingRef = useRef<HTMLHeadingElement>(null)
   const returningToPicker = useRef(false)
+
+  // An unfinished mixed quiz saved in this browser comes back with the same questions, and the
+  // runner then offers to continue it. The prerendered page has none, so this happens after
+  // hydration, by adjusting state during render rather than in an effect.
+  const savedSession = useSyncExternalStore(subscribeProgress, () => getQuizSessionRaw(SLUG), () => null)
+  if (set === null && savedSession) {
+    const restored = questionsFromSession(savedSession, pool)
+    if (restored) setSet({ questions: restored, round: 1 })
+  }
 
   useEffect(() => {
     if (set === null && returningToPicker.current) {
@@ -22,6 +41,7 @@ export function OvningBlandat() {
   }, [set])
 
   function start(count: number) {
+    clearQuizSession(SLUG)
     setSet((prev) => ({ questions: pickQuestions(pool, count), round: (prev?.round ?? 0) + 1 }))
   }
 
@@ -60,16 +80,18 @@ export function OvningBlandat() {
         <>
           <QuizRunner
             key={set.round}
-            slug="blandat"
+            slug={SLUG}
             chapterTitle="blandade frågor"
             questions={set.questions}
             saveResult={false}
+            persistSession
             autoFocus
           />
           <button
             type="button"
             onClick={() => {
               returningToPicker.current = true
+              clearQuizSession(SLUG)
               setSet(null)
             }}
             className="mb-link-quiet inline-flex min-h-11 items-center"

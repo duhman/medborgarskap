@@ -16,9 +16,9 @@ export const landetSverige: ChapterContent = {
     'Enligt klimatlagen ska Sveriges utsläpp av växthusgaser vara så nära noll som möjligt år 2045.',
   ],
   summaryEasy: [
-    'Sverige ligger i Norden, i norra Europa. Landet är långt och smalt. Det är cirka 1 600 kilometer från norr till söder. Den nordligaste delen ligger norr om polcirkeln. Sverige har en lång kust. I öster ligger Östersjön. I väster ligger Skagerrak och Kattegatt.',
+    'Sverige ligger i Norden, i norra Europa. Landet är långt och smalt. Det är cirka 1 600 kilometer från norr till söder. Den nordligaste delen ligger norr om polcirkeln. Sverige har en lång kust. I öster ligger Östersjön. I väster ligger Skagerrak och Kattegatt.',
     'Sverige har ett milt klimat för att ligga så långt norrut. Det beror på Golfströmmen. Golfströmmen är en havsström med varmt vatten. Det varma vattnet värmer luften. Vindarna för sedan in den milda luften över Sverige.',
-    'För cirka 10 000 år sedan var Sverige täckt av tjock is. Den tiden kallas istiden. Isen formade landskapet. Den lämnade sjöar, öar och slätter. Mer än hälften av Sverige är skog. Längs gränsen mot Norge finns fjällen. Där är det för kallt för träd. Sveriges högsta berg heter Kebnekaise. En skärgård är ett hav med många öar nära land.',
+    'För cirka 10 000 år sedan var Sverige täckt av tjock is. Den tiden kallas istiden. Isen formade landskapet. Den lämnade sjöar, öar och slätter. Mer än hälften av Sverige är skog. Längs gränsen mot Norge finns fjällen. Där är det för kallt för träd. Sveriges högsta berg heter Kebnekaise. En skärgård är ett hav med många öar nära land.',
     'Sverige delas in i tre landsdelar: Götaland, Svealand och Norrland. Norrland är störst. Sverige har också 25 landskap, 21 län och 290 kommuner. Landskapen har ingen betydelse för hur landet styrs i dag. Nästan 11 miljoner människor bor i Sverige. De flesta bor i södra Sverige och vid kusterna. De största städerna är Stockholm, Göteborg och Malmö.',
     'Sverige har många naturresurser. En naturresurs är något i naturen som människor kan använda. Exempel är järnmalm, skog, jordbruksmark och vatten. De största gruvorna finns i Norrbotten. Järn används för att göra stål. Vatten i älvarna ger el i vattenkraftverk. Produkter från skogen säljs till många länder.',
     'Jorden blir varmare. Den största orsaken är människors utsläpp av växthusgaser. Växthusgaser är gaser som gör jorden varmare. Isar smälter och havet stiger. Det blir mer extremt väder. Sverige har en klimatlag. Den säger att utsläppen ska vara nära noll år 2045. Alla kan hjälpa till, till exempel genom att åka buss eller tåg och sortera sopor.',
@@ -41,7 +41,7 @@ export const landetSverige: ChapterContent = {
     },
     {
       term: 'istiden',
-      sv: 'En tid för cirka 10 000 år sedan när Sverige var täckt av tjock is.',
+      sv: 'En tid för cirka 10 000 år sedan när Sverige var täckt av tjock is.',
       en: 'The Ice Age: when Sweden was covered by thick ice, about 10,000 years ago.',
     },
     {
@@ -179,12 +179,12 @@ export const landetSverige: ChapterContent = {
       prompt: 'Ungefär hur långt är det från Sveriges nordligaste punkt till den sydligaste?',
       options: [
         { id: 'A', text: 'Cirka 600 kilometer' },
-        { id: 'B', text: 'Cirka 1 600 kilometer' },
-        { id: 'C', text: 'Cirka 2 600 kilometer' },
-        { id: 'D', text: 'Cirka 3 600 kilometer' },
+        { id: 'B', text: 'Cirka 1 600 kilometer' },
+        { id: 'C', text: 'Cirka 2 600 kilometer' },
+        { id: 'D', text: 'Cirka 3 600 kilometer' },
       ],
       correctOptionId: 'B',
-      explanationSv: 'Sverige är ett avlångt land. Det sträcker sig cirka 1 600 kilometer från Treriksröset i norr till Smygehuk i söder.',
+      explanationSv: 'Sverige är ett avlångt land. Det sträcker sig cirka 1 600 kilometer från Treriksröset i norr till Smygehuk i söder.',
       explanationEn: 'Sweden is a long country, stretching about 1,600 kilometres from Treriksröset in the north to Smygehuk in the south.',
       source: {
         chapter: 1,
@@ -234,7 +234,7 @@ export const landetSverige: ChapterContent = {
         { id: 'D', text: 'Isen band ihop Gotland och Öland med fastlandet i flera tusen år' },
       ],
       correctOptionId: 'B',
-      explanationSv: 'För ungefär 10 000 år sedan var Sverige täckt av is. När isen smälte hade den format landskapet, med till exempel många sjöar, skärgårdar och slätter med jord som går att odla.',
+      explanationSv: 'För ungefär 10 000 år sedan var Sverige täckt av is. När isen smälte hade den format landskapet, med till exempel många sjöar, skärgårdar och slätter med jord som går att odla.',
       explanationEn: 'About 10,000 years ago Sweden was covered by ice. When it melted, it had shaped the landscape, leaving many lakes, archipelagos and fertile plains.',
       source: {
         chapter: 1,
@@ -264,13 +264,13 @@ export const landetSverige: ChapterContent = {
       id: 'k1-q13',
       prompt: 'Vilket är Sveriges högsta berg, och ungefär hur högt är det?',
       options: [
-        { id: 'A', text: 'Kebnekaise, cirka 2 000 meter' },
-        { id: 'B', text: 'Kebnekaise, cirka 4 000 meter' },
-        { id: 'C', text: 'Malmberget, cirka 2 000 meter' },
-        { id: 'D', text: 'Treriksröset, cirka 1 000 meter' },
+        { id: 'A', text: 'Kebnekaise, cirka 2 000 meter' },
+        { id: 'B', text: 'Kebnekaise, cirka 4 000 meter' },
+        { id: 'C', text: 'Malmberget, cirka 2 000 meter' },
+        { id: 'D', text: 'Treriksröset, cirka 1 000 meter' },
       ],
       correctOptionId: 'A',
-      explanationSv: 'Sveriges högsta berg är Kebnekaise. Det ligger i fjällen och är cirka 2 000 meter högt.',
+      explanationSv: 'Sveriges högsta berg är Kebnekaise. Det ligger i fjällen och är cirka 2 000 meter högt.',
       explanationEn: 'Sweden\'s highest mountain is Kebnekaise, in the mountain range, about 2,000 metres high.',
       source: {
         chapter: 1,

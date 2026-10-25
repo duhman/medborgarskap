@@ -46,6 +46,28 @@ export function KapitelStudy() {
             Öva direkt (<GfNum value={chapter.questions.length} /> frågor)
           </span>
         </Link>
+        {chapter.summaryEasy?.length || chapter.glossary?.length ? (
+          <p className="flex flex-wrap gap-x-5 text-[0.9375rem]">
+            {chapter.summaryEasy && chapter.summaryEasy.length > 0 && (
+              <a href="#latt-svenska" className="mb-link-quiet inline-flex min-h-11 items-center">
+                Läs på lätt svenska
+              </a>
+            )}
+            {chapter.glossary && chapter.glossary.length > 0 && (
+              <a
+                href="#viktiga-ord"
+                className="mb-link-quiet inline-flex min-h-11 items-center"
+                onClick={() => {
+                  // Open the word list too, not just scroll to its closed heading.
+                  const details = document.getElementById('viktiga-ord')?.parentElement
+                  if (details instanceof HTMLDetailsElement) details.open = true
+                }}
+              >
+                Viktiga ord, med engelska
+              </a>
+            )}
+          </p>
+        ) : null}
       </header>
 
       <section aria-labelledby="listen-read" className="space-y-4">
@@ -53,7 +75,7 @@ export function KapitelStudy() {
           Lyssna och läs
         </h2>
         <div className="space-y-2">
-          <p className="text-[15px] text-ink-2">Kapitlet uppläst av UHR</p>
+          <p className="text-[0.9375rem] text-ink-2">Kapitlet uppläst av UHR</p>
           <audio controls preload="none" src={chapter.mp3Url} className="w-full">
             <a href={chapter.mp3Url}>Ladda ner ljudfilen (MP3)</a>
           </audio>
@@ -118,7 +140,7 @@ export function KapitelStudy() {
             className="mb-section-head flex min-h-11 list-none items-end justify-between gap-3"
           >
             <span>
-              Viktiga ord (<GfNum value={chapter.glossary.length} />)
+              Viktiga ord med engelska (<GfNum value={chapter.glossary.length} />)
             </span>
             <span className="flex items-center gap-1 normal-case tracking-normal text-ink-2">
               <span className="group-open:hidden">Visa</span>

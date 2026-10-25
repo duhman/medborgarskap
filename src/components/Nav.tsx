@@ -9,7 +9,8 @@ const links = [
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   [
-    'inline-flex min-h-11 shrink-0 items-center whitespace-nowrap px-2.5 text-[15px] underline-offset-[6px] transition-colors sm:px-3',
+    // The ring is drawn inside the link so the header never clips it.
+    'inline-flex min-h-11 shrink-0 items-center whitespace-nowrap px-2.5 text-[0.9375rem] underline-offset-[6px] transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--accent-ring)] sm:px-3',
     isActive
       ? 'font-semibold text-ink underline decoration-ink decoration-2'
       : 'font-medium text-ink-2 hover:text-ink hover:underline hover:decoration-line-strong',
@@ -31,8 +32,9 @@ export function Nav() {
           </span>
           Medborgarskap
         </NavLink>
-        <nav aria-label="Huvudmeny" className="-mx-2.5 overflow-x-auto sm:mx-0 sm:-mr-3">
-          <ul className="flex">
+        <nav aria-label="Huvudmeny" className="-mx-2.5 sm:mx-0 sm:-mr-3">
+          {/* Wraps instead of scrolling sideways, so no link hides past the edge on a narrow screen. */}
+          <ul className="flex flex-wrap">
             {links.map((l) => (
               <li key={l.to}>
                 <NavLink to={l.to} className={linkClass}>

@@ -6,7 +6,7 @@ export function StatusStrip() {
   return (
     <aside className="border-b border-line-strong bg-paper-muted text-sm" aria-label="Provstatus">
       <details className="group mx-auto max-w-3xl px-4">
-        <summary className="flex min-h-11 list-none items-center justify-between gap-3 py-2">
+        <summary className="flex min-h-11 list-none items-center justify-between gap-3 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--accent-ring)]">
           <span>
             <span className="font-medium text-ink">Nästa prov:</span>{' '}
             <span className="text-ink-2">{uhrStatus.nextSitting}</span>

@@ -268,8 +268,8 @@ export const sverigesModernaHistoria: ChapterContent = {
       id: 'k10-q9',
       prompt: 'Ungefär hur många svenskar utvandrade till USA mellan 1850 och 1920?',
       options: [
-        { id: 'A', text: 'Omkring 10 000' },
-        { id: 'B', text: 'Omkring 100 000' },
+        { id: 'A', text: 'Omkring 10 000' },
+        { id: 'B', text: 'Omkring 100 000' },
         { id: 'C', text: 'Över en miljon' },
         { id: 'D', text: 'Över fem miljoner' },
       ],
