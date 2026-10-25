@@ -5,6 +5,8 @@ import {
   clearQuizSession,
   derivePathwayOutcome,
   getMistakeIds,
+  getProgressState,
+  localDay,
   getPathwayAnswers,
   getQuizSessionRaw,
   parseQuizSession,
@@ -160,5 +162,20 @@ describe('subscribeProgress', () => {
     off()
     window.dispatchEvent(new StorageEvent('storage', { key: null }))
     expect(calls).toBe(1)
+  })
+})
+
+describe('question history', () => {
+  beforeEach(() => resetProgressForTests())
+
+  it('counts right answers in a row and resets them on a wrong answer', () => {
+    const day = new Date(2026, 9, 25, 12)
+    recordAnswers([{ id: 'k1-q1', correct: true }], day)
+    recordAnswers([{ id: 'k1-q1', correct: true }, { id: 'k1-q2', correct: null }], day)
+    expect(getProgressState().history['k1-q1']).toEqual({ right: 2, wrong: 0, streak: 2, last: '2026-10-25' })
+    expect(getProgressState().history['k1-q2']).toBeUndefined()
+    recordAnswers([{ id: 'k1-q1', correct: false }], new Date(2026, 9, 26, 9))
+    expect(getProgressState().history['k1-q1']).toEqual({ right: 2, wrong: 1, streak: 0, last: '2026-10-26' })
+    expect(localDay(new Date(2026, 0, 5))).toBe('2026-01-05')
   })
 })

@@ -14,6 +14,8 @@ const staticPageDescriptions: Record<string, string> = {
   '/ovning/blandat':
     'Gratis blandade övningsfrågor till medborgarskapsprovet, slumpade från alla 13 kapitel i Sverige i fokus.',
   '/ovning/mina-fel': 'Öva på frågorna du svarat fel på. Sparas bara i din webbläsare.',
+  '/ovning/smart':
+    'Träna smart inför medborgarskapsprovet: dina fel och frågor att repetera kommer först, och du ser hur redo du är per kapitel.',
   '/vanliga-fragor':
     'När är nästa medborgarskapsprov, hur ser det ut och vem måste skriva det? Korta svar med källor från UHR och Migrationsverket.',
   '/om': 'Om Medborgarskap, källor och hur sidan hänger ihop med UHR:s officiella material.',

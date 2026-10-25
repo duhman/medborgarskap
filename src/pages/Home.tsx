@@ -46,6 +46,11 @@ const steps = [
 
 const practice = [
   {
+    to: '/ovning/smart',
+    title: 'Träna smart',
+    text: 'Dina fel och frågor att repetera kommer först. Se hur redo du är i varje kapitel.',
+  },
+  {
     to: '/ovning/blandat',
     title: 'Blandade frågor',
     text: 'Frågor från alla kapitel i slumpad ordning.',

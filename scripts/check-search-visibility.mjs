@@ -11,7 +11,7 @@ const sitemap = await read('/sitemap.xml')
 assert.equal(sitemap.response.status, 200)
 assert.match(sitemap.response.headers.get('content-type') ?? '', /xml/)
 const urls = [...sitemap.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
-assert.equal(urls.length, 36, 'Every public route must remain in the sitemap')
+assert.equal(urls.length, 37, 'Every public route must remain in the sitemap')
 assert.equal(new Set(urls).size, urls.length)
 for (const url of urls) {
   assert.equal(new URL(url).origin, origin, `Sitemap host: ${url}`)

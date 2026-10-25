@@ -165,6 +165,13 @@ async function checkFlows(browser, name) {
     fail(`${name}: no offer to continue an unfinished mixed quiz`)
   }
 
+  // Smart practice shows readiness from the answers so far and starts a round.
+  await page.goto(BASE_URL + '/ovning/smart', { waitUntil: 'networkidle' })
+  if (!(await page.getByText(/frågor sitter säkert/).count())) fail(`${name}: smart practice shows no readiness`)
+  if (!(await page.getByText(/att repetera i dag/).count())) fail(`${name}: smart practice shows no due questions`)
+  await page.getByRole('button', { name: /10/ }).click()
+  if (!(await page.getByText(/Fråga 1 av 10/).count())) fail(`${name}: smart practice did not start`)
+
   // Checklist answers survive a reload.
   await page.goto(BASE_URL + '/behover-jag', { waitUntil: 'networkidle' })
   await page.locator('input[name="age"]').first().check()

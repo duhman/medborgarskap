@@ -15,6 +15,7 @@ import { applyRouteDocumentMeta } from './lib/routeDocumentMeta'
 import { syncRouteJsonLd } from './seo/syncJsonLd'
 import { OvningBlandat } from './pages/OvningBlandat'
 import { OvningMinaFel } from './pages/OvningMinaFel'
+import { OvningSmart } from './pages/OvningSmart'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 import { NotFound } from './pages/NotFound'
@@ -80,6 +81,7 @@ export function AppRoutes() {
           <Route path="kapitel/:slug" element={<KapitelStudy />} />
           <Route path="ovning/blandat" element={<OvningBlandat />} />
           <Route path="ovning/mina-fel" element={<OvningMinaFel />} />
+          <Route path="ovning/smart" element={<OvningSmart />} />
           <Route path="ovning/:slug" element={<OvningQuiz />} />
           <Route path="provfragor" element={<Provfragor />} />
           <Route path="vanliga-fragor" element={<VanligaFragor />} />

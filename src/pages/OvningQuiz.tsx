@@ -55,6 +55,11 @@ export function OvningQuiz() {
             </Link>
           </li>
           <li>
+            <Link to="/ovning/smart" className="mb-link-quiet inline-flex min-h-11 items-center">
+              Träna smart över alla kapitel
+            </Link>
+          </li>
+          <li>
             <Link to="/ovning/blandat" className="mb-link-quiet inline-flex min-h-11 items-center">
               Blandade frågor från alla kapitel
             </Link>

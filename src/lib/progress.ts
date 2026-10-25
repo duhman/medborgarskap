@@ -25,12 +25,24 @@ export type PathwayAnswers = {
 
 export type PathwayOutcome = 'maybe-exempt' | 'likely-needed' | 'unclear'
 
+/** How one question has gone so far, for smart practice and the readiness view. */
+export type QuestionHistory = {
+  right: number
+  wrong: number
+  /** Right answers in a row since the last wrong one. */
+  streak: number
+  /** Day of the last answer, YYYY-MM-DD in the visitor's time zone. */
+  last: string
+}
+
 export type ProgressState = {
   visitedChapters: string[]
   quizResults: QuizResult[]
   pathway: PathwayAnswers
   /** Ids of questions answered wrong and not yet answered right since. */
   mistakes: string[]
+  /** Per question id. Questions never answered are missing. */
+  history: Record<string, QuestionHistory>
 }
 
 const defaultState = (): ProgressState => ({
@@ -38,6 +50,7 @@ const defaultState = (): ProgressState => ({
   quizResults: [],
   pathway: {},
   mistakes: [],
+  history: {},
 })
 
 /** Used when the browser refuses to store anything (blocked storage), so answers still show. */
@@ -55,6 +68,7 @@ function readState(): ProgressState {
       quizResults: parsed.quizResults ?? [],
       pathway: parsed.pathway ?? {},
       mistakes: parsed.mistakes ?? [],
+      history: parsed.history ?? {},
     }
   } catch {
     return defaultState()
@@ -108,16 +122,31 @@ export function saveQuizResult(result: QuizResult): void {
   writeState(state)
 }
 
+/** Today as YYYY-MM-DD in the visitor's own time zone. */
+export function localDay(date: Date = new Date()): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
 /**
  * Remember which questions were answered wrong, and forget them once answered right.
- * Unanswered questions leave the list unchanged.
+ * Also keeps a short history per question for smart practice.
+ * Unanswered questions leave both unchanged.
  */
-export function recordAnswers(answers: { id: string; correct: boolean | null }[]): void {
+export function recordAnswers(answers: { id: string; correct: boolean | null }[], now: Date = new Date()): void {
   const state = readState()
   const mistakes = new Set(state.mistakes)
+  const day = localDay(now)
   for (const a of answers) {
-    if (a.correct === true) mistakes.delete(a.id)
-    if (a.correct === false) mistakes.add(a.id)
+    if (a.correct === null) continue
+    const h = state.history[a.id] ?? { right: 0, wrong: 0, streak: 0, last: day }
+    if (a.correct) {
+      mistakes.delete(a.id)
+      state.history[a.id] = { right: h.right + 1, wrong: h.wrong, streak: h.streak + 1, last: day }
+    } else {
+      mistakes.add(a.id)
+      state.history[a.id] = { right: h.right, wrong: h.wrong + 1, streak: 0, last: day }
+    }
   }
   state.mistakes = [...mistakes]
   writeState(state)
