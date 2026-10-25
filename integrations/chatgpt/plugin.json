@@ -92,7 +92,8 @@
               "expected_behavior": "Explains that the tools provide published study material and information only. They cannot make legal, agency or personal eligibility determinations, but can provide relevant public sources."
             }
           ]
-        }
+        },
+        "demo_recording_url": "https://provamedborgarskap.se/integrations/chatgpt/review-1.0.0.html"
       },
       "publication": {
         "release_notes": "First release: source-linked public study chapters and FAQs for the Swedish citizenship test."

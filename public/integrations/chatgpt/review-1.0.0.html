@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Prova medborgarskap: plugin review walkthrough</title>
+<style>body{font:18px/1.6 system-ui,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;color:#211d18;background:#faf7f1}video{width:100%;height:auto;background:#171717}a{color:#2d4a3e}li{margin:.5rem 0}</style>
+</head>
+<body>
+<h1>Prova medborgarskap: plugin review</h1>
+<p>This walkthrough shows actual ChatGPT test screenshots in workflow order. It is a silent sequence of still screenshots, not a continuous screen capture. Turn on captions for the test descriptions.</p>
+<video controls preload="metadata" poster="walkthrough-01.jpg">
+<source src="walkthrough-1.0.0.mp4" type="video/mp4">
+<track kind="captions" src="walkthrough-1.0.0.vtt" srclang="en" label="English test descriptions" default>
+<a href="walkthrough-1.0.0.mp4">Download the walkthrough</a>
+</video>
+<h2>What is tested</h2>
+<ol>
+<li>Search the public study corpus, then fetch a chapter with canonical and official UHR source links.</li>
+<li>Distinguish question-review dates from summary verification; show saved status and per-source FAQ dates.</li>
+<li>Return an honest empty result for an unmatched search.</li>
+<li>Explain that private progress, arbitrary URLs and personal citizenship decisions are outside the tools' scope.</li>
+</ol>
+<p>The two tools are anonymous and read-only. The service never fetches a user-supplied URL and cannot read local practice answers, progress or accounts. The production HTTP checks separately verify invalid-input, private/write-tool and origin rejection. A refusal in a conversation does not itself test an HTTP rejection.</p>
+<p><a href="https://provamedborgarskap.se/">Website</a> | <a href="https://provamedborgarskap.se/integritet">Privacy</a> | <a href="https://provamedborgarskap.se/villkor">Terms</a> | <a href="https://provamedborgarskap.se/om">Sources and support</a></p>
+</body></html>

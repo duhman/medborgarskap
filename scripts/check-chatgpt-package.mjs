@@ -89,6 +89,19 @@ assert.equal(object(object(server.extensions, 'MCP extensions')['com.openai'], '
 
 const review = object(openai.review, 'review')
 assert.equal(review.commerce, false)
+if (!process.argv.includes('--draft') || review.demo_recording_url) {
+  assert.equal(httpsUrl(review.demo_recording_url, 'demo_recording_url').href, 'https://provamedborgarskap.se/integrations/chatgpt/review-1.0.0.html')
+  const mediaRoot = path.join(root, 'public', 'integrations', 'chatgpt')
+  const [reviewHtml, video, captions] = await Promise.all([
+    readFile(path.join(mediaRoot, 'review-1.0.0.html'), 'utf8'),
+    readFile(path.join(mediaRoot, 'walkthrough-1.0.0.mp4')),
+    readFile(path.join(mediaRoot, 'walkthrough-1.0.0.vtt'), 'utf8'),
+  ])
+  assert(reviewHtml.includes('noindex, nofollow') && reviewHtml.includes('walkthrough-1.0.0.mp4'), 'review page must serve its noindex walkthrough')
+  assert(video.length > 1024 && video.subarray(4, 8).toString() === 'ftyp', 'walkthrough must be a real MP4')
+  assert(captions.startsWith('WEBVTT') && captions.includes('00:40.000'), 'walkthrough captions missing')
+}
+
 const cases = object(review.test_cases, 'review.test_cases')
 assert.equal(cases.positive.length, 5, 'expected five positive review cases')
 assert.equal(cases.negative.length, 3, 'expected three negative review cases')
