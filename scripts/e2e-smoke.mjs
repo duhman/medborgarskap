@@ -58,6 +58,33 @@ async function checkRoutes(browser, name) {
   await context.close()
 }
 
+async function checkMissingRoutes(browser, name) {
+  const context = await browser.newContext(viewports[name])
+  const page = await context.newPage()
+  page.on('pageerror', (error) => fail(`${name} missing route: ${error.message}`))
+  page.on('console', (message) => {
+    if (message.type() === 'error' && !/Failed to load resource.*404/.test(message.text())) {
+      fail(`${name} missing route: ${message.text().slice(0, 300)}`)
+    }
+  })
+  for (const route of ['/does-not-exist', '/kapitel/does-not-exist', '/ovning/does-not-exist']) {
+    const response = await page.goto(BASE_URL + route, { waitUntil: 'networkidle' })
+    if (response?.status() !== 404) fail(`${name} ${route}: expected HTTP 404`)
+    await page.getByRole('heading', { level: 1, name: 'Sidan hittades inte' }).waitFor()
+    if (!(await page.locator('meta[name="robots"]').getAttribute('content'))?.includes('noindex')) {
+      fail(`${name} ${route}: missing noindex`)
+    }
+    await page.getByRole('link', { name: 'Till kapitlen', exact: true }).click()
+    await page.waitForURL('**/kapitel')
+    await page.waitForFunction(
+      () => document.querySelector('meta[name="robots"]')?.getAttribute('content') === 'index, follow',
+      undefined,
+      { timeout: 5000 },
+    ).catch(() => fail(`${name}: noindex persisted after leaving 404`))
+  }
+  await context.close()
+}
+
 async function answerCurrent(page, pick = 0) {
   await page.locator('form .mb-choice').nth(pick).click()
   await page.getByRole('button', { name: 'Svara' }).click()
@@ -173,6 +200,7 @@ try {
   for (const name of Object.keys(viewports)) {
     await checkRoutes(browser, name)
     await checkFlows(browser, name)
+    await checkMissingRoutes(browser, name)
   }
 } finally {
   await browser.close()

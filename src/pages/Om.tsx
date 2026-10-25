@@ -25,10 +25,10 @@ export function Om() {
           Personlig, fristående studiehjälp av Adrian Martén. Gratis att använda. Sidan finns live
           på{' '}
           <a
-            href="https://medborgarskap.adrianmarten.net"
+            href="https://provamedborgarskap.se"
             className="text-accent underline underline-offset-2"
           >
-            medborgarskap.adrianmarten.net
+            provamedborgarskap.se
           </a>
           .
         </p>

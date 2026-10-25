@@ -11,7 +11,7 @@ const ogSvg = `<?xml version="1.0" encoding="UTF-8"?>
   <rect x="80" y="520" width="200" height="4" fill="#2d4a3e"/>
   <text x="80" y="200" font-family="system-ui, sans-serif" font-size="72" font-weight="600" fill="#211D18">Medborgarskap</text>
   <text x="80" y="280" font-family="system-ui, sans-serif" font-size="32" fill="#211D18" opacity="0.85">Fristående övning baserad på UHR:s Sverige i fokus</text>
-  <text x="80" y="340" font-family="ui-monospace, monospace" font-size="22" fill="#2d4a3e" letter-spacing="2">medborgarskap.adrianmarten.net</text>
+  <text x="80" y="340" font-family="ui-monospace, monospace" font-size="22" fill="#2d4a3e" letter-spacing="2">provamedborgarskap.se</text>
 </svg>`
 
 const appleSvg = `<?xml version="1.0" encoding="UTF-8"?>

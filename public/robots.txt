@@ -1,6 +1,7 @@
 # Medborgarskap robots.txt
 # Open to search engines and AI assistants so the study guide can be found and cited.
-# GPTBot and Google-Extended are allowed on purpose: visibility in ChatGPT and Gemini is the goal.
+# OAI-SearchBot supports ChatGPT search; Googlebot supports Google Search.
+# GPTBot and Google-Extended have separate model-use controls; allowing them does not guarantee discovery.
 
 User-agent: *
 Allow: /
@@ -38,4 +39,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://medborgarskap.adrianmarten.net/sitemap.xml
+Sitemap: https://provamedborgarskap.se/sitemap.xml

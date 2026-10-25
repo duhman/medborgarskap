@@ -1,3 +1,4 @@
+import { NotFound } from './NotFound'
 import { Link, useParams } from 'react-router-dom'
 import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
@@ -7,16 +8,7 @@ export function OvningQuiz() {
   const { slug = '' } = useParams()
   const chapter = useChapter(slug)
 
-  if (!chapter) {
-    return (
-      <p>
-        Övningen hittades inte.{' '}
-        <Link to="/kapitel" className="text-accent underline underline-offset-2">
-          Till kapitel
-        </Link>
-      </p>
-    )
-  }
+  if (!chapter) return <NotFound />
 
   return (
     <article className="space-y-8">

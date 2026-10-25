@@ -2,7 +2,7 @@
 
 **Working title:** Medborgarskap  
 **Tagline (SV):** Fristående övning till medborgarskapsprovet, baserad på UHR:s *Sverige i fokus*.  
-**Domain:** https://medborgarskap.adrianmarten.net  
+**Domain:** https://provamedborgarskap.se
 **Repo:** https://github.com/duhman/medborgarskap  
 **Owner:** Adrian Martén (personal / portfolio goodwill; free forever)  
 **Status:** Personal-first MVP; soft-public only when Adrian would send it to a friend without caveats.
@@ -152,7 +152,7 @@ Never invent a next date.
 - `vitest` for question schema + a few quiz helpers
 - `README.md` with sources, disclaimer, and how to update status strip
 
-Domain after deploy: attach `medborgarskap.adrianmarten.net` on Vercel (CNAME/DNS as needed).
+Domain after deploy: attach `provamedborgarskap.se` on Vercel (CNAME/DNS as needed).
 
 ---
 

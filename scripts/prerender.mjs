@@ -57,9 +57,9 @@ async function main() {
   if (routes.length === 0) fail('sitemap has no routes')
   const pages = []
 
-  for (const route of routes) {
+  for (const route of [...routes, { path: "/404", loc: render("/404").canonical }]) {
     const page = render(route.path, route.lastmod)
-    if (/hittades inte/.test(page.html)) fail(`${route.path} rendered the not-found state`)
+    if (route.path !== "/404" && /hittades inte/.test(page.html)) fail(`${route.path} rendered the not-found state`)
     if (page.html.includes('<!--$!-->')) fail(`${route.path} rendered a Suspense fallback instead of the page`)
     if (page.canonical !== route.loc) fail(`${route.path} canonical ${page.canonical} differs from sitemap ${route.loc}`)
     let html = template
@@ -82,6 +82,11 @@ async function main() {
       ['name', 'twitter:url', page.canonical],
     ]) {
       html = setMeta(html, attr, key, value)
+    }
+    if (route.path === '/404') {
+      html = setMeta(html, 'name', 'robots', 'noindex, follow')
+      writeFileSync(join(dist, '404.html'), html)
+      continue
     }
     const file = route.path === '/' ? join(dist, 'index.html') : join(dist, route.path, 'index.html')
     mkdirSync(dirname(file), { recursive: true })
