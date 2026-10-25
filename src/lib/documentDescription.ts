@@ -10,6 +10,8 @@ const staticPageDescriptions: Record<string, string> = {
   '/behover-jag':
     'Svar på om du behöver medborgarskapsprov, med länkar till UHR och Migrationsverket.',
   '/kapitel': 'Alla kapitel i UHR:s Sverige i fokus, med ljud och studietips per kapitel.',
+  '/studieplan':
+    'Gratis studieplan inför medborgarskapsprovet: alla 13 kapitel i Sverige i fokus vecka för vecka, med repetition på slutet.',
   '/provfragor': 'UHR:s exempel på provfrågor, samlade för egen övning utan inloggning.',
   '/ovning/blandat':
     'Gratis blandade övningsfrågor till medborgarskapsprovet, slumpade från alla 13 kapitel i Sverige i fokus.',

@@ -46,6 +46,11 @@ const steps = [
 
 const practice = [
   {
+    to: '/studieplan',
+    title: 'Studieplan',
+    text: 'Få en plan vecka för vecka genom alla kapitel, fram till provet.',
+  },
+  {
     to: '/ovning/smart',
     title: 'Träna smart',
     text: 'Dina fel och frågor att repetera kommer först. Se hur redo du är i varje kapitel.',

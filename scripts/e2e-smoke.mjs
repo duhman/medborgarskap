@@ -172,6 +172,13 @@ async function checkFlows(browser, name) {
   await page.getByRole('button', { name: /10/ }).click()
   if (!(await page.getByText(/Fråga 1 av 10/).count())) fail(`${name}: smart practice did not start`)
 
+  // A study plan is made, survives a reload and ticks off practised chapters.
+  await page.goto(BASE_URL + '/studieplan', { waitUntil: 'networkidle' })
+  await page.getByRole('button', { name: /^8\s*veckor$/ }).click()
+  await page.reload({ waitUntil: 'networkidle' })
+  if (!(await page.getByRole('heading', { name: /Vecka 1 av 8/ }).count())) fail(`${name}: study plan not saved`)
+  if (!(await page.getByText('Övat', { exact: true }).count())) fail(`${name}: study plan does not tick off practised chapters`)
+
   // Checklist answers survive a reload.
   await page.goto(BASE_URL + '/behover-jag', { waitUntil: 'networkidle' })
   await page.locator('input[name="age"]').first().check()

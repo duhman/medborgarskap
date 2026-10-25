@@ -18,6 +18,7 @@ import { OvningMinaFel } from './pages/OvningMinaFel'
 import { OvningSmart } from './pages/OvningSmart'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
+import { Studieplan } from './pages/Studieplan'
 import { NotFound } from './pages/NotFound'
 
 function FocusMainOnNavigate() {
@@ -84,6 +85,7 @@ export function AppRoutes() {
           <Route path="ovning/smart" element={<OvningSmart />} />
           <Route path="ovning/:slug" element={<OvningQuiz />} />
           <Route path="provfragor" element={<Provfragor />} />
+          <Route path="studieplan" element={<Studieplan />} />
           <Route path="vanliga-fragor" element={<VanligaFragor />} />
           <Route path="om" element={<Om />} />
           <Route path="integritet" element={<Integritet />} />
