@@ -74,7 +74,7 @@ async function checkMissingRoutes(browser, name) {
     if (!(await page.locator('meta[name="robots"]').getAttribute('content'))?.includes('noindex')) {
       fail(`${name} ${route}: missing noindex`)
     }
-    await page.getByRole('link', { name: 'Till kapitlen', exact: true }).click()
+    await page.getByRole('main').getByRole('link', { name: /^Alla kapitel/ }).click()
     await page.waitForURL('**/kapitel')
     await page.waitForFunction(
       () => document.querySelector('meta[name="robots"]')?.getAttribute('content') === 'index, follow',

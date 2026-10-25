@@ -129,7 +129,8 @@
     gap: var(--space-3);
     min-height: 52px;
     padding: 12px 16px;
-    border: var(--border-hairline) solid var(--line-strong);
+    /* --ink-3 keeps the card edge at 3:1 or more against the page in light and dark (WCAG 1.4.11). */
+    border: var(--border-hairline) solid var(--ink-3);
     border-radius: var(--radius-control);
     background-color: var(--bg-raised);
     cursor: pointer;
@@ -139,7 +140,7 @@
   }
 
   .mb-choice:hover {
-    border-color: var(--ink-3);
+    border-color: var(--ink);
   }
 
   .mb-choice:has(input:checked) {
