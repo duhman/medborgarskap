@@ -1,4 +1,4 @@
-import type { ChapterContent } from '../types'
+import type { ChapterContent } from '../types.js'
 
 export const manskligaRattigheter: ChapterContent = {
   slug: 'manskliga-rattigheter',

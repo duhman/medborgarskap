@@ -1,4 +1,4 @@
-import type { ChapterContent } from '../types'
+import type { ChapterContent } from '../types.js'
 
 const PDF =
   'https://www.uhr.se/globalassets/_uhr.se/medborgarskapsprovet/utbildningsmaterial/sverige-i-fokus_.pdf'

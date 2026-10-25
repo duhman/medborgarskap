@@ -1,4 +1,4 @@
-import type { ChapterContent } from '../types'
+import type { ChapterContent } from '../types.js'
 
 export const arbetsmarknadOchPrivatekonomi: ChapterContent = {
   slug: 'arbetsmarknad-och-privatekonomi',

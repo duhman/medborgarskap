@@ -13,7 +13,7 @@
     "check:agent-scope": "node scripts/check-agent-scope.mjs",
     "check:route-meta": "node scripts/check-route-meta.mjs",
     "check:all": "npm run verify && npm run check:quotes && node scripts/run-browser-checks.mjs",
-    "verify": "npm run tsc && npm run tsc:api && npm run lint:ci && npm run check:route-meta && npm run test && npm run check:chatgpt-package && npm run build && npm run check:cascade",
+    "verify": "npm run tsc && npm run tsc:api && npm run check:mcp-node-runtime && npm run lint:ci && npm run check:route-meta && npm run test && npm run check:chatgpt-package && npm run build && npm run check:cascade",
     "check:cascade": "node scripts/check-layer-order.mjs --baseline grundform-unlayered-baseline.json dist",
     "preview": "vite preview",
     "test": "vitest run",
@@ -29,6 +29,7 @@
     "check:chatgpt-package": "node scripts/check-chatgpt-package.mjs --draft",
     "package:chatgpt": "node scripts/package-chatgpt.mjs",
     "check:mcp": "node scripts/check-mcp.mjs",
+    "check:mcp-node-runtime": "node scripts/check-mcp-node-runtime.mjs",
     "check:quotes": "node scripts/extract-pdf-text.mjs --out /tmp/sverige-i-fokus.pages.json && SOURCE_PDF_TEXT=/tmp/sverige-i-fokus.pages.json vitest run scripts/__tests__/quotes-pdf.test.mjs"
   },
   "dependencies": {

@@ -1,13 +1,13 @@
 import { createServer } from 'node:http'
 import { Readable } from 'node:stream'
 import { describe, expect, it } from 'vitest'
-import mcpApi from '../../api/mcp'
+import mcpApi from '../../api/mcp.js'
 import {
   fetchInputSchema,
   handleCitizenshipMcp,
   searchInputSchema,
   searchPublicDocuments,
-} from './citizenshipMcp'
+} from './citizenshipMcp.js'
 
 function rpcRequest(
   method: string,
