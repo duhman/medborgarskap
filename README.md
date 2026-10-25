@@ -2,7 +2,7 @@
 
 Fristående övning till medborgarskapsprovet, baserad på UHR:s *Sverige i fokus*.
 
-**Planerad adress:** https://medborgarskap.adrianmarten.net
+**Planerad adress:** https://provamedborgarskap.se
 
 Medborgarskap är en personlig studiehjälp. Den är **inte** knuten till UHR, Skolverket eller Migrationsverket. Övningsfrågor är egna (utom tydligt märkta UHR-exempel på sidan Provfrågor).
 

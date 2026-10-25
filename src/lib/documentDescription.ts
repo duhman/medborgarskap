@@ -6,6 +6,7 @@ export const DEFAULT_SITE_DESCRIPTION =
 const META_DESCRIPTION_MAX = 160
 
 const staticPageDescriptions: Record<string, string> = {
+  '/404': 'Adressen finns inte. Välj ett kapitel eller börja från startsidan.',
   '/behover-jag':
     'Svar på om du behöver medborgarskapsprov, med länkar till UHR och Migrationsverket.',
   '/kapitel': 'Alla kapitel i UHR:s Sverige i fokus, med ljud och studietips per kapitel.',

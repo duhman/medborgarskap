@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { AnalyticsProvider } from './components/AnalyticsProvider'
 import { Layout } from './components/Layout'
 import { BehoverJag } from './pages/BehoverJag'
@@ -17,6 +17,7 @@ import { OvningBlandat } from './pages/OvningBlandat'
 import { OvningMinaFel } from './pages/OvningMinaFel'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
+import { NotFound } from './pages/NotFound'
 
 function FocusMainOnNavigate() {
   const { pathname } = useLocation()
@@ -85,7 +86,7 @@ export function AppRoutes() {
           <Route path="om" element={<Om />} />
           <Route path="integritet" element={<Integritet />} />
           <Route path="villkor" element={<Villkor />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </AnalyticsProvider>

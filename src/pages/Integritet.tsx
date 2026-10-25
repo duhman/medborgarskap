@@ -77,6 +77,25 @@ export function Integritet() {
       </section>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
+        <h2 className="text-xl font-semibold text-ink">ChatGPT och andra AI-assistenter</h2>
+        <p>
+          Vår skrivskyddade integration söker och hämtar bara offentligt studiematerial och
+          daterad provstatus. Den kan inte läsa dina övningssvar, framsteg eller lokalt sparade
+          uppgifter. Skriv inte personnummer, privata ärenden eller andra känsliga uppgifter i en sökning.
+        </p>
+        <p>
+          Assistentens leverantör skickar söktext eller dokument-id till vår tekniska tjänst hos Vercel.
+          Vi sparar inte sökningar eller svar i någon applikationsdatabas och använder dem inte för
+          analys eller marknadsföring. Teknisk information kan behandlas av Vercel för drift och
+          säkerhet. Någon fast lagringstid för leverantörens driftloggar är inte verifierad.
+        </p>
+        <p>
+          Samtalet hos ChatGPT eller en annan assistent hanteras enligt den leverantörens egna
+          villkor, inställningar och integritetspolicy. Integrationen kan inte radera det samtalet.
+        </p>
+      </section>
+
+      <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
         <h2 className="text-xl font-semibold text-ink">Externa länkar</h2>
         <p>
           Länkar till UHR, Migrationsverket och andra myndigheter leder bort från den här

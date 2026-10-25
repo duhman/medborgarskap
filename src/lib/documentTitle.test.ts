@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { getDocumentTitle, HOME_TITLE } from './documentTitle'
 
 describe('getDocumentTitle', () => {
-  it('uses the home title on the home page and unknown paths', () => {
+  it('uses a distinct missing-page title for unknown paths', () => {
     expect(getDocumentTitle('/')).toBe(HOME_TITLE)
-    expect(getDocumentTitle('/finns-inte')).toBe(HOME_TITLE)
+    expect(getDocumentTitle('/finns-inte')).toBe('Sidan hittades inte | Medborgarskap')
   })
 
   it('titles static pages', () => {

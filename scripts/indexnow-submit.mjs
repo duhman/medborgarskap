@@ -6,9 +6,9 @@
  * design (https://www.indexnow.org/documentation); it must match public/<KEY>.txt.
  * Optional: pass URLs as arguments to submit only those.
  */
-const HOST = "medborgarskap.adrianmarten.net";
+const HOST = "provamedborgarskap.se";
 const KEY = "84e5541df3f62f44a95b40005d8ad68d";
-const SITEMAPS = ["https://medborgarskap.adrianmarten.net/sitemap.xml"];
+const SITEMAPS = ["https://provamedborgarskap.se/sitemap.xml"];
 const ENDPOINT = "https://api.indexnow.org/indexnow";
 
 async function sitemapUrls(url) {

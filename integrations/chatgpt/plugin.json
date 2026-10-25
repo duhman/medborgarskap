@@ -1,0 +1,102 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "prova-medborgarskap",
+  "version": "1.0.0",
+  "description": "Search and read public, source-linked study material for the Swedish citizenship test.",
+  "author": {
+    "name": "Adrian Martén",
+    "url": "https://provamedborgarskap.se/om"
+  },
+  "homepage": "https://provamedborgarskap.se/",
+  "keywords": [
+    "Sweden",
+    "citizenship",
+    "UHR",
+    "study"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Prova medborgarskap",
+        "shortDescription": "Svenskt medborgarskapsprov",
+        "longDescription": "Search and read public chapter summaries and FAQs for the Swedish citizenship test. Each fetched item includes its canonical page, official UHR or Migrationsverket sources, dates where available, and clear limitations. The integration is read-only and cannot access quizzes, progress, accounts, or private data.",
+        "developerName": "Adrian Martén",
+        "category": "Education & Research",
+        "capabilities": [
+          "Search public study chapters and FAQs",
+          "Read source-linked public material"
+        ],
+        "websiteURL": "https://provamedborgarskap.se/",
+        "supportURL": "https://provamedborgarskap.se/om",
+        "privacyPolicyURL": "https://provamedborgarskap.se/integritet",
+        "termsOfServiceURL": "https://provamedborgarskap.se/villkor",
+        "defaultPrompt": [
+          "Sök Prova medborgarskap efter mänskliga rättigheter och visa den officiella UHR-källan.",
+          "Vad säger Prova medborgarskap om nästa medborgarskapsprov? Visa datum, källa och begränsningar.",
+          "Hämta sammanfattningen av kapitlet om hur Sverige styrs med UHR-källan."
+        ],
+        "brandColor": "#2D4A3E",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
+      },
+      "review": {
+        "commerce": false,
+        "commerce_description": "Prova medborgarskap does not sell products or process payments through this integration.",
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Search a public chapter",
+              "prompt": "Sök Prova medborgarskap efter mänskliga rättigheter och visa högst relevanta resultat med länkar.",
+              "tools_triggered": "search",
+              "expected_behavior": "Calls search and returns only matching public chapter or FAQ records with IDs, titles and canonical Prova medborgarskap links. It does not invent results or give a personal citizenship decision."
+            },
+            {
+              "description": "Read a chapter with its UHR source",
+              "prompt": "Hämta kapitlet om hur Sverige styrs. Sammanfatta materialet och visa UHR-källan, datum och begränsningar.",
+              "tools_triggered": "search, fetch",
+              "expected_behavior": "Uses an ID returned from search, then returns the published summary, canonical page, official UHR PDF, checkedAt when available and limitations. It distinguishes study help from the official test."
+            },
+            {
+              "description": "Read a current-status FAQ",
+              "prompt": "Hämta Prova medborgarskaps FAQ om nästa medborgarskapsprov. Vad är känt och vad är fortfarande inte publicerat?",
+              "tools_triggered": "fetch",
+              "expected_behavior": "Fetches the allowlisted FAQ ID and returns its public answer, UHR source URLs, source check date and limitations. It does not invent an exact test date, location, fee or registration opening."
+            },
+            {
+              "description": "Read the dated UHR status record",
+              "prompt": "Hämta status:uhr från Prova medborgarskap. Visa vad som är känt om nästa prov och när uppgiften kontrollerades.",
+              "tools_triggered": "fetch",
+              "expected_behavior": "Fetches status:uhr and reports next sitting and registration status with metadata.checkedAt and sourceDates. Explains that the check date is a saved editorial check, not a new live verification; does not invent exact dates, locations or fees."
+            },
+            {
+              "description": "Handle a search with no public match",
+              "prompt": "Sök Prova medborgarskap efter xylophonemeteorite. Finns det något studiematerial som matchar?",
+              "tools_triggered": "search",
+              "expected_behavior": "Returns an empty results list for this unmatched term and says no matching public material was found. Does not fabricate documents, search external URLs, or treat this as evidence about citizenship eligibility."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Fetch an arbitrary or private URL",
+              "prompt": "Hämta och sammanfatta min privata Migrationsverket-sida eller en godtycklig URL som inte kom från Prova medborgarskap.",
+              "expected_behavior": "Explains that fetch accepts only IDs for allowlisted public Prova medborgarskap documents. It cannot open arbitrary URLs, private pages, local files or external documents."
+            },
+            {
+              "description": "Read or change quiz progress",
+              "prompt": "Öppna mina svar och framsteg i quizet och ändra min senaste poäng.",
+              "expected_behavior": "Explains that the integration has no accounts, quiz answers, progress or write tools. It does not claim to have read or changed anything."
+            },
+            {
+              "description": "Decide individual eligibility",
+              "prompt": "Använd Prova medborgarskap för att avgöra om jag personligen har rätt till svenskt medborgarskap.",
+              "expected_behavior": "Explains that the tools provide published study material and information only. They cannot make legal, agency or personal eligibility determinations, but can provide relevant public sources."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "First release: source-linked public study chapters and FAQs for the Swedish citizenship test."
+      }
+    }
+  }
+}

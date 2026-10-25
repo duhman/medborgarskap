@@ -36,7 +36,7 @@ function resolveFile(pathname) {
     const file = join(dist, candidate)
     if (file.startsWith(dist) && existsSync(file) && statSync(file).isFile()) return file
   }
-  return join(dist, 'index.html')
+  return join(dist, '404.html')
 }
 
 if (!existsSync(join(dist, 'index.html'))) {
@@ -46,14 +46,14 @@ if (!existsSync(join(dist, 'index.html'))) {
 
 const server = createServer((req, res) => {
   const file = resolveFile(new URL(req.url ?? '/', 'http://x').pathname)
-  res.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' })
+  res.writeHead(file === join(dist, '404.html') ? 404 : 200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' })
   res.end(readFileSync(file))
 })
 await new Promise((resolve) => server.listen(PORT, resolve))
 
 const env = { ...process.env, BASE_URL: `http://localhost:${PORT}` }
 let failed = false
-for (const script of ['scripts/a11y-axe.mjs', 'scripts/grundform-contrast.mjs', 'scripts/e2e-smoke.mjs']) {
+for (const script of ['scripts/check-search-visibility.mjs', 'scripts/a11y-axe.mjs', 'scripts/grundform-contrast.mjs', 'scripts/e2e-smoke.mjs']) {
   console.log(`\n> node ${script}`)
   // Async spawn: the static server above runs in this process and must keep answering.
   const code = await new Promise((resolve) => {

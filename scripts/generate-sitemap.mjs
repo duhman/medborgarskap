@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const ORIGIN = 'https://medborgarskap.adrianmarten.net'
+const ORIGIN = 'https://provamedborgarskap.se'
 const slugs = [...readFileSync(join(root, 'src/content/chapters/meta.ts'), 'utf8').matchAll(/slug:\s*'([^']+)'/g)].map((m) => m[1])
 
 const pages = [

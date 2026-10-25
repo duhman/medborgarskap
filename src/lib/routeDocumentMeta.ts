@@ -1,11 +1,11 @@
 import { getDocumentDescription } from './documentDescription'
 import { getDocumentTitle } from './documentTitle'
 
-export const SITE_ORIGIN = 'https://medborgarskap.adrianmarten.net'
+export const SITE_ORIGIN = 'https://provamedborgarskap.se'
 
 export const SITE_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`
 
-/** Canonical path for medborgarskap.adrianmarten.net (no trailing slash except home). */
+/** Canonical path for provamedborgarskap.se (no trailing slash except home). */
 export function canonicalPathname(pathname: string): string {
   if (!pathname || pathname === '/') return '/'
   const trimmed = pathname.replace(/\/+$/, '')
@@ -56,6 +56,7 @@ export function applyRouteDocumentMeta(pathname: string): void {
   document.title = title
   upsertLinkRel('canonical', url)
   upsertMetaByName('description', description)
+  upsertMetaByName('robots', title.includes('hittades inte') ? 'noindex, follow' : 'index, follow')
   upsertMetaByProperty('og:title', title)
   upsertMetaByProperty('og:description', description)
   upsertMetaByProperty('og:url', url)

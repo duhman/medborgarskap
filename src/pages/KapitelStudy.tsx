@@ -1,3 +1,4 @@
+import { NotFound } from './NotFound'
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useChapter } from '../content/chapters/load'
@@ -15,16 +16,7 @@ export function KapitelStudy() {
     if (chapter) markChapterVisited(slug)
   }, [chapter, slug])
 
-  if (!chapter) {
-    return (
-      <p>
-        Kapitlet hittades inte.{' '}
-        <Link to="/kapitel" className="text-accent underline underline-offset-2">
-          Tillbaka till listan
-        </Link>
-      </p>
-    )
-  }
+  if (!chapter) return <NotFound />
 
   const quizResult = quizResults.find((r) => r.slug === slug)
   const chapters = getAllChapters()
