@@ -179,6 +179,14 @@ async function checkFlows(browser, name) {
   if (!(await page.getByRole('heading', { name: /Vecka 1 av 8/ }).count())) fail(`${name}: study plan not saved`)
   if (!(await page.getByText('Övat', { exact: true }).count())) fail(`${name}: study plan does not tick off practised chapters`)
 
+  // Word cards: flip a card and mark it known.
+  await page.goto(BASE_URL + '/kapitel/lag-och-ratt', { waitUntil: 'networkidle' })
+  await page.getByRole('button', { name: /^Börja med \d+\s*ord$/ }).click()
+  await page.getByRole('button', { name: 'Visa vad det betyder' }).click()
+  if (!(await page.getByText(/^English: /).count())) fail(`${name}: word card shows no meaning`)
+  await page.getByRole('button', { name: 'Jag kunde det' }).click()
+  if (!(await page.getByText(/^1\s*av\s*\d+\s*kan du$/).count())) fail(`${name}: word card not counted as known`)
+
   // Checklist answers survive a reload.
   await page.goto(BASE_URL + '/behover-jag', { waitUntil: 'networkidle' })
   await page.locator('input[name="age"]').first().check()
