@@ -53,3 +53,11 @@ FFmpeg verification:
 The final publisher action remains subject to explicit action-time confirmation of the displayed terms and legal declarations. Standing delivery authorization does not itself accept a new legal agreement. No public directory approval or publication is claimed.
 
 The final four-file archive has SHA-256 `c23306beaf1d126e2c0333bdacfad11d01b1472a8f31e953d3425bb5e3cc585a`. Local Chrome decoded the complete 40-second video; public playback is checked after publication.
+
+## Final public and publisher checks
+
+[PR #34](https://github.com/duhman/medborgarskap/pull/34) merged as `97ee131f9c702d247e7d1dd8ba5623c9c649a43a`; Vercel deployment `dpl_CqmffA3kmZTMFzDYWxiLMiTULTFn` reported READY on the established custom domains. The repeated production checks passed **9/9 MCP checks** and **36 pages / six crawler requests / five invalid paths / both host redirects**. The public review HTML, MP4, VTT and poster returned correct MIME types and exact committed bytes. MP4 byte ranges returned HTTP 206. Chrome played the full public 40 seconds with no media error, and the native captions were visible. Caption descriptions were then shortened to avoid covering the chapter's date explanation; the shorter layout was visually checked in Chrome.
+
+OpenAI accepted the final ZIP into the same verified/configured draft. The incomplete-review-information blocker cleared. The remaining privacy finding is non-blocking: the automatic policy assessment could not be completed, and the portal allows submission for additional review. It is not evidence of privacy-policy approval.
+
+All six final declarations remain unchecked: Terms/Plugin Guidelines and compliance, applicable laws, no transfers/trades, third-party content/API rights, suitability for under-18s, and no targeting/sharing of personal information about under-13s. The final Submit button remains disabled pending explicit user confirmation. The test connection is installed; the public directory listing is not submitted, approved or published.

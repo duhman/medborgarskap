@@ -35,3 +35,5 @@ The first production MCP check failed 0/9: Vercel's emitted Node ESM could not r
 Google's subsequent live homepage inspection reported **URL is available to Google** and **Page can be indexed**. That proves Google's live fetch succeeded for the homepage; it does not prove that the sitemap processing succeeded or that any page is indexed.
 
 Google accepted **Request indexing** for the canonical homepage and reported it added to a priority crawl queue. [Indexing request receipt](assets/discovery-2026-10-25/google-indexing-requested.png). No manual CAPTCHA interaction was needed. The queue confirmation is not an indexed-page confirmation.
+
+A single follow-up sitemap resubmission was accepted after the successful live homepage test. The Search Console table still showed “Couldn't fetch” and zero discovered pages afterward. No indexing success is claimed and no crawler protections were bypassed or weakened.
