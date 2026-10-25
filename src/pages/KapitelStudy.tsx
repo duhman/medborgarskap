@@ -6,6 +6,7 @@ import { chapterPageRanges, getAllChapters, pdfPageUrl, SOURCE_PDF_VERSION } fro
 import { ExternalLink } from '../components/ExternalLink'
 import { GfNum } from '../components/GfNum'
 import { ListenButton } from '../components/ListenButton'
+import { WordCards } from '../components/WordCards'
 import { markChapterVisited, useProgressState } from '../lib/progress'
 
 export function KapitelStudy() {
@@ -161,6 +162,8 @@ export function KapitelStudy() {
           </dl>
         </details>
       )}
+
+      {chapter.glossary && chapter.glossary.length > 0 && <WordCards slug={chapter.slug} terms={chapter.glossary} />}
 
       <section aria-labelledby="practice" className="space-y-3 border border-ink bg-raised p-5 sm:p-6">
         <h2 id="practice" className="text-xl font-semibold">
