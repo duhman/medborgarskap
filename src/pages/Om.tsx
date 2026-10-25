@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { officialLinks, uhrStatus } from '../config/status'
-import { getAllChapters, SOURCE_PDF_VERSION } from '../content/chapters/meta'
+import { SOURCE_PDF_VERSION, totalQuestionCount } from '../content/chapters/meta'
 import { GfNum } from '../components/GfNum'
 import { CONTACT_EMAIL, REPO_URL } from '../lib/report'
 
@@ -14,7 +14,7 @@ const sources = [
   { label: 'Reform 6 juni 2026', url: officialLinks.reformNotice },
 ]
 
-const questionCount = getAllChapters().reduce((n, c) => n + c.questions.length, 0)
+const questionCount = totalQuestionCount
 
 export function Om() {
   return (

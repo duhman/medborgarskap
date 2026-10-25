@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { QuizQuestion } from '../content/types'
-import { getAllChapters } from '../content/chapters/meta'
+import { allChapters } from '../content/chapters/all'
 import {
   displayOptions,
   formatSource,
@@ -50,7 +50,7 @@ describe('helpers', () => {
 
   it('spreads correct answers over all four display positions', () => {
     const counts = [0, 0, 0, 0]
-    for (const ch of getAllChapters()) {
+    for (const ch of allChapters) {
       for (const q of ch.questions) {
         counts[displayOptions(q).findIndex((o) => o.id === q.correctOptionId)] += 1
       }
@@ -60,7 +60,7 @@ describe('helpers', () => {
   })
 
   it('gives the same display order on every render', () => {
-    const q = getAllChapters()[0].questions[0]
+    const q = allChapters[0].questions[0]
     expect(displayOptions(q)).toEqual(displayOptions(q))
   })
 
@@ -70,7 +70,7 @@ describe('helpers', () => {
 })
 
 describe('practice sets', () => {
-  const pool = getAllChapters().flatMap((c) => c.questions)
+  const pool = allChapters.flatMap((c) => c.questions)
 
   it('shuffles a list without losing or duplicating items', () => {
     const out = shuffled(pool, seededRandom('x'))

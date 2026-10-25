@@ -46,7 +46,6 @@ export type ChapterContent = {
   intro: string
   bullets?: string[]
   questions: QuizQuestion[]
-  isStub?: boolean
   /** Kort sammanfattning på lätt svenska, några stycken. */
   summaryEasy?: string[]
   glossary?: GlossaryTerm[]

@@ -2,7 +2,7 @@ import { useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
-import { getAllQuestions } from '../content/chapters/meta'
+import { useAllQuestions } from '../content/chapters/load'
 import type { QuizQuestion } from '../content/types'
 import { getMistakeIds, subscribeProgress } from '../lib/progress'
 
@@ -14,8 +14,9 @@ export function OvningMinaFel() {
   const saved = useSyncExternalStore(subscribeProgress, readMistakes, () => null)
   const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
 
+  const allQuestions = useAllQuestions()
   const ids = saved ? new Set(saved.split(',')) : new Set<string>()
-  const mistakes = getAllQuestions().filter((q) => ids.has(q.id))
+  const mistakes = allQuestions.filter((q) => ids.has(q.id))
 
   function start() {
     setSet((prev) => ({ questions: mistakes, round: (prev?.round ?? 0) + 1 }))

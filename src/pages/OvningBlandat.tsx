@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
-import { getAllQuestions } from '../content/chapters/meta'
+import { useAllQuestions } from '../content/chapters/load'
 import type { QuizQuestion } from '../content/types'
 import { pickQuestions } from '../lib/quiz'
 
 const SIZES = [10, 20, 40] as const
 
 export function OvningBlandat() {
-  const pool = getAllQuestions()
+  const pool = useAllQuestions()
   const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
   const sizeHeadingRef = useRef<HTMLHeadingElement>(null)
   const returningToPicker = useRef(false)

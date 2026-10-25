@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { pathwaySources } from '../config/pathwaySources'
 import { officialLinks } from '../config/status'
@@ -6,20 +6,15 @@ import { GfNum } from '../components/GfNum'
 import { OfficialSourceCitation } from '../components/SourceCitation'
 import {
   derivePathwayOutcome,
-  getPathwayAnswers,
   savePathwayAnswers,
-  type PathwayAnswers,
+  useProgressState,
 } from '../lib/progress'
 
 const citationClass = 'space-y-1 pt-2 text-sm text-ink-3'
 
 export function BehoverJag() {
-  const [answers, setAnswers] = useState<PathwayAnswers>(() => getPathwayAnswers())
-
-  useEffect(() => {
-    savePathwayAnswers(answers)
-  }, [answers])
-
+  // Saved in this browser only. The prerendered page starts empty and fills in after hydration.
+  const answers = useProgressState().pathway
   const outcome = useMemo(() => derivePathwayOutcome(answers), [answers])
 
   return (
@@ -40,7 +35,7 @@ export function BehoverJag() {
               type="radio"
               name="age"
               checked={answers.ageBracket === '16-66'}
-              onChange={() => setAnswers((a) => ({ ...a, ageBracket: '16-66' }))}
+              onChange={() => savePathwayAnswers({ ageBracket: '16-66' })}
             />
             <span>
               <GfNum value={16} />-<GfNum value={66} /> år{' '}
@@ -52,7 +47,7 @@ export function BehoverJag() {
               type="radio"
               name="age"
               checked={answers.ageBracket === '67plus'}
-              onChange={() => setAnswers((a) => ({ ...a, ageBracket: '67plus' }))}
+              onChange={() => savePathwayAnswers({ ageBracket: '67plus' })}
             />
             <span>
               <GfNum value={67} /> år eller äldre{' '}
@@ -72,7 +67,7 @@ export function BehoverJag() {
                 type="radio"
                 name="school"
                 checked={answers.schoolSamhall === v}
-                onChange={() => setAnswers((a) => ({ ...a, schoolSamhall: v }))}
+                onChange={() => savePathwayAnswers({ schoolSamhall: v })}
               />
               <span>{v === 'yes' ? 'Ja' : v === 'no' ? 'Nej' : 'Osäker'}</span>
             </label>
@@ -90,7 +85,7 @@ export function BehoverJag() {
                 type="radio"
                 name="komvux"
                 checked={answers.komvuxFolk === v}
-                onChange={() => setAnswers((a) => ({ ...a, komvuxFolk: v }))}
+                onChange={() => savePathwayAnswers({ komvuxFolk: v })}
               />
               <span>{v === 'yes' ? 'Ja' : v === 'no' ? 'Nej' : 'Osäker'}</span>
             </label>
@@ -111,7 +106,7 @@ export function BehoverJag() {
               type="radio"
               name="sfi"
               checked={answers.sfiPath === 'yes'}
-              onChange={() => setAnswers((a) => ({ ...a, sfiPath: 'yes' }))}
+              onChange={() => savePathwayAnswers({ sfiPath: 'yes' })}
             />
             <span>Ja</span>
           </label>
@@ -120,7 +115,7 @@ export function BehoverJag() {
               type="radio"
               name="sfi"
               checked={answers.sfiPath === 'no'}
-              onChange={() => setAnswers((a) => ({ ...a, sfiPath: 'no' }))}
+              onChange={() => savePathwayAnswers({ sfiPath: 'no' })}
             />
             <span>Nej</span>
           </label>

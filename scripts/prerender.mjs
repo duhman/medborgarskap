@@ -4,8 +4,9 @@
  * JavaScript (OAI-SearchBot, PerplexityBot, Bingbot on first pass) see the real page text,
  * the route's own title, description and canonical, and per-route JSON-LD. Also writes llms.txt.
  *
- * Runs after `vite build`. The browser entry still uses createRoot, so the client replaces the
- * prerendered markup on load and no hydration contract is introduced.
+ * Runs after `vite build`. The browser entry hydrates this markup (src/main.tsx), so what a route
+ * renders here must match its first client render: read browser-only state (localStorage) through
+ * useSyncExternalStore with an empty server snapshot, never during render.
  * Fails with PRERENDER_FAILED when a route renders the not-found state or the template drifts.
  */
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -47,7 +48,8 @@ async function main() {
     logLevel: 'warn',
     build: { ssr: 'src/entry-server.tsx', outDir: ssrOut, emptyOutDir: true, copyPublicDir: false },
   })
-  const { render } = await import(pathToFileURL(join(ssrOut, 'entry-server.js')).href)
+  const { preload, render } = await import(pathToFileURL(join(ssrOut, 'entry-server.js')).href)
+  await preload()
   const template = readFileSync(join(dist, 'index.html'), 'utf8')
   if (!template.includes('<div id="root"></div>')) fail('dist/index.html has no empty #root')
 
@@ -58,6 +60,7 @@ async function main() {
   for (const route of routes) {
     const page = render(route.path, route.lastmod)
     if (/hittades inte/.test(page.html)) fail(`${route.path} rendered the not-found state`)
+    if (page.html.includes('<!--$!-->')) fail(`${route.path} rendered a Suspense fallback instead of the page`)
     if (page.canonical !== route.loc) fail(`${route.path} canonical ${page.canonical} differs from sitemap ${route.loc}`)
     let html = template
       .replace('<div id="root"></div>', `<div id="root">${page.html}</div>`)

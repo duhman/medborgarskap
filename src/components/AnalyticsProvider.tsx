@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
-import posthog from 'posthog-js'
+import type { PostHog } from 'posthog-js'
 import { isAnalyticsOptedOut } from '../lib/analyticsOptOut'
 
 type AnalyticsProviderProps = {
@@ -16,18 +16,20 @@ function scheduleDeferred(task: () => void): () => void {
   return () => window.clearTimeout(timer)
 }
 
-function initPostHog(): boolean {
+/** Loads posthog-js only when analytics will run, so it stays out of the first page load. */
+async function initPostHog(): Promise<PostHog | null> {
   const key = import.meta.env.VITE_PUBLIC_POSTHOG_KEY
   const host = import.meta.env.VITE_PUBLIC_POSTHOG_HOST
 
   if (!key || !host) {
-    return false
+    return null
   }
 
   if (isAnalyticsOptedOut()) {
-    return false
+    return null
   }
 
+  const { default: posthog } = await import('posthog-js')
   posthog.init(key, {
     api_host: host,
     capture_pageview: false,
@@ -39,29 +41,34 @@ function initPostHog(): boolean {
     persistence: 'localStorage+cookie',
   })
 
-  return true
+  return posthog
 }
 
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const location = useLocation()
-  const [ready, setReady] = useState(false)
+  const [posthog, setPostHog] = useState<PostHog | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    return scheduleDeferred(() => {
-      if (cancelled) {
-        return
-      }
-      if (initPostHog()) {
-        setReady(true)
-      }
+    const cancelTask = scheduleDeferred(() => {
+      initPostHog()
+        .then((client) => {
+          if (!cancelled && client) setPostHog(client)
+        })
+        .catch(() => {
+          // Blocked by an ad blocker or offline: the site works the same without analytics.
+        })
     })
+    return () => {
+      cancelled = true
+      cancelTask()
+    }
   }, [])
 
   useEffect(() => {
-    if (!ready) return
+    if (!posthog) return
     posthog.capture('$pageview')
-  }, [ready, location.pathname, location.search, location.hash])
+  }, [posthog, location.pathname, location.search, location.hash])
 
   return children
 }
