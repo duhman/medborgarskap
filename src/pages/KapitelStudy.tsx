@@ -5,6 +5,7 @@ import { useChapter } from '../content/chapters/load'
 import { chapterPageRanges, getAllChapters, pdfPageUrl, SOURCE_PDF_VERSION } from '../content/chapters/meta'
 import { ExternalLink } from '../components/ExternalLink'
 import { GfNum } from '../components/GfNum'
+import { ListenButton } from '../components/ListenButton'
 import { markChapterVisited, useProgressState } from '../lib/progress'
 
 export function KapitelStudy() {
@@ -113,6 +114,7 @@ export function KapitelStudy() {
           <h2 id="latt-svenska" className="mb-section-head">
             Kapitlet på lätt svenska
           </h2>
+          <ListenButton id={`${chapter.slug}:latt-svenska`} parts={chapter.summaryEasy} label="Lyssna på texten" />
           {chapter.summaryEasy.map((p) => (
             <p key={p} className="text-lg leading-relaxed">
               {p}

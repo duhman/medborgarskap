@@ -15,6 +15,7 @@ import {
 } from '../lib/progress'
 import { reportErrorLinks } from '../lib/report'
 import { GfNum } from './GfNum'
+import { ListenButton } from './ListenButton'
 import { ProgressMeter } from './ProgressMeter'
 import { SourceCitation } from './SourceCitation'
 
@@ -380,9 +381,16 @@ export function QuizRunner({
         )}
       </div>
 
-      <p className="hidden text-sm text-ink-3 sm:block">
-        Tips: välj svar med tangenterna A-D och tryck Enter.
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-x-4">
+        <p className="hidden text-sm text-ink-3 sm:block">
+          Tips: välj svar med tangenterna A-D och tryck Enter.
+        </p>
+        <ListenButton
+          id={`${q.id}:${attempt}:fraga`}
+          parts={[q.prompt, ...options.map((o, i) => `${LETTERS[i]}. ${o.text}`)]}
+          label="Lyssna på frågan"
+        />
+      </div>
 
       {/* method="dialog" outside a dialog submits nowhere, so a tap on Svara before the page has
           finished loading does not reload it with the answer in the address. */}
@@ -443,6 +451,14 @@ export function QuizRunner({
               {isCorrect ? 'Rätt' : chosen ? 'Inte rätt' : 'Du hoppade över frågan'}
             </p>
             <p>{q.explanationSv}</p>
+            <ListenButton
+              id={`${q.id}:${attempt}:forklaring`}
+              parts={[
+                `Rätt svar: ${q.options.find((o) => o.id === q.correctOptionId)?.text ?? ''}.`,
+                q.explanationSv,
+              ]}
+              label="Lyssna på förklaringen"
+            />
             <SourceCitation source={q.source} className="text-[0.9375rem] text-ink-2" />
             {q.explanationEn && (
               <div>
