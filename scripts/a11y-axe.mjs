@@ -60,7 +60,7 @@ async function run() {
   try {
     await waitForServer(`${BASE_URL}/`)
 
-    const browser = await chromium.launch()
+    const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {})
     const summary = {
       label: LABEL,
       playwrightVersion: PINNED_PLAYWRIGHT_VERSION,

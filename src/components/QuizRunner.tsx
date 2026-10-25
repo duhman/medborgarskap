@@ -1,8 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import type { QuizQuestion } from '../content/types'
 import { displayOptions, percentCorrect, scoreQuiz, seededRandom, shuffled } from '../lib/quiz'
-import { recordAnswers, saveQuizResult } from '../lib/progress'
+import {
+  clearQuizSession,
+  getQuizSessionRaw,
+  parseQuizSession,
+  recordAnswers,
+  saveQuizResult,
+  saveQuizSession,
+  subscribeProgress,
+  type QuizSession,
+} from '../lib/progress'
 import { reportErrorLinks } from '../lib/report'
 import { GfNum } from './GfNum'
 import { ProgressMeter } from './ProgressMeter'
@@ -47,6 +56,12 @@ export function QuizRunner({
   const [finished, setFinished] = useState(false)
   const [showEn, setShowEn] = useState(false)
   const [hint, setHint] = useState(false)
+  // An unfinished run of this chapter saved in this browser. The prerendered page has none.
+  const savedSession = useSyncExternalStore(
+    subscribeProgress,
+    () => (saveResult ? getQuizSessionRaw(slug) : null),
+    () => null,
+  )
 
   useEffect(() => {
     const target = focusTarget.current
@@ -85,6 +100,14 @@ export function QuizRunner({
     setChecked(true)
     setHint(false)
     recordAnswers([{ id: q.id, correct: choice == null ? null : choice === q.correctOptionId }])
+    if (saveResult) {
+      saveQuizSession(slug, {
+        attempt,
+        index: index + 1,
+        answers: { ...answers, [q.id]: choice },
+        savedAt: new Date().toISOString(),
+      })
+    }
     focusTarget.current = 'feedback'
   }
 
@@ -100,6 +123,7 @@ export function QuizRunner({
     setFinished(true)
     focusTarget.current = 'result'
     if (saveResult) {
+      clearQuizSession(slug)
       const { score } = scoreQuiz(questions, answers)
       saveQuizResult({ slug, score, total, completedAt: new Date().toISOString() })
     }
@@ -127,7 +151,22 @@ export function QuizRunner({
     }
   }
 
+  function continueSession(session: QuizSession) {
+    setAttempt(session.attempt)
+    setIndex(session.index)
+    setAnswers(session.answers)
+    setSelected(undefined)
+    setChecked(false)
+    setShowEn(false)
+    focusTarget.current = 'counter'
+  }
+
+  function dismissSession() {
+    clearQuizSession(slug)
+  }
+
   function handleRetry() {
+    if (saveResult) clearQuizSession(slug)
     setAttempt((n) => n + 1)
     setIndex(0)
     setSelected(undefined)
@@ -210,9 +249,37 @@ export function QuizRunner({
   const isCorrect = checked && chosen === q.correctOptionId
   const report = reportErrorLinks(q)
   const isLast = index + 1 === total
+  const session = parseQuizSession(savedSession)
+  // Offer to continue only before this visit has answered anything.
+  const resume =
+    session &&
+    attempt === 0 &&
+    index === 0 &&
+    !checked &&
+    session.index > 0 &&
+    session.index < total &&
+    Object.keys(session.answers).every((id) => questions.some((x) => x.id === id))
+      ? session
+      : null
 
   return (
     <div ref={rootRef} onKeyDown={handleKeyDown} className="scroll-mt-4 space-y-4">
+      {resume && (
+        <section aria-label="Påbörjad övning" className="surface-raised space-y-3 p-4 sm:p-5">
+          <p>
+            Du har en påbörjad övning. Du kom till fråga <GfNum value={resume.index + 1} /> av{' '}
+            <GfNum value={total} />.
+          </p>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button type="button" onClick={() => continueSession(resume)} className="mb-btn mb-btn--primary">
+              Fortsätt där du slutade
+            </button>
+            <button type="button" onClick={dismissSession} className="mb-btn mb-btn--secondary">
+              Börja från början
+            </button>
+          </div>
+        </section>
+      )}
       <div className="space-y-2">
         <div className="flex items-baseline justify-between gap-4 text-sm">
           <p ref={counterRef} tabIndex={-1} className="font-medium text-ink outline-none">

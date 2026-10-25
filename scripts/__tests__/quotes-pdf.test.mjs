@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { getAllChapters } from '../../src/content/chapters/meta'
+import { allChapters } from '../../src/content/chapters/all'
 
 /**
  * Checks every question's quote against the text of Sverige i fokus, page by page.
@@ -41,7 +41,7 @@ describe.skipIf(!available)('quotes match Sverige i fokus', () => {
     : { pages: {} }
   const normalized = Object.entries(pages).map(([n, text]) => [Number(n), normalizeForQuote(text)])
 
-  for (const ch of getAllChapters()) {
+  for (const ch of allChapters) {
     it(`chapter ${ch.number}: every quote is on its cited page`, () => {
       const problems = []
       for (const q of ch.questions) {

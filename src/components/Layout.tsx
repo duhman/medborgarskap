@@ -1,6 +1,8 @@
-import { Link, Outlet } from 'react-router-dom'
+import { Suspense } from 'react'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Disclaimer } from './Disclaimer'
 import { Nav } from './Nav'
+import { PageErrorBoundary } from './PageErrorBoundary'
 import { StatusStrip } from './StatusStrip'
 
 const siblingSites = [
@@ -19,6 +21,8 @@ const siteLinks = [
 ] as const
 
 export function Layout() {
+  const { pathname } = useLocation()
+
   return (
     <div className="flex min-h-dvh flex-col">
       <a href="#main-content" className="skip-link">
@@ -31,7 +35,13 @@ export function Layout() {
         tabIndex={-1}
         className="mx-auto w-full max-w-3xl flex-1 px-4 pt-8 pb-16 outline-none sm:pt-12"
       >
-        <Outlet />
+        {/* Chapter pages pause here while their questions load (see content/chapters/load.ts). */}
+        {/* Keyed by path so an error on one page does not stick when the visitor moves on. */}
+        <PageErrorBoundary key={pathname}>
+          <Suspense fallback={<p className="text-ink-3">Laddar…</p>}>
+            <Outlet />
+          </Suspense>
+        </PageErrorBoundary>
       </main>
       <footer role="contentinfo" className="border-t border-line-strong bg-paper-muted">
         <div className="mx-auto max-w-3xl space-y-8 px-4 py-10">

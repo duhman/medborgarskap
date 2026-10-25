@@ -73,7 +73,7 @@ async function run() {
   let browser
   try {
     await waitForServer(`${BASE_URL}/`)
-    browser = await chromium.launch()
+    browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {})
     const page = await browser.newPage()
     await page.goto(`${BASE_URL}/`, { waitUntil: 'load' })
     await page.waitForSelector(CTA_SELECTOR, { state: 'visible' })

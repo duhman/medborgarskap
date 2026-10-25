@@ -1,4 +1,7 @@
+import { useSyncExternalStore } from 'react'
+
 const STORAGE_KEY = 'medborgarskap-progress-v1'
+const SESSION_PREFIX = 'medborgarskap-quiz-v1:'
 
 export type QuizResult = {
   slug: string
@@ -37,7 +40,11 @@ const defaultState = (): ProgressState => ({
   mistakes: [],
 })
 
+/** Used when the browser refuses to store anything (blocked storage), so answers still show. */
+let memoryFallback: ProgressState | undefined
+
 function readState(): ProgressState {
+  if (memoryFallback) return structuredClone(memoryFallback)
   if (typeof localStorage === 'undefined') return defaultState()
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -60,8 +67,10 @@ function writeState(state: ProgressState): void {
   if (typeof localStorage === 'undefined') return
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    memoryFallback = undefined
   } catch {
-    // Storage full or blocked (private mode): progress is a convenience, so carry on without it.
+    // Storage full or blocked (private mode): keep progress in memory for this visit instead.
+    memoryFallback = state
   }
   listeners.forEach((listener) => listener())
 }
@@ -71,7 +80,7 @@ export function subscribeProgress(listener: () => void): () => void {
   listeners.add(listener)
   const onStorage = (e: StorageEvent) => {
     // key is null when another tab clears all storage.
-    if (e.key === STORAGE_KEY || e.key === null) listener()
+    if (e.key === STORAGE_KEY || e.key === null || e.key.startsWith(SESSION_PREFIX)) listener()
   }
   if (typeof window !== 'undefined') window.addEventListener('storage', onStorage)
   return () => {
@@ -136,6 +145,33 @@ export function getProgressState(): ProgressState {
   return readState()
 }
 
+const EMPTY_STATE: ProgressState = defaultState()
+let snapshotRaw: string | null | undefined
+let snapshot: ProgressState = EMPTY_STATE
+
+function readSnapshot(): ProgressState {
+  if (memoryFallback) return memoryFallback
+  let raw: string | null = null
+  try {
+    raw = localStorage.getItem(STORAGE_KEY)
+  } catch {
+    return EMPTY_STATE
+  }
+  if (raw !== snapshotRaw) {
+    snapshotRaw = raw
+    snapshot = raw ? readState() : EMPTY_STATE
+  }
+  return snapshot
+}
+
+/**
+ * Progress for rendering. The prerendered HTML and the first client render use the empty state,
+ * so hydration matches; React then re-renders with what this browser has saved.
+ */
+export function useProgressState(): ProgressState {
+  return useSyncExternalStore(subscribeProgress, readSnapshot, () => EMPTY_STATE)
+}
+
 export function derivePathwayOutcome(answers: PathwayAnswers): PathwayOutcome {
   if (answers.ageBracket === '67plus') return 'maybe-exempt'
   if (answers.schoolSamhall === 'yes' || answers.komvuxFolk === 'yes') {
@@ -152,6 +188,63 @@ export function derivePathwayOutcome(answers: PathwayAnswers): PathwayOutcome {
 
 /** Test helper */
 export function resetProgressForTests(): void {
+  memoryFallback = undefined
   if (typeof localStorage === 'undefined') return
   localStorage.removeItem(STORAGE_KEY)
+}
+
+/** An unfinished chapter quiz, so the visitor can continue where they left off. */
+export type QuizSession = {
+  attempt: number
+  /** The next question to answer, in the attempt's order. */
+  index: number
+  answers: Record<string, 'A' | 'B' | 'C' | 'D' | undefined>
+  savedAt: string
+}
+
+const SESSION_KEY = (slug: string) => `${SESSION_PREFIX}${slug}`
+
+export function saveQuizSession(slug: string, session: QuizSession): void {
+  try {
+    localStorage.setItem(SESSION_KEY(slug), JSON.stringify(session))
+  } catch {
+    // Blocked storage: resuming is a convenience.
+  }
+  listeners.forEach((listener) => listener())
+}
+
+/** The saved session as a string, so useSyncExternalStore compares it by value. */
+export function getQuizSessionRaw(slug: string): string | null {
+  try {
+    return localStorage.getItem(SESSION_KEY(slug))
+  } catch {
+    return null
+  }
+}
+
+export function parseQuizSession(raw: string | null): QuizSession | undefined {
+  if (!raw) return undefined
+  try {
+    const parsed = JSON.parse(raw) as QuizSession
+    if (
+      !Number.isInteger(parsed.index) ||
+      !Number.isInteger(parsed.attempt) ||
+      typeof parsed.answers !== 'object' ||
+      parsed.answers === null
+    ) {
+      return undefined
+    }
+    return parsed
+  } catch {
+    return undefined
+  }
+}
+
+export function clearQuizSession(slug: string): void {
+  try {
+    localStorage.removeItem(SESSION_KEY(slug))
+  } catch {
+    // Nothing to clear.
+  }
+  listeners.forEach((listener) => listener())
 }

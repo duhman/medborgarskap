@@ -4,7 +4,7 @@ import { GfNum } from '../components/GfNum'
 import { ProgressMeter } from '../components/ProgressMeter'
 import { officialLinks } from '../config/status'
 import { getAllChapters } from '../content/chapters/meta'
-import { getProgressState } from '../lib/progress'
+import { useProgressState, type ProgressState } from '../lib/progress'
 
 type StudyProgress = {
   practised: number
@@ -12,10 +12,9 @@ type StudyProgress = {
   next?: { slug: string; number: number; title: string }
 }
 
-/** Progress lives in localStorage; during prerender readState() falls back to empty and this returns null. */
-function getStudyProgress(): StudyProgress | null {
+/** Null until this browser has saved progress (always null in the prerendered HTML). */
+function getStudyProgress({ visitedChapters, quizResults }: ProgressState): StudyProgress | null {
   const chapters = getAllChapters()
-  const { visitedChapters, quizResults } = getProgressState()
   if (visitedChapters.length === 0 && quizResults.length === 0) return null
   const done = new Set(quizResults.map((r) => r.slug))
   const practised = chapters.filter((c) => done.has(c.slug)).length
@@ -59,7 +58,7 @@ const practice = [
 ] as const
 
 export function Home() {
-  const progress = getStudyProgress()
+  const progress = getStudyProgress(useProgressState())
 
   return (
     <article className="space-y-12">

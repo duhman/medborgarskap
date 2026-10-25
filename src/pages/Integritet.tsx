@@ -32,9 +32,14 @@ export function Integritet() {
         <h2 className="text-xl font-semibold text-ink">localStorage på din enhet</h2>
         <p>
           Webbläsaren kan spara dina svar i vägledningen &quot;Behöver jag ta provet?&quot; och
-          dina quizresultat i localStorage. Uppgifterna stannar på din enhet och skickas inte
-          till oss som applikationsdata. Du kan rensa dem när som helst via webbläsarens
-          inställningar.
+          dina quizresultat i localStorage, och var du är i en påbörjad övning. Uppgifterna
+          stannar på din enhet och skickas inte till oss som applikationsdata. Du kan rensa dem
+          när som helst via webbläsarens inställningar.
+        </p>
+        <p>
+          För att sidan ska fungera utan internet sparar webbläsaren också kopior av sidor och
+          filer som du har öppnat här (en så kallad service worker). Kopiorna innehåller inga
+          uppgifter om dig och rensas på samma sätt.
         </p>
       </section>
 

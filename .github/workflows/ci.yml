@@ -1,9 +1,9 @@
 name: CI
 
+# Manual only: the GitHub Actions budget is zero, so every check runs locally before merge
+# (`npm run check:all`, see AGENTS.md). Start this by hand from the Actions tab if ever needed.
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}

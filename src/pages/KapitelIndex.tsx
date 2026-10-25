@@ -4,11 +4,11 @@ import { officialLinks } from '../config/status'
 import { ExternalLink } from '../components/ExternalLink'
 import { GfNum } from '../components/GfNum'
 import { ProgressMeter } from '../components/ProgressMeter'
-import { getProgressState, getQuizResult } from '../lib/progress'
+import { useProgressState } from '../lib/progress'
 
 export function KapitelIndex() {
   const chapters = getAllChapters()
-  const { visitedChapters, quizResults } = getProgressState()
+  const { visitedChapters, quizResults } = useProgressState()
   const chapterSlugs = new Set(chapters.map((c) => c.slug))
   const visitedCount = visitedChapters.filter((slug) => chapterSlugs.has(slug)).length
   const quizCount = quizResults.filter((r) => chapterSlugs.has(r.slug)).length
@@ -56,7 +56,7 @@ export function KapitelIndex() {
 
       <ol className="surface-raised divide-y divide-line-strong">
         {chapters.map((ch) => {
-          const result = getQuizResult(ch.slug)
+          const result = quizResults.find((r) => r.slug === ch.slug)
           const visitedOnly = !result && visitedChapters.includes(ch.slug)
           return (
             <li key={ch.slug}>
@@ -83,11 +83,9 @@ export function KapitelIndex() {
                         <>
                           Senast <GfNum value={result.score} /> av <GfNum value={result.total} /> rätt
                         </>
-                      ) : ch.isStub ? (
-                        'Frågor kommer snart'
                       ) : (
                         <>
-                          <GfNum value={ch.questions.length} /> frågor
+                          <GfNum value={ch.questionCount} /> frågor
                         </>
                       )}
                     </span>

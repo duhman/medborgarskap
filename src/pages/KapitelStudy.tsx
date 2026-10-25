@@ -1,19 +1,15 @@
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import {
-  chapterPageRanges,
-  getAllChapters,
-  getChapterBySlug,
-  pdfPageUrl,
-  SOURCE_PDF_VERSION,
-} from '../content/chapters/meta'
+import { useChapter } from '../content/chapters/load'
+import { chapterPageRanges, getAllChapters, pdfPageUrl, SOURCE_PDF_VERSION } from '../content/chapters/meta'
 import { ExternalLink } from '../components/ExternalLink'
 import { GfNum } from '../components/GfNum'
-import { getQuizResult, markChapterVisited } from '../lib/progress'
+import { markChapterVisited, useProgressState } from '../lib/progress'
 
 export function KapitelStudy() {
   const { slug = '' } = useParams()
-  const chapter = getChapterBySlug(slug)
+  const chapter = useChapter(slug)
+  const { quizResults } = useProgressState()
 
   useEffect(() => {
     if (chapter) markChapterVisited(slug)
@@ -30,7 +26,7 @@ export function KapitelStudy() {
     )
   }
 
-  const quizResult = getQuizResult(slug)
+  const quizResult = quizResults.find((r) => r.slug === slug)
   const chapters = getAllChapters()
   const position = chapters.findIndex((c) => c.slug === chapter.slug)
   const prev = chapters[position - 1]
@@ -45,13 +41,11 @@ export function KapitelStudy() {
         </p>
         <h1 className="text-3xl font-semibold sm:text-4xl">{chapter.title}</h1>
         <p className="text-lg leading-relaxed text-ink-2">{chapter.intro}</p>
-        {!chapter.isStub && (
-          <Link to={`/ovning/${chapter.slug}`} className="mb-btn mb-btn--secondary w-full sm:w-auto">
-            <span>
-              Öva direkt (<GfNum value={chapter.questions.length} /> frågor)
-            </span>
-          </Link>
-        )}
+        <Link to={`/ovning/${chapter.slug}`} className="mb-btn mb-btn--secondary w-full sm:w-auto">
+          <span>
+            Öva direkt (<GfNum value={chapter.questions.length} /> frågor)
+          </span>
+        </Link>
       </header>
 
       <section aria-labelledby="listen-read" className="space-y-4">
@@ -157,14 +151,8 @@ export function KapitelStudy() {
           Öva kapitlet
         </h2>
         <p className="text-ink-2">
-          {chapter.isStub ? (
-            'Frågor kommer i en senare uppdatering.'
-          ) : (
-            <>
-              <GfNum value={chapter.questions.length} /> frågor, en i taget, med förklaring efter
-              varje svar.
-            </>
-          )}
+          <GfNum value={chapter.questions.length} /> frågor, en i taget, med förklaring efter varje
+          svar.
         </p>
         {quizResult && (
           <p className="text-sm text-ink-3">
@@ -173,7 +161,7 @@ export function KapitelStudy() {
           </p>
         )}
         <Link to={`/ovning/${chapter.slug}`} className="mb-btn mb-btn--primary w-full sm:w-auto sm:px-8">
-          {chapter.isStub ? 'Visa övningssidan' : quizResult ? 'Öva igen' : 'Börja öva'}
+          {quizResult ? 'Öva igen' : 'Börja öva'}
         </Link>
         {chapter.review && (
           <p className="text-sm text-ink-3">

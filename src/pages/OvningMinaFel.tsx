@@ -1,8 +1,8 @@
-import { useState, useSyncExternalStore } from 'react'
+import { Suspense, useState, useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
 import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
-import { getAllQuestions } from '../content/chapters/meta'
+import { useAllQuestions } from '../content/chapters/load'
 import type { QuizQuestion } from '../content/types'
 import { getMistakeIds, subscribeProgress } from '../lib/progress'
 
@@ -12,14 +12,6 @@ const readMistakes = () => getMistakeIds().join(',')
 export function OvningMinaFel() {
   // The prerendered page has no saved progress, so the server snapshot is null.
   const saved = useSyncExternalStore(subscribeProgress, readMistakes, () => null)
-  const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
-
-  const ids = saved ? new Set(saved.split(',')) : new Set<string>()
-  const mistakes = getAllQuestions().filter((q) => ids.has(q.id))
-
-  function start() {
-    setSet((prev) => ({ questions: mistakes, round: (prev?.round ?? 0) + 1 }))
-  }
 
   return (
     <article className="space-y-8">
@@ -32,45 +24,13 @@ export function OvningMinaFel() {
         </p>
       </header>
 
-      {saved === null ? null : mistakes.length === 0 ? (
-        <p className="surface-raised p-5">
-          Du har inga sparade fel just nu. Gör en{' '}
-          <Link to="/ovning/blandat" className="text-accent underline underline-offset-2">
-            blandad övning
-          </Link>{' '}
-          eller öva ett{' '}
-          <Link to="/kapitel" className="text-accent underline underline-offset-2">
-            kapitel
-          </Link>
-          .
-        </p>
+      {saved === null ? null : saved === '' ? (
+        <NoMistakes />
       ) : (
-        !set && (
-          <div className="surface-raised space-y-4 p-5">
-            <p className="text-lg">
-              Du har <GfNum value={mistakes.length} /> {mistakes.length === 1 ? 'fråga' : 'frågor'}{' '}
-              att öva på.
-            </p>
-            <button
-              type="button"
-              onClick={start}
-              className="mb-btn mb-btn--primary"
-            >
-              Öva på dem nu
-            </button>
-          </div>
-        )
-      )}
-
-      {set && (
-        <QuizRunner
-          key={set.round}
-          slug="mina-fel"
-          chapterTitle="dina fel"
-          questions={set.questions}
-          saveResult={false}
-          autoFocus
-        />
+        // Questions load only when there is something to practise.
+        <Suspense fallback={<p className="text-ink-3">Laddar dina frågor…</p>}>
+          <MistakesPractice ids={saved} />
+        </Suspense>
       )}
 
       <p>
@@ -79,5 +39,57 @@ export function OvningMinaFel() {
         </Link>
       </p>
     </article>
+  )
+}
+
+function NoMistakes() {
+  return (
+    <p className="surface-raised p-5">
+      Du har inga sparade fel just nu. Gör en{' '}
+      <Link to="/ovning/blandat" className="text-accent underline underline-offset-2">
+        blandad övning
+      </Link>{' '}
+      eller öva ett{' '}
+      <Link to="/kapitel" className="text-accent underline underline-offset-2">
+        kapitel
+      </Link>
+      .
+    </p>
+  )
+}
+
+function MistakesPractice({ ids }: { ids: string }) {
+  const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
+  const allQuestions = useAllQuestions()
+  const idSet = new Set(ids.split(','))
+  const mistakes = allQuestions.filter((q) => idSet.has(q.id))
+
+  function start() {
+    setSet((prev) => ({ questions: mistakes, round: (prev?.round ?? 0) + 1 }))
+  }
+
+  if (set) {
+    return (
+      <QuizRunner
+        key={set.round}
+        slug="mina-fel"
+        chapterTitle="dina fel"
+        questions={set.questions}
+        saveResult={false}
+        autoFocus
+      />
+    )
+  }
+  if (mistakes.length === 0) return <NoMistakes />
+  return (
+    <div className="surface-raised space-y-4 p-5">
+      <p className="text-lg">
+        Du har <GfNum value={mistakes.length} /> {mistakes.length === 1 ? 'fråga' : 'frågor'} att öva
+        på.
+      </p>
+      <button type="button" onClick={start} className="mb-btn mb-btn--primary">
+        Öva på dem nu
+      </button>
+    </div>
   )
 }

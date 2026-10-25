@@ -1,11 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
 import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
-import { getChapterBySlug } from '../content/chapters/meta'
+import { useChapter } from '../content/chapters/load'
 
 export function OvningQuiz() {
   const { slug = '' } = useParams()
-  const chapter = getChapterBySlug(slug)
+  const chapter = useChapter(slug)
 
   if (!chapter) {
     return (

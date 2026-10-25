@@ -47,7 +47,7 @@ export function getDocumentDescription(pathname: string): string {
     if (!chapter) {
       return 'Kapitlet hittades inte. Gå tillbaka till kapitelöversikten på Medborgarskap.'
     }
-    return truncateMetaDescription(chapter.stubIntro)
+    return truncateMetaDescription(chapter.intro)
   }
 
   const quizMatch = path.match(/^\/ovning\/([^/]+)$/)

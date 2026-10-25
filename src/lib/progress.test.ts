@@ -1,11 +1,38 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import {
+  clearQuizSession,
   derivePathwayOutcome,
   getMistakeIds,
+  getQuizSessionRaw,
+  parseQuizSession,
   recordAnswers,
   resetProgressForTests,
+  saveQuizSession,
+  subscribeProgress,
   type PathwayAnswers,
 } from './progress'
+
+describe('quiz sessions', () => {
+  it('saves, reads back and clears an unfinished quiz, and tells subscribers', () => {
+    let calls = 0
+    const unsubscribe = subscribeProgress(() => {
+      calls += 1
+    })
+    saveQuizSession('lag-och-ratt', { attempt: 0, index: 3, answers: { q1: 'A' }, savedAt: '2026-10-25' })
+    expect(parseQuizSession(getQuizSessionRaw('lag-och-ratt'))).toMatchObject({ index: 3, answers: { q1: 'A' } })
+    clearQuizSession('lag-och-ratt')
+    expect(getQuizSessionRaw('lag-och-ratt')).toBeNull()
+    expect(calls).toBe(2)
+    unsubscribe()
+  })
+
+  it('ignores broken saved data', () => {
+    expect(parseQuizSession('not json')).toBeUndefined()
+    expect(parseQuizSession('{"index":"2"}')).toBeUndefined()
+    expect(parseQuizSession('{"index":1.5,"attempt":0,"answers":{}}')).toBeUndefined()
+    expect(parseQuizSession(null)).toBeUndefined()
+  })
+})
 
 describe('recordAnswers', () => {
   beforeEach(() => resetProgressForTests())
