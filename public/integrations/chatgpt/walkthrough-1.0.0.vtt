@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00.000 --> 00:08.000
+Chapter search and fetch: canonical and UHR links, with the question-review date distinguished from summary verification. A plain-text retry rendered after a ChatGPT display error.
+
+00:08.000 --> 00:16.000
+Dated UHR status and FAQ: the planned sitting is separated from details not yet confirmed in the saved source record.
+
+00:16.000 --> 00:24.000
+Canonical FAQ and official source links. Source check dates describe a saved check, not a new live verification.
+
+00:24.000 --> 00:32.000
+An unmatched public search returns zero results. No documents are invented.
+
+00:32.000 --> 00:40.000
+The read-only plugin cannot fetch arbitrary private URLs, read or change private quiz progress, or decide personal citizenship eligibility. HTTP rejection checks are tested separately.
