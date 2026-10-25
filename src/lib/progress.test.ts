@@ -29,6 +29,7 @@ describe('quiz sessions', () => {
   it('ignores broken saved data', () => {
     expect(parseQuizSession('not json')).toBeUndefined()
     expect(parseQuizSession('{"index":"2"}')).toBeUndefined()
+    expect(parseQuizSession('{"index":1.5,"attempt":0,"answers":{}}')).toBeUndefined()
     expect(parseQuizSession(null)).toBeUndefined()
   })
 })

@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react'
 
 const STORAGE_KEY = 'medborgarskap-progress-v1'
+const SESSION_PREFIX = 'medborgarskap-quiz-v1:'
 
 export type QuizResult = {
   slug: string
@@ -66,6 +67,7 @@ function writeState(state: ProgressState): void {
   if (typeof localStorage === 'undefined') return
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    memoryFallback = undefined
   } catch {
     // Storage full or blocked (private mode): keep progress in memory for this visit instead.
     memoryFallback = state
@@ -78,7 +80,7 @@ export function subscribeProgress(listener: () => void): () => void {
   listeners.add(listener)
   const onStorage = (e: StorageEvent) => {
     // key is null when another tab clears all storage.
-    if (e.key === STORAGE_KEY || e.key === null) listener()
+    if (e.key === STORAGE_KEY || e.key === null || e.key.startsWith(SESSION_PREFIX)) listener()
   }
   if (typeof window !== 'undefined') window.addEventListener('storage', onStorage)
   return () => {
@@ -200,7 +202,7 @@ export type QuizSession = {
   savedAt: string
 }
 
-const SESSION_KEY = (slug: string) => `medborgarskap-quiz-v1:${slug}`
+const SESSION_KEY = (slug: string) => `${SESSION_PREFIX}${slug}`
 
 export function saveQuizSession(slug: string, session: QuizSession): void {
   try {
@@ -224,7 +226,14 @@ export function parseQuizSession(raw: string | null): QuizSession | undefined {
   if (!raw) return undefined
   try {
     const parsed = JSON.parse(raw) as QuizSession
-    if (typeof parsed.index !== 'number' || typeof parsed.attempt !== 'number' || !parsed.answers) return undefined
+    if (
+      !Number.isInteger(parsed.index) ||
+      !Number.isInteger(parsed.attempt) ||
+      typeof parsed.answers !== 'object' ||
+      parsed.answers === null
+    ) {
+      return undefined
+    }
     return parsed
   } catch {
     return undefined

@@ -15,14 +15,16 @@ bun run verify
 | ---- | ------ | ------------------------------ |
 | Typecheck | `bun run tsc` | folded into `npm run build` |
 | Lint | `bun run lint:ci` | `npm run lint` |
-| Unit tests | `bun run test` | not in CI yet (see PR body snippet) |
+| Unit tests | `bun run test` | yes |
 | Production build | `bun run build` | `npm run build` |
 
 **Prod-like static server (Vercel shape):** after `bun run build`, smoke with `bun run preview` (default port 4173). This is the stack’s production bundle served locally; no Wrangler.
 
-**Accessibility (CI-only today):** Playwright axe on all routes: `bun run test:a11y:install-browser -- --with-deps` once, then `bun run test:a11y`. Run before merge when touching layout, nav, or copy on interactive pages.
+**Accessibility:** Playwright axe on all routes, part of `npm run check:all`. Install the browser once with `npm run test:a11y:install-browser -- --with-deps`.
 
-**End to end (local):** after a build, start `npm run preview` and run `BASE_URL=http://localhost:4173 npm run test:e2e` (add `CHROMIUM_PATH=...` to use a preinstalled Chromium). It loads every sitemap route on a phone and a desktop viewport (console errors, hydration mismatches, horizontal scroll) and walks the study flows, including resume and offline.
+**No GitHub Actions:** CI and the weekly source check only run when started by hand (zero Actions budget). Before every merge run `npm run check:all` locally: verify, quotes against the PDF, then `scripts/run-browser-checks.mjs` (axe light/dark, Grundform contrast, e2e) against a Vercel-like static server. Run `npm run check:sources` now and then for the official pages.
+
+**End to end:** `npm run test:e2e` with `BASE_URL` set (add `CHROMIUM_PATH=...` to use a preinstalled Chromium); `check:all` does this for you. Do not point it at `vite preview`, which serves the home HTML for every route. It loads every sitemap route on a phone and a desktop viewport (console errors, hydration mismatches, horizontal scroll) and walks the study flows, including resume and offline.
 
 **Hydration and chapter loading:** `src/main.tsx` hydrates the prerendered HTML, so a page's first client render must match the prerender. Read localStorage only through `useSyncExternalStore` with an empty server snapshot (`useProgressState()` in src/lib/progress.ts). Chapter questions load per chapter from `src/content/chapters/load.ts` (`useChapter`, `useAllQuestions`); `chapterMetaList` holds what lists and SEO need and must not import chapter files (content.test.ts checks intro and question counts stay in sync). `public/sw.js` keeps visited pages readable offline.
 

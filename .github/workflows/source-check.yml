@@ -5,9 +5,8 @@
 # Cost: about one runner minute a week; the repository is public, so Actions minutes are free.
 name: source-check
 
+# Manual only (no Actions budget). Run `npm run check:sources` locally instead.
 on:
-  schedule:
-    - cron: '17 5 * * 1'
   workflow_dispatch:
 
 permissions:

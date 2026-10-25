@@ -91,7 +91,8 @@ export function useAllQuestions(): QuizQuestion[] {
 /** Laddar de kapitel en sida behöver, innan den förrenderade sidan hydreras. */
 export function preloadRouteData(pathname: string): Promise<unknown> {
   const path = pathname.replace(/\/+$/, '')
-  if (path === '/ovning/blandat' || path === '/ovning/mina-fel') return loadAllChapters()
+  // /ovning/mina-fel loads questions only once it knows there are saved mistakes.
+  if (path === '/ovning/blandat') return loadAllChapters()
   const slug = path.match(/^\/(?:kapitel|ovning)\/([^/]+)$/)?.[1]
   if (slug && isChapterSlug(slug)) return loadChapter(slug)
   return Promise.resolve()

@@ -30,6 +30,10 @@ async function initPostHog(): Promise<PostHog | null> {
   }
 
   const { default: posthog } = await import('posthog-js')
+  // The visitor may have opted out while the library was loading.
+  if (isAnalyticsOptedOut()) {
+    return null
+  }
   posthog.init(key, {
     api_host: host,
     capture_pageview: false,

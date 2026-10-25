@@ -26,11 +26,16 @@ const viewports = {
 
 function watchConsole(page, label) {
   page.on('console', (msg) => {
-    if (msg.type() === 'error' && !/posthog|Failed to load resource/i.test(msg.text())) {
+    // Analytics may be blocked or unconfigured locally; everything else counts.
+    if (msg.type() === 'error' && !/posthog/i.test(msg.text() + (msg.location().url ?? ''))) {
       fail(`${label}: console error: ${msg.text().slice(0, 300)}`)
     }
   })
   page.on('pageerror', (err) => fail(`${label}: page error: ${err.message.slice(0, 300)}`))
+  page.on('requestfailed', (req) => {
+    // ERR_ABORTED is a request cancelled by navigation, not a failure.
+    if (req.url().startsWith(BASE_URL) && req.failure()?.errorText !== 'net::ERR_ABORTED') fail(`${label}: request failed: ${req.url()} (${req.failure()?.errorText})`)
+  })
 }
 
 async function checkRoutes(browser, name) {
@@ -48,6 +53,7 @@ async function checkRoutes(browser, name) {
     if (await page.getByText('Laddar…').count()) fail(`${label}: stuck on loading`)
     page.removeAllListeners('console')
     page.removeAllListeners('pageerror')
+    page.removeAllListeners('requestfailed')
   }
   await context.close()
 }
@@ -126,8 +132,17 @@ async function checkFlows(browser, name) {
 
   // Offline: a visited chapter still opens (service worker), and studying continues.
   await page.goto(BASE_URL + '/kapitel/lag-och-ratt', { waitUntil: 'networkidle' })
-  await page.evaluate(() => navigator.serviceWorker?.ready)
+  const swReady = await page.evaluate(() =>
+    Promise.race([
+      navigator.serviceWorker?.ready.then(() => true) ?? false,
+      new Promise((resolve) => setTimeout(() => resolve(false), 10_000)),
+    ]),
+  )
+  if (!swReady) fail(`${name}: service worker did not become ready`)
   await page.reload({ waitUntil: 'networkidle' })
+  // Requests are expected to fail from here on.
+  page.removeAllListeners('console')
+  page.removeAllListeners('requestfailed')
   await context.setOffline(true)
   await page.reload({ waitUntil: 'domcontentloaded' }).catch(() => null)
   const offlineH1 = await page.locator('main h1').first().textContent().catch(() => null)
