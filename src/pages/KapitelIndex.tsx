@@ -108,6 +108,9 @@ export function KapitelIndex() {
           Öva över alla kapitel
         </h2>
         <div className="flex flex-col gap-3 sm:flex-row">
+          <Link to="/ovning/smart" className="mb-btn mb-btn--secondary">
+            Träna smart
+          </Link>
           <Link to="/ovning/blandat" className="mb-btn mb-btn--secondary">
             Blandade frågor
           </Link>
