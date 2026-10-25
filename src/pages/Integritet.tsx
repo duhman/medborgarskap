@@ -1,11 +1,34 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { clearAllProgress } from '../lib/progress'
+
+function ClearProgress() {
+  const [cleared, setCleared] = useState(false)
+
+  function clear() {
+    if (!window.confirm('Vill du rensa allt som sidan har sparat i den här webbläsaren?')) return
+    clearAllProgress()
+    setCleared(true)
+  }
+
+  return (
+    <div className="space-y-2">
+      <button type="button" onClick={clear} className="mb-btn mb-btn--secondary">
+        Rensa mina sparade uppgifter
+      </button>
+      <p role="status" className="text-ink-2">
+        {cleared ? 'Klart. Dina framsteg, fel och svar är borttagna från den här webbläsaren.' : ''}
+      </p>
+    </div>
+  )
+}
 
 export function Integritet() {
   return (
     <article className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Integritetspolicy</h1>
-        <p className="text-sm text-ink-2">Senast uppdaterad: 24 september 2026</p>
+        <p className="text-sm text-ink-2">Senast uppdaterad: 25 oktober 2026</p>
       </header>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
@@ -29,16 +52,17 @@ export function Integritet() {
       </section>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
-        <h2 className="text-xl font-semibold text-ink">localStorage på din enhet</h2>
+        <h2 className="text-xl font-semibold text-ink">Det som sparas i din webbläsare</h2>
         <p>
-          Webbläsaren kan spara dina svar i vägledningen &quot;Behöver jag ta provet?&quot; och
-          dina quizresultat i localStorage, och var du är i en påbörjad övning. Uppgifterna
-          stannar på din enhet och skickas inte till oss som applikationsdata. Du kan rensa dem
-          när som helst via webbläsarens inställningar.
+          Din webbläsare sparar dina svar i vägledningen &quot;Behöver jag provet?&quot;, dina
+          resultat i övningarna, frågor du har svarat fel på och var du är i en påbörjad övning.
+          Det sparas i webbläsarens lokala lagring (localStorage). Uppgifterna stannar på din enhet
+          och skickas inte till oss. Du kan rensa dem här eller i webbläsarens inställningar.
         </p>
+        <ClearProgress />
         <p>
           För att sidan ska fungera utan internet sparar webbläsaren också kopior av sidor och
-          filer som du har öppnat här (en så kallad service worker). Kopiorna innehåller inga
+          filer som du har öppnat här. Kopiorna innehåller inga
           uppgifter om dig och rensas på samma sätt.
         </p>
       </section>
@@ -46,7 +70,7 @@ export function Integritet() {
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
         <h2 className="text-xl font-semibold text-ink">Teknisk drift och loggar</h2>
         <p>
-          Sidan hostas hos Vercel. Leverantören kan logga teknisk information (till exempel IP,
+          Sidan ligger hos företaget Vercel. Leverantören kan logga teknisk information (till exempel IP,
           begärd sökväg och tidpunkt) för drift och säkerhet. Vi använder inte dessa loggar för
           marknadsföring.
         </p>

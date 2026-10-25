@@ -1,12 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import {
+  clearAllProgress,
+  clearPathwayAnswers,
   clearQuizSession,
   derivePathwayOutcome,
   getMistakeIds,
+  getPathwayAnswers,
   getQuizSessionRaw,
   parseQuizSession,
   recordAnswers,
   resetProgressForTests,
+  savePathwayAnswers,
   saveQuizSession,
   subscribeProgress,
   type PathwayAnswers,
@@ -31,6 +35,36 @@ describe('quiz sessions', () => {
     expect(parseQuizSession('{"index":"2"}')).toBeUndefined()
     expect(parseQuizSession('{"index":1.5,"attempt":0,"answers":{}}')).toBeUndefined()
     expect(parseQuizSession(null)).toBeUndefined()
+    expect(parseQuizSession('{"index":1,"attempt":0,"answers":{},"ids":"q1"}')).toBeUndefined()
+  })
+
+  it('keeps the question ids of a mixed set', () => {
+    saveQuizSession('blandat', { attempt: 0, index: 1, answers: {}, savedAt: '2026-10-25', ids: ['q2', 'q1'] })
+    expect(parseQuizSession(getQuizSessionRaw('blandat'))?.ids).toEqual(['q2', 'q1'])
+    clearQuizSession('blandat')
+  })
+})
+
+describe('clearing saved data', () => {
+  beforeEach(() => resetProgressForTests())
+
+  it('clears checklist answers only', () => {
+    savePathwayAnswers({ ageBracket: '16-66' })
+    recordAnswers([{ id: 'q1', correct: false }])
+    clearPathwayAnswers()
+    expect(getPathwayAnswers()).toEqual({})
+    expect(getMistakeIds()).toEqual(['q1'])
+  })
+
+  it('clears progress, mistakes and unfinished quizzes but nothing else', () => {
+    localStorage.setItem('other-site-key', 'x')
+    recordAnswers([{ id: 'q1', correct: false }])
+    saveQuizSession('lag-och-ratt', { attempt: 0, index: 2, answers: {}, savedAt: '2026-10-25' })
+    clearAllProgress()
+    expect(getMistakeIds()).toEqual([])
+    expect(getQuizSessionRaw('lag-och-ratt')).toBeNull()
+    expect(localStorage.getItem('other-site-key')).toBe('x')
+    localStorage.removeItem('other-site-key')
   })
 })
 

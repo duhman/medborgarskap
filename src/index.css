@@ -194,8 +194,8 @@
   .mb-choice__tag {
     flex-shrink: 0;
     font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 0.75rem;
+    line-height: 1rem;
     font-weight: 500;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -207,8 +207,8 @@
     padding-bottom: var(--space-2);
     border-bottom: var(--border-hairline) solid var(--ink);
     font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 0.75rem;
+    line-height: 1rem;
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -220,6 +220,12 @@
 @layer site {
   html {
     scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   .skip-link {

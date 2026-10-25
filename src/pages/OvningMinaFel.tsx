@@ -12,6 +12,8 @@ const readMistakes = () => getMistakeIds().join(',')
 export function OvningMinaFel() {
   // The prerendered page has no saved progress, so the server snapshot is null.
   const saved = useSyncExternalStore(subscribeProgress, readMistakes, () => null)
+  // A round keeps running when its last right answer empties the list, so its result still shows.
+  const [practising, setPractising] = useState(false)
 
   return (
     <article className="space-y-8">
@@ -24,12 +26,12 @@ export function OvningMinaFel() {
         </p>
       </header>
 
-      {saved === null ? null : saved === '' ? (
+      {saved === null ? null : saved === '' && !practising ? (
         <NoMistakes />
       ) : (
         // Questions load only when there is something to practise.
         <Suspense fallback={<p className="text-ink-3">Laddar dina frågor…</p>}>
-          <MistakesPractice ids={saved} />
+          <MistakesPractice ids={saved} onStart={() => setPractising(true)} />
         </Suspense>
       )}
 
@@ -58,14 +60,21 @@ function NoMistakes() {
   )
 }
 
-function MistakesPractice({ ids }: { ids: string }) {
+function MistakesPractice({ ids, onStart }: { ids: string; onStart: () => void }) {
   const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
   const allQuestions = useAllQuestions()
   const idSet = new Set(ids.split(','))
   const mistakes = allQuestions.filter((q) => idSet.has(q.id))
 
   function start() {
+    onStart()
     setSet((prev) => ({ questions: mistakes, round: (prev?.round ?? 0) + 1 }))
+  }
+
+  // A new round practises what is still wrong, not the questions answered right last time.
+  function retry() {
+    if (mistakes.length === 0) setSet(null)
+    else start()
   }
 
   if (set) {
@@ -76,6 +85,8 @@ function MistakesPractice({ ids }: { ids: string }) {
         chapterTitle="dina fel"
         questions={set.questions}
         saveResult={false}
+        onRetry={retry}
+        retryLabel="Öva på de fel som är kvar"
         autoFocus
       />
     )

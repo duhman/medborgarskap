@@ -10,6 +10,7 @@ import { Integritet } from './pages/Integritet'
 import { Om } from './pages/Om'
 import { VanligaFragor } from './pages/VanligaFragor'
 import { Villkor } from './pages/Villkor'
+import { prefetchChaptersWhenIdle, savePageForOffline } from './lib/offline'
 import { applyRouteDocumentMeta } from './lib/routeDocumentMeta'
 import { syncRouteJsonLd } from './seo/syncJsonLd'
 import { OvningBlandat } from './pages/OvningBlandat'
@@ -57,6 +58,8 @@ function DocumentTitle() {
   useEffect(() => {
     applyRouteDocumentMeta(pathname)
     syncRouteJsonLd(pathname)
+    savePageForOffline(pathname)
+    if (/^\/(kapitel|ovning)\/./.test(pathname)) prefetchChaptersWhenIdle()
   }, [pathname])
 
   return null

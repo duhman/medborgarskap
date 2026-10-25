@@ -92,6 +92,8 @@ async function checkFlows(browser, name) {
   await answerCurrent(page, 0)
   await page.reload({ waitUntil: 'networkidle' })
   const resume = page.getByRole('button', { name: 'Fortsätt där du slutade' })
+  // Answering the first question under the offer would overwrite the saved run.
+  if (await page.locator('form .mb-choice').count()) fail(`${name}: question shows under the offer to continue`)
   if (await resume.count()) {
     await resume.click()
     if (!(await page.getByText(/Fråga 3 av/).count())) fail(`${name}: continuing did not return to question 3`)
@@ -123,6 +125,18 @@ async function checkFlows(browser, name) {
   await page.goto(BASE_URL + '/ovning/blandat', { waitUntil: 'networkidle' })
   await page.getByRole('button', { name: /10/ }).click()
   if (!(await page.getByText(/Fråga 1 av 10/).count())) fail(`${name}: mixed practice did not start`)
+  // A mixed quiz left half way comes back with the same questions.
+  await answerCurrent(page, 0)
+  await page.getByRole('button', { name: /Nästa fråga/ }).click()
+  await answerCurrent(page, 0)
+  await page.reload({ waitUntil: 'networkidle' })
+  const mixedResume = page.getByRole('button', { name: 'Fortsätt där du slutade' })
+  if (await mixedResume.count()) {
+    await mixedResume.click()
+    if (!(await page.getByText(/Fråga 3 av 10/).count())) fail(`${name}: mixed practice did not continue at question 3`)
+  } else {
+    fail(`${name}: no offer to continue an unfinished mixed quiz`)
+  }
 
   // Checklist answers survive a reload.
   await page.goto(BASE_URL + '/behover-jag', { waitUntil: 'networkidle' })

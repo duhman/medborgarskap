@@ -24,7 +24,7 @@ export function Provfragor() {
             <p className="mb-1 font-mono text-xs font-medium uppercase tracking-wide text-ink-3">
               Officiellt UHR-exempel <GfNum value={q.id} />
             </p>
-            <p className="mb-4 text-[17px] font-semibold leading-snug">{q.prompt}</p>
+            <p className="mb-4 text-[1.0625rem] font-semibold leading-snug">{q.prompt}</p>
             <ol className="space-y-2">
               {q.options.map((opt) => (
                 <li

@@ -25,6 +25,19 @@
   --accent-deep-d: #2d4a3e;
   --accent-soft-d: rgba(90, 143, 120, 0.22);
   --accent-ring-d: #8fc4a8;
+
+  /*
+   * Grundform sets its type scale in px, which ignores a larger default font chosen in the
+   * browser. The same sizes in rem (at the usual 16 px default) follow that setting.
+   */
+  --type-body-lg-size: 1.25rem;
+  --type-body-lg-line: 2rem;
+  --type-body-size: 1.0625rem;
+  --type-body-line: 1.5rem;
+  --type-small-size: 0.875rem;
+  --type-small-line: 1.25rem;
+  --type-label-size: 0.75rem;
+  --type-label-line: 1rem;
 }
 
 h1 {

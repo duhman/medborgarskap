@@ -137,6 +137,12 @@ export function savePathwayAnswers(pathway: PathwayAnswers): void {
   writeState(state)
 }
 
+export function clearPathwayAnswers(): void {
+  const state = readState()
+  state.pathway = {}
+  writeState(state)
+}
+
 export function getPathwayAnswers(): PathwayAnswers {
   return readState().pathway
 }
@@ -200,6 +206,8 @@ export type QuizSession = {
   index: number
   answers: Record<string, 'A' | 'B' | 'C' | 'D' | undefined>
   savedAt: string
+  /** The question ids of the set, for sets picked at random (the mixed quiz) that must be rebuilt. */
+  ids?: string[]
 }
 
 const SESSION_KEY = (slug: string) => `${SESSION_PREFIX}${slug}`
@@ -230,7 +238,8 @@ export function parseQuizSession(raw: string | null): QuizSession | undefined {
       !Number.isInteger(parsed.index) ||
       !Number.isInteger(parsed.attempt) ||
       typeof parsed.answers !== 'object' ||
-      parsed.answers === null
+      parsed.answers === null ||
+      (parsed.ids !== undefined && !Array.isArray(parsed.ids))
     ) {
       return undefined
     }
@@ -245,6 +254,19 @@ export function clearQuizSession(slug: string): void {
     localStorage.removeItem(SESSION_KEY(slug))
   } catch {
     // Nothing to clear.
+  }
+  listeners.forEach((listener) => listener())
+}
+
+/** Removes everything this site saved in this browser: progress, mistakes, answers and unfinished quizzes. */
+export function clearAllProgress(): void {
+  memoryFallback = undefined
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (key === STORAGE_KEY || key.startsWith(SESSION_PREFIX)) localStorage.removeItem(key)
+    }
+  } catch {
+    // Blocked storage: nothing was saved.
   }
   listeners.forEach((listener) => listener())
 }

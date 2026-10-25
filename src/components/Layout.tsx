@@ -50,7 +50,7 @@ export function Layout() {
             <div className="space-y-2">
               <p className="mb-section-head">Medborgarskap</p>
               <nav aria-label="Medborgarskap">
-                <ul className="flex flex-wrap gap-x-5 text-[15px]">
+                <ul className="flex flex-wrap gap-x-5 text-[0.9375rem]">
                   {siteLinks.map((l) => (
                     <li key={l.to}>
                       <Link to={l.to} className="mb-link-quiet inline-flex min-h-11 items-center">
@@ -64,7 +64,7 @@ export function Layout() {
             <div className="space-y-2">
               <p className="mb-section-head">Fler projekt</p>
               <nav aria-label="Fler projekt">
-                <ul className="flex flex-wrap gap-x-5 text-[15px]">
+                <ul className="flex flex-wrap gap-x-5 text-[0.9375rem]">
                   {siblingSites.map((site) => (
                     <li key={site.href}>
                       <a
