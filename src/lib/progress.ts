@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react'
+import type { StudyPlanSettings } from './studyPlan'
 
 const STORAGE_KEY = 'medborgarskap-progress-v1'
 const SESSION_PREFIX = 'medborgarskap-quiz-v1:'
@@ -43,6 +44,8 @@ export type ProgressState = {
   mistakes: string[]
   /** Per question id. Questions never answered are missing. */
   history: Record<string, QuestionHistory>
+  /** The visitor's study plan, if they made one. */
+  plan?: StudyPlanSettings
 }
 
 const defaultState = (): ProgressState => ({
@@ -69,6 +72,7 @@ function readState(): ProgressState {
       pathway: parsed.pathway ?? {},
       mistakes: parsed.mistakes ?? [],
       history: parsed.history ?? {},
+      ...(parsed.plan ? { plan: parsed.plan } : {}),
     }
   } catch {
     return defaultState()
@@ -169,6 +173,13 @@ export function savePathwayAnswers(pathway: PathwayAnswers): void {
 export function clearPathwayAnswers(): void {
   const state = readState()
   state.pathway = {}
+  writeState(state)
+}
+
+export function saveStudyPlan(plan: StudyPlanSettings | undefined): void {
+  const state = readState()
+  if (plan) state.plan = plan
+  else delete state.plan
   writeState(state)
 }
 
