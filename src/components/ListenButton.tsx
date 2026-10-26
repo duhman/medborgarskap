@@ -16,7 +16,8 @@ export function ListenButton({ id, parts, label, className = '', forcePlaying = 
   const onPreview =
     typeof window !== 'undefined' && window.location.pathname.startsWith('/og-preview')
   const canSpeak = useCanSpeak()
-  const playing = forcePlaying || useSpeakingId() === id
+  const speakingId = useSpeakingId()
+  const playing = forcePlaying || speakingId === id
 
   // Stop when the text goes away, for example on the next question or another page.
   useEffect(() => () => stopSpeaking(id), [id])

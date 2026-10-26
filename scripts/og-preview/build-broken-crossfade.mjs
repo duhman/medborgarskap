@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import sharp from 'sharp'
 import { compositeFrame } from './compositor.mjs'
-import { FPS, WIDTH, HEIGHT, TOTAL_FRAMES } from './timing.mjs'
+import { FPS, TOTAL_FRAMES } from './timing.mjs'
 
 const proofDir = join(dirname(fileURLToPath(import.meta.url)), 'proof')
 const out = join(proofDir, 'broken-crossfade.mp4')
