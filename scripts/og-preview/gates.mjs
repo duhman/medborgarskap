@@ -1,4 +1,4 @@
-import { BODY_TOP, BAND_BOTTOM, BAND_TOP } from './timing.mjs'
+import { BODY_TOP, BAND_TOP } from './timing.mjs'
 import { frameMeanWithinPaperBand, rgbMeanFromBuffer, deltaE } from './palette.mjs'
 
 const SAFE_INSET = 60
