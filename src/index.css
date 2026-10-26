@@ -139,8 +139,9 @@
       background-color var(--dur-quick) var(--ease-out);
   }
 
-  .mb-choice:hover {
-    border-color: var(--ink);
+  .mb-choice:not(:has(input:checked)):hover {
+    border-color: var(--ink-2);
+    background-color: var(--bg-raised);
   }
 
   .mb-choice:has(input:checked) {
@@ -189,7 +190,7 @@
   }
 
   .mb-choice--muted:hover {
-    border-color: var(--line-strong);
+    border-color: var(--ink-3);
   }
 
   .mb-choice__tag {
