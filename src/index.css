@@ -139,7 +139,7 @@
       background-color var(--dur-quick) var(--ease-out);
   }
 
-  .mb-choice:not(.mb-choice--correct):not(.mb-choice--wrong):not(.mb-choice--muted):hover {
+  .mb-choice:where(:not(.mb-choice--correct):not(.mb-choice--wrong):not(.mb-choice--muted)):hover {
     border-color: var(--ink-2);
     background-color: var(--bg-raised);
   }
@@ -149,7 +149,7 @@
     background-color: var(--bg-sunk);
   }
 
-  .mb-choice:has(input:checked):hover {
+  .mb-choice:has(input:checked):not(.mb-choice--correct):not(.mb-choice--wrong):not(.mb-choice--muted):hover {
     border-color: var(--ink);
     background-color: var(--bg-sunk);
   }

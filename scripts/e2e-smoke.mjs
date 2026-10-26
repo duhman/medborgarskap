@@ -144,7 +144,7 @@ async function checkChoiceHoverBorders(browser, name) {
       for (const sheet of document.styleSheets) {
         try {
           for (const rule of sheet.cssRules) {
-            if (rule.cssText?.includes('mb-choice:not(.mb-choice--correct)')) return true
+            if (rule.cssText?.includes('mb-choice:where')) return true
           }
         } catch {
           /* cross-origin sheet */
@@ -191,6 +191,48 @@ async function checkChoiceHoverBorders(browser, name) {
     await correct.hover()
     await page.screenshot({
       path: `${shotDir}/mb-choice-correct-hover-after-wrong-1280.png`,
+      fullPage: false,
+    })
+  }
+
+  const wrongChecked = page.locator('form .mb-choice.mb-choice--wrong').filter({ has: page.locator('input:checked') }).first()
+  if (!(await wrongChecked.count())) fail(`${label}: no checked wrong row after wrong answer`)
+  await expectBorderToken(page, wrongChecked, '--error', `${label} wrong checked`)
+  if (shotDir) {
+    await wrongChecked.hover()
+    await page.screenshot({
+      path: `${shotDir}/mb-choice-wrong-checked-hover-1280.png`,
+      fullPage: false,
+    })
+  }
+
+  let correctGraded = false
+  for (const pick of [0, 1, 2, 3]) {
+    await page.goto(BASE_URL + '/ovning/landet-sverige', { waitUntil: 'networkidle' })
+    await page.evaluate(() => localStorage.clear())
+    await page.reload({ waitUntil: 'networkidle' })
+    await page.getByRole('button', { name: 'Svara' }).waitFor()
+    await page.locator('form .mb-choice').first().waitFor()
+    await page.locator('form .mb-choice').nth(pick).click()
+    await page.getByRole('button', { name: 'Svara' }).click()
+    if (await page.locator('form .mb-choice--wrong').count()) continue
+    if (await page.locator('form .mb-choice--correct').count()) {
+      correctGraded = true
+      break
+    }
+  }
+  if (!correctGraded) fail(`${label}: could not submit a correct answer`)
+
+  const correctChecked = page
+    .locator('form .mb-choice.mb-choice--correct')
+    .filter({ has: page.locator('input:checked') })
+    .first()
+  if (!(await correctChecked.count())) fail(`${label}: no checked correct row after correct answer`)
+  await expectBorderToken(page, correctChecked, '--ok', `${label} correct checked`)
+  if (shotDir) {
+    await correctChecked.hover()
+    await page.screenshot({
+      path: `${shotDir}/mb-choice-correct-checked-hover-1280.png`,
       fullPage: false,
     })
   }
