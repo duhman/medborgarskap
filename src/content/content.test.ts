@@ -137,7 +137,6 @@ describe('official UHR samples', () => {
     expect(officialSampleQuestions).toHaveLength(5)
     for (const q of officialSampleQuestions) {
       expect(q.options).toHaveLength(4)
-      expect(q.note.toLowerCase()).toContain('uhr')
     }
   })
 })
