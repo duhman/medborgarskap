@@ -139,11 +139,17 @@
       background-color var(--dur-quick) var(--ease-out);
   }
 
-  .mb-choice:hover {
-    border-color: var(--ink);
+  .mb-choice:not(.mb-choice--correct):not(.mb-choice--wrong):not(.mb-choice--muted):hover {
+    border-color: var(--ink-2);
+    background-color: var(--bg-raised);
   }
 
   .mb-choice:has(input:checked) {
+    border-color: var(--ink);
+    background-color: var(--bg-sunk);
+  }
+
+  .mb-choice:has(input:checked):hover {
     border-color: var(--ink);
     background-color: var(--bg-sunk);
   }
@@ -182,14 +188,16 @@
 
   .mb-choice--correct:hover {
     border-color: var(--ok);
+    background-color: color-mix(in srgb, var(--ok) 10%, var(--bg-raised));
   }
 
   .mb-choice--wrong:hover {
     border-color: var(--error);
+    background-color: color-mix(in srgb, var(--error) 8%, var(--bg-raised));
   }
 
   .mb-choice--muted:hover {
-    border-color: var(--line-strong);
+    border-color: var(--ink-3);
   }
 
   .mb-choice__tag {
