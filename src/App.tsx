@@ -20,6 +20,7 @@ import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 import { Studieplan } from './pages/Studieplan'
 import { NotFound } from './pages/NotFound'
+import { OgPreviewStage } from './pages/OgPreviewStage'
 
 function FocusMainOnNavigate() {
   const { pathname } = useLocation()
@@ -75,6 +76,7 @@ export function AppRoutes() {
       <FocusMainOnNavigate />
       <DocumentTitle />
       <Routes>
+        <Route path="og-preview/:stage" element={<OgPreviewStage />} />
         <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="behover-jag" element={<BehoverJag />} />

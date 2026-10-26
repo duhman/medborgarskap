@@ -34,6 +34,7 @@ function subscribe(listener: () => void): () => void {
 }
 
 const hasSwedishVoice = () => {
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/og-preview')) return true
   const s = synth()
   return !!s && swedishVoice(s.getVoices()) !== null
 }

@@ -23,3 +23,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# og:video local scratch (committed proof is strip + report + body refs)
+eng.traineddata
+swe.traineddata
+scripts/og-preview/proof/broken-frames/
+scripts/og-preview/proof/check-frames/
+scripts/og-preview/proof/broken-crossfade.mp4
+scripts/og-preview/proof/frames/

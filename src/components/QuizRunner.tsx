@@ -32,6 +32,8 @@ type Props = {
   /** Replaces the built-in retry, for sets that change between rounds (the mistakes list). */
   onRetry?: () => void
   retryLabel?: string
+  /** Isolated og:video stage: hide counters, meters and extra chrome. */
+  ogPreview?: boolean
 }
 
 type OptionId = QuizQuestion['correctOptionId']
@@ -84,6 +86,7 @@ export function QuizRunner({
   persistSession = saveResult,
   onRetry,
   retryLabel = 'Gör om i ny ordning',
+  ogPreview = false,
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null)
   const counterRef = useRef<HTMLParagraphElement>(null)
@@ -360,37 +363,41 @@ export function QuizRunner({
 
   return (
     <div ref={rootRef} onKeyDown={handleKeyDown} className="scroll-mt-4 space-y-4">
-      <div className="space-y-2">
-        <div className="flex items-baseline justify-between gap-4 text-sm">
-          <p ref={counterRef} tabIndex={-1} className="font-medium text-ink outline-none">
-            Fråga <GfNum value={index + 1} /> av <GfNum value={total} />
-          </p>
-          <p className="text-ink-3">
-            <GfNum value={correctSoFar} /> rätt
-          </p>
-        </div>
-        {total <= MAX_METER_BLOCKS ? (
-          <ProgressMeter value={index + (checked ? 1 : 0)} max={total} />
-        ) : (
-          <div aria-hidden="true" className="h-2.5 bg-[var(--line)]">
-            <div
-              className="h-full bg-accent transition-[width] duration-200"
-              style={{ width: `${((index + (checked ? 1 : 0)) / total) * 100}%` }}
+      {!ogPreview && (
+        <>
+          <div className="space-y-2">
+            <div className="flex items-baseline justify-between gap-4 text-sm">
+              <p ref={counterRef} tabIndex={-1} className="font-medium text-ink outline-none">
+                Fråga <GfNum value={index + 1} /> av <GfNum value={total} />
+              </p>
+              <p className="text-ink-3">
+                <GfNum value={correctSoFar} /> rätt
+              </p>
+            </div>
+            {total <= MAX_METER_BLOCKS ? (
+              <ProgressMeter value={index + (checked ? 1 : 0)} max={total} />
+            ) : (
+              <div aria-hidden="true" className="h-2.5 bg-[var(--line)]">
+                <div
+                  className="h-full bg-accent transition-[width] duration-200"
+                  style={{ width: `${((index + (checked ? 1 : 0)) / total) * 100}%` }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-x-4">
+            <p className="hidden text-sm text-ink-3 sm:block">
+              Tips: välj svar med tangenterna A-D och tryck Enter.
+            </p>
+            <ListenButton
+              id={`${q.id}:${attempt}:fraga`}
+              parts={[q.prompt, ...options.map((o, i) => `${LETTERS[i]}. ${o.text}`)]}
+              label="Lyssna på frågan"
             />
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-x-4">
-        <p className="hidden text-sm text-ink-3 sm:block">
-          Tips: välj svar med tangenterna A-D och tryck Enter.
-        </p>
-        <ListenButton
-          id={`${q.id}:${attempt}:fraga`}
-          parts={[q.prompt, ...options.map((o, i) => `${LETTERS[i]}. ${o.text}`)]}
-          label="Lyssna på frågan"
-        />
-      </div>
+        </>
+      )}
 
       {/* method="dialog" outside a dialog submits nowhere, so a tap on Svara before the page has
           finished loading does not reload it with the answer in the address. */}
@@ -406,7 +413,13 @@ export function QuizRunner({
             else if (checked && isChosen) state = 'mb-choice--wrong'
             else if (checked) state = 'mb-choice--muted'
             return (
-              <label key={opt.id} htmlFor={id} className={`mb-choice ${state}`}>
+              <label
+                key={opt.id}
+                htmlFor={id}
+                className={`mb-choice ${state}`}
+                {...(ogPreview && opt.id === 'A' && !checked ? { 'data-og-quiz': 'option-A' } : {})}
+                {...(ogPreview && checked && isAnswer ? { 'data-og-quiz': 'reveal' } : {})}
+              >
                 <input
                   id={id}
                   type="radio"
@@ -437,7 +450,7 @@ export function QuizRunner({
             role="status"
             className="space-y-3 border-t border-line-strong pt-4 outline-none"
           >
-            <p className="flex items-center gap-2 text-lg font-semibold">
+            <p className={`flex items-center gap-2 font-semibold ${ogPreview ? 'og-preview-feedback-title text-lg' : 'text-lg'}`}>
               {isCorrect ? (
                 <svg aria-hidden="true" viewBox="0 0 12 12" className="size-3 shrink-0 text-[var(--ok)]">
                   <circle cx="6" cy="6" r="6" fill="currentColor" />
@@ -451,15 +464,20 @@ export function QuizRunner({
               {isCorrect ? 'Rätt' : chosen ? 'Inte rätt' : 'Du hoppade över frågan'}
             </p>
             <p>{q.explanationSv}</p>
-            <ListenButton
-              id={`${q.id}:${attempt}:forklaring`}
-              parts={[
-                `Rätt svar: ${q.options.find((o) => o.id === q.correctOptionId)?.text ?? ''}.`,
-                q.explanationSv,
-              ]}
-              label="Lyssna på förklaringen"
+            {!ogPreview && (
+              <ListenButton
+                id={`${q.id}:${attempt}:forklaring`}
+                parts={[
+                  `Rätt svar: ${q.options.find((o) => o.id === q.correctOptionId)?.text ?? ''}.`,
+                  q.explanationSv,
+                ]}
+                label="Lyssna på förklaringen"
+              />
+            )}
+            <SourceCitation
+              source={q.source}
+              className={ogPreview ? 'og-preview-citation text-ink-2' : 'text-[0.9375rem] text-ink-2'}
             />
-            <SourceCitation source={q.source} className="text-[0.9375rem] text-ink-2" />
             {q.explanationEn && (
               <div>
                 <button
@@ -488,8 +506,14 @@ export function QuizRunner({
         )}
 
         {/* On a phone the buttons stay in reach at the bottom of the screen while the question shows. */}
-        <div className="flex items-center gap-3 max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:-mx-4 max-sm:border-t max-sm:border-line-strong max-sm:bg-paper max-sm:px-4 max-sm:py-3">
-          <button type="submit" className="mb-btn mb-btn--primary flex-1 sm:min-w-44 sm:flex-none">
+        <div
+          className={`flex items-center gap-3 ${ogPreview ? '' : 'max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:-mx-4 max-sm:border-t max-sm:border-line-strong max-sm:bg-paper max-sm:px-4 max-sm:py-3'}`}
+        >
+          <button
+            type="submit"
+            className="mb-btn mb-btn--primary flex-1 sm:min-w-44 sm:flex-none"
+            {...(ogPreview ? { 'data-og-quiz': checked ? 'next' : 'submit' } : {})}
+          >
             {checked ? (isLast ? 'Visa resultat' : 'Nästa fråga') : 'Svara'}
           </button>
           {!checked && (
@@ -502,7 +526,7 @@ export function QuizRunner({
             </button>
           )}
         </div>
-        {checked && (
+        {checked && !ogPreview && (
           <p className="text-sm text-ink-3">
             Hittat ett fel i frågan? Meddela via{' '}
             <a href={report.email} className="mb-link-quiet">

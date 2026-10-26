@@ -1,0 +1,81 @@
+@layer site {
+  .og-preview-root {
+    box-sizing: border-box;
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .og-preview-band {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: 1200px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    border-bottom: 1px solid var(--line-strong);
+    background: var(--paper);
+  }
+
+  .og-preview-body {
+    position: absolute;
+    left: 0;
+    top: 131px;
+    width: 1200px;
+    height: 499px;
+    padding: 0 48px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+
+  /* Feed-size type at 1200px wide (brief section 5). */
+  .og-preview-body .og-preview-chapter-h1 {
+    font-size: 44px;
+    line-height: 1.15;
+  }
+
+  .og-preview-body .og-preview-plan-line {
+    font-size: 40px;
+    line-height: 1.25;
+  }
+
+  .og-preview-body .og-preview-tagline {
+    font-size: 56px;
+    line-height: 1.15;
+    font-weight: 600;
+  }
+
+  .og-preview-body .og-preview-quiz legend {
+    font-size: 44px;
+    line-height: 1.2;
+  }
+
+  .og-preview-body .og-preview-quiz .mb-choice {
+    font-size: 34px;
+  }
+
+  .og-preview-body .og-preview-quiz .mb-choice__tag {
+    font-size: 32px;
+  }
+
+  .og-preview-body .og-preview-quiz .og-preview-feedback-title {
+    font-size: 32px;
+  }
+
+  .og-preview-body .og-preview-quiz .og-preview-citation {
+    font-size: 32px;
+  }
+
+  .og-preview-band .og-preview-wordmark {
+    font-size: 40px;
+  }
+
+  .og-preview-band .og-preview-url {
+    font-size: 30px;
+  }
+}
