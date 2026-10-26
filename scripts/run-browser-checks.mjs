@@ -54,8 +54,6 @@ await new Promise((resolve) => server.listen(PORT, resolve))
 const env = {
   ...process.env,
   BASE_URL: `http://localhost:${PORT}`,
-  CHOICE_HOVER_SCREENSHOT_DIR:
-    process.env.CHOICE_HOVER_SCREENSHOT_DIR ?? '/opt/cursor/artifacts/screenshots',
 }
 let failed = false
 for (const script of ['scripts/check-search-visibility.mjs', 'scripts/a11y-axe.mjs', 'scripts/grundform-contrast.mjs', 'scripts/e2e-smoke.mjs']) {
