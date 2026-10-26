@@ -21,6 +21,7 @@ import {
   overlappingOcrLinesGate,
   citationRedHueGateBody,
   cssFontSizeGate,
+  bodyWordmarkLeakGate,
 } from './og-preview/gates.mjs'
 import { compositeFrame } from './og-preview/compositor.mjs'
 
@@ -46,8 +47,10 @@ async function loadRgba(path) {
   return { data, width: info.width, height: info.height }
 }
 
-async function bodyReferenceRgba(bodyPng, bandPng) {
-  const png = await compositeFrame({ bandPng, bodyPng, bodyAlpha: 1 })
+const bodyLayoutForKey = (key) => (key === 'quiz-q' || key === 'quiz-r' ? 'quiz' : 'default')
+
+async function bodyReferenceRgba(bodyPng, bandPng, key) {
+  const png = await compositeFrame({ bandPng, bodyPng, bodyAlpha: 1, bodyLayout: bodyLayoutForKey(key) })
   const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
   const rowBytes = info.width * 4
   const start = BODY_TOP * rowBytes
@@ -126,7 +129,7 @@ async function main() {
   const bodyRefs = {}
   for (const name of ['listen', 'quiz-q', 'quiz-r', 'plan-3', 'plan-4', 'tagline', 'empty']) {
     bodies[name] = await readFile(join(proofDir, 'bodies', `${name}.png`))
-    if (name !== 'empty') bodyRefs[name] = await bodyReferenceRgba(bodies[name], bandPng)
+    if (name !== 'empty') bodyRefs[name] = await bodyReferenceRgba(bodies[name], bandPng, name)
   }
 
   const beatBodyKey = {
@@ -144,7 +147,12 @@ async function main() {
     if (expectedCache[beat]) return expectedCache[beat]
     const key = beatBodyKey[beat] ?? 'empty'
     const alpha = beat === 'trans' ? 0 : 1
-    const png = await compositeFrame({ bandPng, bodyPng: bodies[key], bodyAlpha: alpha })
+    const png = await compositeFrame({
+      bandPng,
+      bodyPng: bodies[key],
+      bodyAlpha: alpha,
+      bodyLayout: bodyLayoutForKey(key),
+    })
     expectedCache[beat] = await loadRgba(png)
     return expectedCache[beat]
   }
@@ -152,7 +160,12 @@ async function main() {
   const fullForeign = {}
   for (const name of Object.keys(bodies)) {
     if (name === 'empty') continue
-    const png = await compositeFrame({ bandPng, bodyPng: bodies[name], bodyAlpha: 1 })
+    const png = await compositeFrame({
+      bandPng,
+      bodyPng: bodies[name],
+      bodyAlpha: 1,
+      bodyLayout: bodyLayoutForKey(name),
+    })
     fullForeign[name] = (await loadRgba(png)).data
   }
 
@@ -176,6 +189,7 @@ async function main() {
   const textHeightChecked = new Set()
   const overlapChecked = new Set()
   const citationHueChecked = new Set()
+  const wordmarkChecked = new Set()
 
   const frameBuffers = []
   for (const f of pngs) frameBuffers.push(await loadRgba(join(frameSourceDir, f)))
@@ -228,6 +242,12 @@ async function main() {
         overlapChecked.add(beat)
         const ov = overlappingOcrLinesGate(lines)
         if (ov.length) fail(`frame ${i} (${beat}) overlap: ${ov.join('; ')}`)
+      }
+      if ((beat === 'quiz-q' || beat === 'quiz-r') && !wordmarkChecked.has(beat)) {
+        wordmarkChecked.add(beat)
+        const fullLines = await ocrWords(fullPng)
+        const wm = bodyWordmarkLeakGate(fullLines)
+        if (wm.length) fail(`frame ${i} (${beat}) wordmark leak: ${wm.join('; ')}`)
       }
     }
 

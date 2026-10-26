@@ -13,7 +13,11 @@ export function OgPreviewShell({ children, stage }: Props) {
     <div className="og-preview-root" data-mode="light" data-og-stage={stage ?? ''}>
       <OgPreviewBand />
       <div className="og-preview-body" data-og-body="true">
-        <div className="og-preview-body-inner">{children}</div>
+        <div
+          className={`og-preview-body-inner${stage === 'quiz' ? ' og-preview-body-inner--quiz' : ''}`}
+        >
+          {children}
+        </div>
       </div>
     </div>
   )

@@ -126,17 +126,38 @@ async function main() {
   const tagline = await halveRetinaCapture(await captureBodyPng(page, `${base}/og-preview/tagline`))
 
   await page.goto(`${base}/og-preview/quiz`, { waitUntil: 'networkidle' })
-  await page.locator('.og-preview-quiz fieldset').waitFor()
+  const beatBCapture = page.locator('[data-og-quiz-capture="beat-b"]')
+  await beatBCapture.waitFor()
+  /** Ancestors use overflow:hidden at 630px; expand so beat-b PNG includes Rätt + citation. */
+  await page.addStyleTag({
+    content: `
+      .og-preview-root { overflow: visible !important; height: auto !important; min-height: 630px !important; }
+      .og-preview-body { overflow: visible !important; height: auto !important; min-height: 499px !important; }
+    `,
+  })
+  await page.evaluate(() => {
+    window.scrollTo(0, 0)
+    const body = document.querySelector('.og-preview-body')
+    if (body) body.scrollTop = 0
+  })
   const quizFontBefore = await page.evaluate(() => {
     const q = document.querySelector('.og-preview-quiz-legend')
-    return { questionPx: q ? parseFloat(getComputedStyle(q).fontSize) : 0 }
+    const c = document.querySelector('.og-preview-quiz .mb-choice')
+    return {
+      questionPx: q ? parseFloat(getComputedStyle(q).fontSize) : 0,
+      choicePx: c ? parseFloat(getComputedStyle(c).fontSize) : 0,
+    }
   })
-  const quizQ = await halveRetinaCapture(await page.locator('.og-preview-quiz fieldset').screenshot({ type: 'png' }))
+  const quizQ = await halveRetinaCapture(await beatBCapture.screenshot({ type: 'png' }))
   await page.locator('[data-og-quiz="option-A"]').click()
   await page.locator('[data-og-quiz="submit"]').click()
   await page.waitForSelector('[data-og-quiz="reveal"]')
   await page.waitForTimeout(200)
-  await page.locator('[data-og-citation="true"]').scrollIntoViewIfNeeded()
+  await page.evaluate(() => {
+    window.scrollTo(0, 0)
+    const body = document.querySelector('.og-preview-body')
+    if (body) body.scrollTop = 0
+  })
   const citationBox = await page.locator('[data-og-citation="true"]').evaluate((el) => {
     const inner = el.closest('.og-preview-body-inner')
     if (!inner) return null
@@ -160,13 +181,15 @@ async function main() {
     const q = document.querySelector('.og-preview-quiz-legend')
     const r = document.querySelector('.og-preview-feedback-title')
     const c = document.querySelector('.og-preview-citation')
+    const choice = document.querySelector('.og-preview-quiz .mb-choice')
     return {
       questionPx: q ? parseFloat(getComputedStyle(q).fontSize) : 0,
       rattPx: r ? parseFloat(getComputedStyle(r).fontSize) : 0,
       citationPx: c ? parseFloat(getComputedStyle(c).fontSize) : 0,
+      choicePx: choice ? parseFloat(getComputedStyle(choice).fontSize) : 0,
     }
   })
-  const quizR = await halveRetinaCapture(await page.locator('[data-og-quiz="reveal-card"]').screenshot({ type: 'png' }))
+  const quizR = await halveRetinaCapture(await beatBCapture.screenshot({ type: 'png' }))
 
   await page.goto(`${base}/og-preview/listen`, { waitUntil: 'networkidle' })
   await page.getByRole('heading', { name: 'Politiska val och partier' }).waitFor({ timeout: 15_000 })
@@ -210,27 +233,50 @@ async function main() {
   const framePaths = []
   let frameIndex = 0
 
+  const bodyLayoutForBeat = (key) => (key === 'quiz-q' || key === 'quiz-r' ? 'quiz' : 'default')
+
   for (const seg of SEGMENTS) {
     for (let f = 0; f < seg.frames; f++) {
       let png
       if (seg.kind === 'hold') {
         if (seg.beat === 'plan') {
-          const body = f < 6 ? bodies['plan-3'] : bodies['plan-4']
-          png = await compositeFrame({ bandPng, bodyPng: body, bodyAlpha: 1 })
+          const key = f < 6 ? 'plan-3' : 'plan-4'
+          png = await compositeFrame({ bandPng, bodyPng: bodies[key], bodyAlpha: 1, bodyLayout: bodyLayoutForBeat(key) })
         } else {
-          png = await compositeFrame({ bandPng, bodyPng: bodies[seg.beat === 'listen' ? 'listen' : seg.beat], bodyAlpha: 1 })
+          const key = seg.beat === 'listen' ? 'listen' : seg.beat
+          png = await compositeFrame({
+            bandPng,
+            bodyPng: bodies[key],
+            bodyAlpha: 1,
+            bodyLayout: bodyLayoutForBeat(key),
+          })
         }
       } else if (seg.kind === 'reveal-tick') {
-        const body = f < Math.floor(seg.frames / 2) ? bodies[seg.from] : bodies[seg.to]
-        png = await compositeFrame({ bandPng, bodyPng: body, bodyAlpha: 1 })
+        const key = f < Math.floor(seg.frames / 2) ? seg.from : seg.to
+        png = await compositeFrame({
+          bandPng,
+          bodyPng: bodies[key],
+          bodyAlpha: 1,
+          bodyLayout: bodyLayoutForBeat(key),
+        })
       } else if (seg.kind === 'transition') {
         const { from: aFrom, to: aTo, empty } = transitionAlphas(f)
         if (empty) {
           png = await compositeFrame({ bandPng, bodyPng: bodies.empty, bodyAlpha: 0 })
         } else if (aTo > 0) {
-          png = await compositeFrame({ bandPng, bodyPng: bodies[seg.to], bodyAlpha: aTo })
+          png = await compositeFrame({
+            bandPng,
+            bodyPng: bodies[seg.to],
+            bodyAlpha: aTo,
+            bodyLayout: bodyLayoutForBeat(seg.to),
+          })
         } else {
-          png = await compositeFrame({ bandPng, bodyPng: bodies[seg.from], bodyAlpha: aFrom })
+          png = await compositeFrame({
+            bandPng,
+            bodyPng: bodies[seg.from],
+            bodyAlpha: aFrom,
+            bodyLayout: bodyLayoutForBeat(seg.from),
+          })
         }
       }
 

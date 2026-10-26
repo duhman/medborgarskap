@@ -161,6 +161,22 @@ export function citationRedHueGateBody(data, width, bodyHeight, bbox) {
   return []
 }
 
+const WORDMARK_LEAK_Y = 120
+
+/** Fail when header wordmark OCR appears in the body band (leaked capture or double header). */
+export function bodyWordmarkLeakGate(lines, yMin = WORDMARK_LEAK_Y) {
+  const problems = []
+  for (const ln of lines) {
+    if (ln.y0 <= yMin) continue
+    const t = ln.text.trim()
+    if (!t) continue
+    if (/Medborgarskap|provamed/i.test(t)) {
+      problems.push(`wordmark below y=${yMin}: "${t.slice(0, 48)}" (y0=${Math.round(ln.y0)})`)
+    }
+  }
+  return problems
+}
+
 /** CSS font-size gate from Playwright computed styles (canonical 1200px canvas). */
 export function cssFontSizeGate(metrics, beat) {
   if (!metrics) return []
@@ -168,12 +184,18 @@ export function cssFontSizeGate(metrics, beat) {
   if (beat === 'quiz-q' && metrics.quizQ?.questionPx < MIN_LINE_HEIGHT_PX) {
     problems.push(`quiz-q question ${metrics.quizQ.questionPx}px < ${MIN_LINE_HEIGHT_PX}px`)
   }
+  if (beat === 'quiz-q' && metrics.quizQ?.choicePx != null && metrics.quizQ.choicePx < MIN_LINE_HEIGHT_PX) {
+    problems.push(`quiz-q choice ${metrics.quizQ.choicePx}px < ${MIN_LINE_HEIGHT_PX}px`)
+  }
   if (beat === 'quiz-r' && metrics.quizR) {
     if (metrics.quizR.questionPx < MIN_LINE_HEIGHT_PX) {
       problems.push(`quiz-r question ${metrics.quizR.questionPx}px < ${MIN_LINE_HEIGHT_PX}px`)
     }
     if (metrics.quizR.rattPx < MIN_LINE_HEIGHT_PX) {
       problems.push(`quiz-r Rätt ${metrics.quizR.rattPx}px < ${MIN_LINE_HEIGHT_PX}px`)
+    }
+    if (metrics.quizR.choicePx != null && metrics.quizR.choicePx < MIN_LINE_HEIGHT_PX) {
+      problems.push(`quiz-r choice ${metrics.quizR.choicePx}px < ${MIN_LINE_HEIGHT_PX}px`)
     }
   }
   if (beat === 'listen' && metrics.listenTitlePx != null && metrics.listenTitlePx < MIN_LINE_HEIGHT_PX) {

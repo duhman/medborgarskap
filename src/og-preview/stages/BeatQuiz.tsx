@@ -14,7 +14,7 @@ export function BeatQuiz() {
   if (!first) return null
 
   return (
-    <div className="og-preview-quiz pt-1" data-og-quiz="reveal-card">
+    <div className="og-preview-quiz pt-1">
       <QuizRunner
         key={`og-${SLUG}-${first.id}`}
         slug={SLUG}

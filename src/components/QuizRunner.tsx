@@ -401,7 +401,13 @@ export function QuizRunner({
 
       {/* method="dialog" outside a dialog submits nowhere, so a tap on Svara before the page has
           finished loading does not reload it with the answer in the address. */}
-      <form method="dialog" onSubmit={handleSubmit} noValidate className="space-y-4">
+      <form
+        method="dialog"
+        onSubmit={handleSubmit}
+        noValidate
+        className="space-y-4"
+        {...(ogPreview ? { 'data-og-quiz-capture': 'beat-b' } : {})}
+      >
         <fieldset key={`${attempt}-${q.id}`} className="surface-raised space-y-2 p-4 sm:p-5">
           <legend
             className={

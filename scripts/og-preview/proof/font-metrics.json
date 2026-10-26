@@ -1,11 +1,13 @@
 {
   "quizQ": {
-    "questionPx": 44
+    "questionPx": 44,
+    "choicePx": 36
   },
   "quizR": {
     "questionPx": 44,
     "rattPx": 36,
-    "citationPx": 32
+    "citationPx": 32,
+    "choicePx": 36
   },
   "listenTitlePx": 48
 }

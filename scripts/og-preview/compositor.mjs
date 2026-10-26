@@ -7,22 +7,35 @@ function hexToRgb(hex) {
 }
 
 const BODY_COLUMN_MAX = 860
+const SAFE_INSET = 60
 
-async function flattenBodyRgb(bodyPng, bodyWidth, bodyHeight, paperHex) {
+async function flattenBodyRgb(bodyPng, bodyWidth, bodyHeight, paperHex, layout = 'default') {
   const paperBody = await sharp({
     create: { width: bodyWidth, height: bodyHeight, channels: 3, background: paperHex },
   })
     .png()
     .toBuffer()
 
+  const quizMaxW = bodyWidth - SAFE_INSET * 2
+  const resize =
+    layout === 'quiz'
+      ? { width: quizMaxW, height: bodyHeight, fit: 'inside' }
+      : {
+          width: BODY_COLUMN_MAX,
+          height: bodyHeight,
+          fit: 'inside',
+          withoutEnlargement: true,
+        }
+
   const bodySized = await sharp(bodyPng)
-    .resize({ width: BODY_COLUMN_MAX, height: bodyHeight, fit: 'inside', withoutEnlargement: true })
+    .resize(resize)
     .ensureAlpha()
     .png()
     .toBuffer()
   const sizedMeta = await sharp(bodySized).metadata()
   const left = Math.max(0, Math.round((bodyWidth - (sizedMeta.width || 0)) / 2))
-  const top = Math.max(0, Math.round((bodyHeight - (sizedMeta.height || 0)) / 2))
+  const top =
+    layout === 'quiz' ? 0 : Math.max(0, Math.round((bodyHeight - (sizedMeta.height || 0)) / 2))
 
   return sharp(paperBody)
     .composite([{ input: bodySized, top, left, blend: 'over' }])
@@ -46,7 +59,13 @@ function blendRgbTowardPaper(flatRgb, bodyWidth, bodyHeight, alpha, paperRgb) {
  * Composite one frame: fixed band from reference + body layer with optional alpha over paper.
  * Body fade linearly blends flattened RGB toward paper (never through black).
  */
-export async function compositeFrame({ bandPng, bodyPng, bodyAlpha = 1, paperHex = '#FAF7F1' }) {
+export async function compositeFrame({
+  bandPng,
+  bodyPng,
+  bodyAlpha = 1,
+  paperHex = '#FAF7F1',
+  bodyLayout = 'default',
+}) {
   const paperRgb = hexToRgb(paperHex)
   const paper = await sharp({
     create: { width: WIDTH, height: HEIGHT, channels: 3, background: paperHex },
@@ -57,7 +76,7 @@ export async function compositeFrame({ bandPng, bodyPng, bodyAlpha = 1, paperHex
   const band = await sharp(bandPng).extract({ left: 0, top: 0, width: WIDTH, height: BAND_BOTTOM }).toBuffer()
 
   const bodyHeight = HEIGHT - BODY_TOP
-  const flatRgb = await flattenBodyRgb(bodyPng, WIDTH, bodyHeight, paperHex)
+  const flatRgb = await flattenBodyRgb(bodyPng, WIDTH, bodyHeight, paperHex, bodyLayout)
   const bodyRgb =
     bodyAlpha >= 0.999 ? flatRgb : blendRgbTowardPaper(flatRgb, WIDTH, bodyHeight, bodyAlpha, paperRgb)
 
