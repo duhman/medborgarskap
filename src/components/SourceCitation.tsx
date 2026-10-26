@@ -6,9 +6,11 @@ import { GfNum } from './GfNum'
 type Props = {
   source: QuestionSource
   className?: string
+  /** og:video beat B: label only, no blockquote (avoids overlap in narrow capture). */
+  compact?: boolean
 }
 
-export function SourceCitation({ source, className = 'text-ink-3' }: Props) {
+export function SourceCitation({ source, className = 'text-ink-3', compact = false }: Props) {
   const label =
     source.page != null ? (
       <>
@@ -20,7 +22,13 @@ export function SourceCitation({ source, className = 'text-ink-3' }: Props) {
       </>
     )
 
-  if (!source.quote) return <p className={className}>{label}</p>
+  if (compact || !source.quote) {
+    return (
+      <p className={className} data-og-citation={compact ? 'true' : undefined}>
+        {label}
+      </p>
+    )
+  }
 
   return (
     <figure className={className}>

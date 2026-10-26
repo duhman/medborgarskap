@@ -7,17 +7,22 @@ type Props = {
   parts: readonly string[]
   label: string
   className?: string
+  /** Isolated og:video stage: show the playing label without speechSynthesis. */
+  forcePlaying?: boolean
 }
 
 /** Reads text aloud with the device's Swedish voice. Renders nothing when there is none. */
-export function ListenButton({ id, parts, label, className = '' }: Props) {
+export function ListenButton({ id, parts, label, className = '', forcePlaying = false }: Props) {
+  const onPreview =
+    typeof window !== 'undefined' && window.location.pathname.startsWith('/og-preview')
   const canSpeak = useCanSpeak()
-  const playing = useSpeakingId() === id
+  const speakingId = useSpeakingId()
+  const playing = forcePlaying || speakingId === id
 
   // Stop when the text goes away, for example on the next question or another page.
   useEffect(() => () => stopSpeaking(id), [id])
 
-  if (!canSpeak) return null
+  if (!canSpeak && !(onPreview && forcePlaying)) return null
   return (
     <button
       type="button"

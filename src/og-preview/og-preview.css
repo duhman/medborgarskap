@@ -1,0 +1,188 @@
+@layer site {
+  .og-preview-root {
+    box-sizing: border-box;
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .og-preview-band {
+    position: absolute;
+    left: 60px;
+    top: 60px;
+    width: 1080px;
+    height: 70px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    border-bottom: 1px solid var(--line-strong);
+    background: var(--paper);
+  }
+
+  .og-preview-body {
+    position: absolute;
+    left: 0;
+    top: 131px;
+    width: 1200px;
+    height: 499px;
+    padding: 0 60px;
+    overflow: hidden;
+    background: var(--paper);
+    display: flex;
+    justify-content: center;
+  }
+
+  .og-preview-body-inner {
+    width: 100%;
+    max-width: 800px;
+    min-width: 720px;
+  }
+
+  .og-preview-body-inner--quiz {
+    max-width: 1080px;
+    min-width: 0;
+  }
+
+  .og-preview-body form[data-og-quiz-capture='beat-b'] {
+    width: 100%;
+  }
+
+  .og-preview-root[data-og-stage='quiz'] form[data-og-quiz-capture='beat-b'] {
+    gap: 8px;
+  }
+
+  .og-preview-root[data-og-stage='quiz'] .og-preview-quiz [role='status'] {
+    gap: 8px;
+    padding-top: 8px;
+  }
+
+  .og-preview-root[data-og-stage='quiz'] .og-preview-quiz .og-preview-explanation {
+    font-size: 30px;
+    line-height: 1.28;
+  }
+
+  .og-preview-root[data-og-stage='quiz'] .og-preview-quiz fieldset {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+
+  .og-preview-root[data-og-stage='quiz'] .og-preview-quiz .mb-choice {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    min-height: 0;
+  }
+
+  .og-preview-root[data-og-stage='quiz'] .og-preview-quiz .mb-choice--muted,
+  .og-preview-root[data-og-stage='quiz'] .og-preview-quiz .mb-choice--muted .flex-1 {
+    color: var(--ink);
+  }
+
+  /* Feed-size type at 1200px wide (brief section 5). */
+  .og-preview-body .og-preview-chapter-h1 {
+    font-size: 48px !important;
+    line-height: 1.15;
+  }
+
+  .og-preview-body .og-preview-plan-line {
+    font-size: 40px;
+    line-height: 1.25;
+  }
+
+  .og-preview-body .og-preview-tagline {
+    font-size: 56px;
+    line-height: 1.15;
+    font-weight: 600;
+  }
+
+  .og-preview-body .og-preview-quiz legend,
+  .og-preview-body .og-preview-quiz-legend {
+    font-size: 40px;
+    line-height: 1.15;
+  }
+
+  .og-preview-body .og-preview-quiz .mb-choice {
+    font-size: 36px;
+    line-height: 1.25;
+  }
+
+  .og-preview-body .og-preview-quiz .mb-choice .flex-1 {
+    font-size: 36px;
+  }
+
+  .og-preview-body .og-preview-quiz .mb-choice__tag {
+    font-size: 36px;
+  }
+
+  .og-preview-body .og-preview-quiz .og-preview-feedback-title {
+    font-size: 36px;
+  }
+
+  .og-preview-body .og-preview-quiz .og-preview-citation {
+    font-size: 30px;
+    line-height: 1.25;
+    color: #2d4a3e;
+  }
+
+  .og-preview-body .og-preview-quiz .og-preview-citation a {
+    color: #2d4a3e;
+    text-decoration: none;
+  }
+
+  .og-preview-body .og-preview-quiz .og-preview-explanation {
+    font-size: 32px;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  .og-preview-body .og-preview-listen-btn {
+    font-size: 34px;
+    font-weight: 500;
+    padding: 16px 28px;
+    border-radius: 2px;
+    background: var(--accent);
+    color: var(--accent-on);
+    gap: 14px;
+    width: auto;
+    max-width: max-content;
+    align-self: flex-start;
+  }
+
+  .og-preview-body .og-preview-listen-btn svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .og-preview-body .og-preview-plan-panel {
+    font-size: 36px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .og-preview-body .og-preview-plan-list {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .og-preview-body .og-preview-plan-row {
+    font-size: 28px;
+  }
+
+  .og-preview-body .og-preview-tagline-url {
+    font-size: 30px;
+    font-family: var(--font-mono, 'IBM Plex Mono'), monospace;
+    color: var(--ink-2);
+  }
+
+  .og-preview-band .og-preview-wordmark {
+    font-size: 40px;
+  }
+
+  .og-preview-band .og-preview-url {
+    font-size: 30px;
+  }
+}
