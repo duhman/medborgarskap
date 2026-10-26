@@ -18,6 +18,9 @@ import {
   bodyTransitionMinChannelGate,
   safeMarginGate,
   minTextHeightGate,
+  overlappingOcrLinesGate,
+  citationRedHueGateBody,
+  cssFontSizeGate,
 } from './og-preview/gates.mjs'
 import { compositeFrame } from './og-preview/compositor.mjs'
 
@@ -113,6 +116,11 @@ async function main() {
   const refPath = join(proofDir, 'reference-frame.png')
   if (!existsSync(refPath)) fail('missing proof reference-frame.png; run record-og-preview-video.mjs first')
   const bandPng = await readFile(refPath)
+  let fontMetrics = null
+  const fontMetricsPath = join(proofDir, 'font-metrics.json')
+  if (existsSync(fontMetricsPath)) {
+    fontMetrics = JSON.parse(await readFile(fontMetricsPath, 'utf8'))
+  }
 
   const bodies = {}
   const bodyRefs = {}
@@ -166,6 +174,8 @@ async function main() {
 
   let sawEmptyTransition = false
   const textHeightChecked = new Set()
+  const overlapChecked = new Set()
+  const citationHueChecked = new Set()
 
   const frameBuffers = []
   for (const f of pngs) frameBuffers.push(await loadRgba(join(frameSourceDir, f)))
@@ -207,11 +217,36 @@ async function main() {
 
     if (beat !== 'trans' && !textHeightChecked.has(beat)) {
       textHeightChecked.add(beat)
-      const words = await ocrWords(bodyPng)
-      const thIssues = minTextHeightGate(words, beat)
-      if (thIssues.length && ocrIssues.length === 0) {
+      const lines = await ocrWords(bodyPng)
+      const thIssues = minTextHeightGate(lines, beat)
+      const skipOcrHeight =
+        fontMetrics && (beat === 'quiz-q' || beat === 'quiz-r' || (beat === 'listen' && fontMetrics.listenTitlePx >= 29))
+      if (thIssues.length && ocrIssues.length === 0 && !skipOcrHeight) {
         fail(`frame ${i} (${beat}) text-height: ${thIssues.join('; ')}`)
       }
+      if ((beat === 'quiz-q' || beat === 'quiz-r') && !overlapChecked.has(beat)) {
+        overlapChecked.add(beat)
+        const ov = overlappingOcrLinesGate(lines)
+        if (ov.length) fail(`frame ${i} (${beat}) overlap: ${ov.join('; ')}`)
+      }
+    }
+
+    if (beat === 'quiz-r' && !citationHueChecked.has('quiz-r')) {
+      citationHueChecked.add('quiz-r')
+      const linesForHue = await ocrWords(bodyPng)
+      const citeLine = linesForHue.find((ln) => /Sverige i fokus|Kapitel 4/i.test(ln.text))
+      const pad = 8
+      const bbox = citeLine
+        ? {
+            x0: citeLine.x0 - pad,
+            y0: citeLine.y0 - pad,
+            x1: citeLine.x1 + pad,
+            y1: citeLine.y1 + pad,
+          }
+        : null
+      const bodyOnly = await loadRgba(bodyPng)
+      const hueIssues = citationRedHueGateBody(bodyOnly.data, bodyOnly.width, bodyOnly.height, bbox)
+      if (hueIssues.length) fail(`frame ${i} (${beat}) citation hue: ${hueIssues.join('; ')}`)
     }
 
     if (beat === 'quiz-q' && bodyRegionSsim(data, bodyRefs['quiz-q'], WIDTH) < 0.96) {
@@ -237,6 +272,10 @@ async function main() {
   }
 
   if (!sawEmptyTransition) fail('no empty-body transition frame detected')
+
+  for (const beat of ['listen', 'quiz-q', 'quiz-r']) {
+    for (const msg of cssFontSizeGate(fontMetrics, beat)) fail(`font-metrics (${beat}): ${msg}`)
+  }
 
   await terminateOcr()
 

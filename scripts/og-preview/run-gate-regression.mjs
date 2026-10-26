@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Prove new gates fail baseline d5c7588 mp4 and pass current public/og-preview.mp4. */
+/** Prove new gates fail baseline 87253f0 mp4 and pass current public/og-preview.mp4. */
 import { spawnSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
 const proof = join(root, 'scripts/og-preview/proof')
-const baseline = join(proof, 'baseline-d5c7588.mp4')
+const baseline = join(proof, 'baseline-87253f0.mp4')
 const current = join(root, 'public/og-preview.mp4')
 
 function runCheck(video) {
@@ -18,7 +18,7 @@ function runCheck(video) {
 }
 
 if (!existsSync(baseline)) {
-  console.error('Missing baseline-d5c7588.mp4; run: git show d5c7588:public/og-preview.mp4 > scripts/og-preview/proof/baseline-d5c7588.mp4')
+  console.error('Missing baseline-87253f0.mp4; run: git show 87253f0:public/og-preview.mp4 > scripts/og-preview/proof/baseline-87253f0.mp4')
   process.exit(1)
 }
 

@@ -16,7 +16,7 @@ import {
   captureBodyPng,
   captureFullPng,
   transitionAlphas,
-  downscaleCapture,
+  halveRetinaCapture,
 } from './og-preview/compositor.mjs'
 import { INIT_SCRIPT, progressSeed } from './og-preview/seed.mjs'
 import { SEGMENTS, TOTAL_FRAMES, WIDTH, HEIGHT, FPS, segmentFrameCount } from './og-preview/timing.mjs'
@@ -111,42 +111,70 @@ async function main() {
   await page.getByText('Stoppa uppläsningen').waitFor({ timeout: 15_000 })
 
   const listenFullRaw = await captureFullPng(page, `${base}/og-preview/listen`)
-  const listenFull = await downscaleCapture(listenFullRaw, WIDTH, HEIGHT)
+  const listenFull = await halveRetinaCapture(listenFullRaw)
   const bandPng = listenFull
   await writeFile(join(proofDir, 'reference-frame.png'), listenFull)
 
   await setProgress(page, 3)
   await page.goto(`${base}/og-preview/plan`, { waitUntil: 'networkidle' })
-  const plan3 = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/plan`), WIDTH, HEIGHT - 131)
+  const plan3 = await halveRetinaCapture(await captureBodyPng(page, `${base}/og-preview/plan`))
 
   await setProgress(page, 4)
   await page.goto(`${base}/og-preview/plan`, { waitUntil: 'networkidle' })
-  const plan4 = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/plan`), WIDTH, HEIGHT - 131)
+  const plan4 = await halveRetinaCapture(await captureBodyPng(page, `${base}/og-preview/plan`))
 
-  const tagline = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/tagline`), WIDTH, HEIGHT - 131)
+  const tagline = await halveRetinaCapture(await captureBodyPng(page, `${base}/og-preview/tagline`))
 
   await page.goto(`${base}/og-preview/quiz`, { waitUntil: 'networkidle' })
   await page.locator('.og-preview-quiz fieldset').waitFor()
-  const quizQ = await downscaleCapture(
-    await page.locator('.og-preview-quiz fieldset').screenshot({ type: 'png' }),
-    WIDTH,
-    HEIGHT - 131,
-  )
+  const quizFontBefore = await page.evaluate(() => {
+    const q = document.querySelector('.og-preview-quiz-legend')
+    return { questionPx: q ? parseFloat(getComputedStyle(q).fontSize) : 0 }
+  })
+  const quizQ = await halveRetinaCapture(await page.locator('.og-preview-quiz fieldset').screenshot({ type: 'png' }))
   await page.locator('[data-og-quiz="option-A"]').click()
   await page.locator('[data-og-quiz="submit"]').click()
   await page.waitForSelector('[data-og-quiz="reveal"]')
   await page.waitForTimeout(200)
-  await page.addStyleTag({
-    content: `.og-preview-body { overflow: visible !important; height: auto !important; }`,
+  await page.locator('[data-og-citation="true"]').scrollIntoViewIfNeeded()
+  const citationBox = await page.locator('[data-og-citation="true"]').evaluate((el) => {
+    const inner = el.closest('.og-preview-body-inner')
+    if (!inner) return null
+    let x = 0
+    let y = 0
+    let node = el
+    while (node && node !== inner) {
+      x += node.offsetLeft
+      y += node.offsetTop
+      node = node.offsetParent
+      if (node === document.body) break
+    }
+    return {
+      x0: x,
+      y0: y,
+      x1: x + el.offsetWidth,
+      y1: y + el.offsetHeight,
+    }
   })
-  await page.locator('.og-preview-citation').scrollIntoViewIfNeeded()
-  const quizR = await downscaleCapture(
-    await page.locator('[data-og-quiz="reveal-card"]').screenshot({ type: 'png' }),
-    WIDTH,
-    HEIGHT - 131,
-  )
+  const quizFontAfter = await page.evaluate(() => {
+    const q = document.querySelector('.og-preview-quiz-legend')
+    const r = document.querySelector('.og-preview-feedback-title')
+    const c = document.querySelector('.og-preview-citation')
+    return {
+      questionPx: q ? parseFloat(getComputedStyle(q).fontSize) : 0,
+      rattPx: r ? parseFloat(getComputedStyle(r).fontSize) : 0,
+      citationPx: c ? parseFloat(getComputedStyle(c).fontSize) : 0,
+    }
+  })
+  const quizR = await halveRetinaCapture(await page.locator('[data-og-quiz="reveal-card"]').screenshot({ type: 'png' }))
 
-  const listenBody = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/listen`), WIDTH, HEIGHT - 131)
+  await page.goto(`${base}/og-preview/listen`, { waitUntil: 'networkidle' })
+  await page.getByRole('heading', { name: 'Politiska val och partier' }).waitFor({ timeout: 15_000 })
+  const listenBody = await halveRetinaCapture(await captureBodyPng(page, `${base}/og-preview/listen`))
+  const listenTitlePx = await page.evaluate(() => {
+    const h = document.querySelector('.og-preview-chapter-h1')
+    return h ? parseFloat(getComputedStyle(h).fontSize) : 0
+  })
   const emptyBody = await sharp({
     create: { width: WIDTH, height: HEIGHT - 131, channels: 4, background: { r: 250, g: 247, b: 241, alpha: 0 } },
   })
@@ -168,6 +196,13 @@ async function main() {
   for (const [name, buf] of Object.entries(bodies)) {
     await writeFile(join(bodiesDir, `${name}.png`), buf)
   }
+  if (citationBox) {
+    await writeFile(join(proofDir, 'citation-bbox.json'), JSON.stringify(citationBox, null, 2))
+  }
+  await writeFile(
+    join(proofDir, 'font-metrics.json'),
+    JSON.stringify({ quizQ: quizFontBefore, quizR: quizFontAfter, listenTitlePx }, null, 2),
+  )
 
   const framesDir = join(proofDir, 'frames')
   await mkdir(framesDir, { recursive: true })

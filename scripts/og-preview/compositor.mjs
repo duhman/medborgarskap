@@ -15,19 +15,17 @@ async function flattenBodyRgb(bodyPng, bodyWidth, bodyHeight, paperHex) {
     .png()
     .toBuffer()
 
-  const meta = await sharp(bodyPng).metadata()
-  const sourceW = meta.width || BODY_COLUMN_MAX
-  const targetW = sourceW > BODY_COLUMN_MAX ? BODY_COLUMN_MAX : sourceW
   const bodySized = await sharp(bodyPng)
-    .resize({ width: targetW, height: bodyHeight, fit: 'inside' })
+    .resize({ width: BODY_COLUMN_MAX, height: bodyHeight, fit: 'inside', withoutEnlargement: true })
     .ensureAlpha()
     .png()
     .toBuffer()
   const sizedMeta = await sharp(bodySized).metadata()
   const left = Math.max(0, Math.round((bodyWidth - (sizedMeta.width || 0)) / 2))
+  const top = Math.max(0, Math.round((bodyHeight - (sizedMeta.height || 0)) / 2))
 
   return sharp(paperBody)
-    .composite([{ input: bodySized, top: 0, left, blend: 'over' }])
+    .composite([{ input: bodySized, top, left, blend: 'over' }])
     .removeAlpha()
     .raw()
     .toBuffer()
@@ -101,7 +99,13 @@ export async function captureFullPng(page, stagePath) {
   return page.locator('.og-preview-root').screenshot({ type: 'png' })
 }
 
-/** Downscale a 2x capture to canvas pixels. */
-export async function downscaleCapture(png, targetW, targetH) {
-  return sharp(png).resize({ width: targetW, height: targetH, fit: 'inside' }).png().toBuffer()
+/** Halve a 2x retina capture to 1200px-canvas pixel size (no fit-to-frame shrink). */
+export async function halveRetinaCapture(png) {
+  const meta = await sharp(png).metadata()
+  const w = meta.width ?? WIDTH
+  const h = meta.height ?? HEIGHT
+  return sharp(png)
+    .resize({ width: Math.round(w / 2), height: Math.round(h / 2) })
+    .png()
+    .toBuffer()
 }

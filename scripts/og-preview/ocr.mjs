@@ -18,7 +18,7 @@ export function requiredForBeat(beat) {
     case 'quiz-q':
       return [...always, ['Hur ofta hålls val']]
     case 'quiz-r':
-      return [...always, ['Hur ofta', 'hålls val'], ['Rätt', 'RÄTT', 'svar'], ['14', 'Kapitel']]
+      return [...always, ['Hur ofta', 'Vart fjärde', 'vart'], ['Rätt', 'RÄTT', 'svar'], ['14', 'Kapitel', 'fokus']]
     case 'plan-3':
       return [...always, ['3 av 13', '3 av 13 kapitel'], ['kapitel övade']]
     case 'plan-4':
@@ -86,6 +86,10 @@ function linesFromBlocks(blocks) {
         const bbox = line.bbox ?? {}
         lines.push({
           text: line.text ?? '',
+          x0: bbox.x0 ?? 0,
+          y0: bbox.y0 ?? 0,
+          x1: bbox.x1 ?? 0,
+          y1: bbox.y1 ?? 0,
           h: (bbox.y1 ?? 0) - (bbox.y0 ?? 0),
           w: (bbox.x1 ?? 0) - (bbox.x0 ?? 0),
         })

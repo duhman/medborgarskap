@@ -21,7 +21,7 @@ export function BeatPlan() {
       <p className="og-preview-plan-line m-0 text-center font-semibold text-ink">
         <GfNum value={done} /> av 13 kapitel övade.
       </p>
-      <ul className="og-preview-plan-row m-0 list-none space-y-3 p-0 text-ink">
+      <ul className="og-preview-plan-row og-preview-plan-list m-0 list-none space-y-2 p-0 text-ink">
         {preview.map((c) => {
           const ovat = practised.has(c.slug)
           return (

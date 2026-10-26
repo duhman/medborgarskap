@@ -403,7 +403,15 @@ export function QuizRunner({
           finished loading does not reload it with the answer in the address. */}
       <form method="dialog" onSubmit={handleSubmit} noValidate className="space-y-4">
         <fieldset key={`${attempt}-${q.id}`} className="surface-raised space-y-2 p-4 sm:p-5">
-          <legend className="text-lg font-semibold leading-snug sm:text-xl">{q.prompt}</legend>
+          <legend
+            className={
+              ogPreview
+                ? 'og-preview-quiz-legend font-semibold leading-snug'
+                : 'text-lg font-semibold leading-snug sm:text-xl'
+            }
+          >
+            {q.prompt}
+          </legend>
           {options.map((opt, position) => {
             const id = `${q.id}-${opt.id}`
             const isAnswer = opt.id === q.correctOptionId
@@ -450,7 +458,7 @@ export function QuizRunner({
             role="status"
             className="space-y-3 border-t border-line-strong pt-4 outline-none"
           >
-            <p className={`flex items-center gap-2 font-semibold ${ogPreview ? 'og-preview-feedback-title text-lg' : 'text-lg'}`}>
+            <p className={`flex items-center gap-2 font-semibold ${ogPreview ? 'og-preview-feedback-title' : 'text-lg'}`}>
               {isCorrect ? (
                 <svg aria-hidden="true" viewBox="0 0 12 12" className="size-3 shrink-0 text-[var(--ok)]">
                   <circle cx="6" cy="6" r="6" fill="currentColor" />
@@ -476,7 +484,8 @@ export function QuizRunner({
             )}
             <SourceCitation
               source={q.source}
-              className={ogPreview ? 'og-preview-citation text-accent' : 'text-[0.9375rem] text-ink-2'}
+              compact={ogPreview}
+              className={ogPreview ? 'og-preview-citation' : 'text-[0.9375rem] text-ink-2'}
             />
             {q.explanationEn && !ogPreview && (
               <div>
