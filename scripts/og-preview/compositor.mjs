@@ -17,9 +17,11 @@ async function flattenBodyRgb(bodyPng, bodyWidth, bodyHeight, paperHex, layout =
     .toBuffer()
 
   const quizMaxW = bodyWidth - SAFE_INSET * 2
+  /** Keep Beat B ink above frame y=570 (60px bottom safe margin on 630px canvas). */
+  const quizMaxH = bodyHeight - SAFE_INSET
   const resize =
     layout === 'quiz'
-      ? { width: quizMaxW, height: bodyHeight, fit: 'inside' }
+      ? { width: quizMaxW, height: quizMaxH, fit: 'inside' }
       : {
           width: BODY_COLUMN_MAX,
           height: bodyHeight,

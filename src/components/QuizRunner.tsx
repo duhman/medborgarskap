@@ -405,7 +405,7 @@ export function QuizRunner({
         method="dialog"
         onSubmit={handleSubmit}
         noValidate
-        className="space-y-4"
+        className={ogPreview ? 'space-y-2' : 'space-y-4'}
         {...(ogPreview ? { 'data-og-quiz-capture': 'beat-b' } : {})}
       >
         <fieldset key={`${attempt}-${q.id}`} className="surface-raised space-y-2 p-4 sm:p-5">
@@ -462,7 +462,11 @@ export function QuizRunner({
             ref={feedbackRef}
             tabIndex={-1}
             role="status"
-            className="space-y-3 border-t border-line-strong pt-4 outline-none"
+            className={
+              ogPreview
+                ? 'space-y-2 border-t border-line-strong pt-2 outline-none'
+                : 'space-y-3 border-t border-line-strong pt-4 outline-none'
+            }
           >
             <p className={`flex items-center gap-2 font-semibold ${ogPreview ? 'og-preview-feedback-title' : 'text-lg'}`}>
               {isCorrect ? (

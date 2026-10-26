@@ -1,4 +1,4 @@
-import { BODY_TOP, BAND_TOP } from './timing.mjs'
+import { BODY_TOP, BAND_TOP, HEIGHT } from './timing.mjs'
 import { frameMeanWithinPaperBand, rgbMeanFromBuffer, deltaE } from './palette.mjs'
 
 const SAFE_INSET = 60
@@ -34,7 +34,9 @@ function isPaperish(r, g, b) {
   return deltaE(`#${[r, g, b].map((c) => c.toString(16).padStart(2, '0')).join('')}`, '#FAF7F1') <= 8
 }
 
-/** No non-paper pixels in 60px side margins (header band + body). */
+const SAFE_BOTTOM_Y = HEIGHT - SAFE_INSET
+
+/** No non-paper pixels in 60px side/bottom margins (header band + body). */
 export function safeMarginGate(data, width, height) {
   const yStart = BAND_TOP
   for (let y = yStart; y < height; y++) {
@@ -47,8 +49,17 @@ export function safeMarginGate(data, width, height) {
       if (!isPaperish(data[i], data[i + 1], data[i + 2])) return false
     }
   }
+  const bottomY = Math.min(SAFE_BOTTOM_Y, height)
+  for (let y = bottomY; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4
+      if (!isPaperish(data[i], data[i + 1], data[i + 2])) return false
+    }
+  }
   return true
 }
+
+export { SAFE_BOTTOM_Y }
 
 function lineHeightMin(lines, patterns) {
   const heights = []
