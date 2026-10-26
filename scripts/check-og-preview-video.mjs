@@ -140,24 +140,26 @@ async function main() {
     fullForeign[name] = (await loadRgba(png)).data
   }
 
-  const framesDir = join(proofDir, 'frames')
-  let pngs = (await readdir(framesDir).catch(() => [])).filter((f) => f.endsWith('.png')).sort()
-  if (pngs.length !== TOTAL_FRAMES) {
+  let frameSourceDir = join(proofDir, 'frames')
+  let pngs = (await readdir(frameSourceDir).catch(() => [])).filter((f) => f.endsWith('.png')).sort()
+  const useCachedFrames = videoPath === defaultVideo && pngs.length === TOTAL_FRAMES
+  if (!useCachedFrames) {
     const extractDir = join(proofDir, 'check-frames')
     await extractFrames(videoPath, extractDir)
+    frameSourceDir = extractDir
     pngs = (await readdir(extractDir)).filter((f) => f.endsWith('.png')).sort()
   }
   if (pngs.length !== TOTAL_FRAMES) fail(`frame count ${pngs.length}, expected ${TOTAL_FRAMES}`)
 
-  const first = await loadRgba(join(framesDir, pngs[0]))
-  const last = await loadRgba(join(framesDir, pngs[pngs.length - 1]))
+  const first = await loadRgba(join(frameSourceDir, pngs[0]))
+  const last = await loadRgba(join(frameSourceDir, pngs[pngs.length - 1]))
   const loopSsim = computeSsim(first.data, last.data, WIDTH, HEIGHT)
   if (loopSsim < 0.998) fail(`loop SSIM ${loopSsim.toFixed(4)} < 0.998`)
 
   let sawEmptyTransition = false
 
   const frameBuffers = []
-  for (const f of pngs) frameBuffers.push(await loadRgba(join(framesDir, f)))
+  for (const f of pngs) frameBuffers.push(await loadRgba(join(frameSourceDir, f)))
 
   for (let i = 0; i < pngs.length; i++) {
     if (i % 50 === 0) console.log(`check:og-preview frame ${i}/${pngs.length}`)
@@ -211,33 +213,35 @@ async function main() {
 
   await terminateOcr()
 
-  const thumbW = Math.round(WIDTH / 4)
-  const thumbH = Math.round(HEIGHT / 4)
-  const cols = 10
-  const rows = Math.ceil(pngs.length / cols)
-  const composites = []
-  for (let idx = 0; idx < pngs.length; idx++) {
-    composites.push({
-      input: await sharp(join(framesDir, pngs[idx])).resize({ width: thumbW, height: thumbH }).toBuffer(),
-      left: (idx % cols) * thumbW,
-      top: Math.floor(idx / cols) * thumbH,
+  if (videoPath === defaultVideo) {
+    const thumbW = Math.round(WIDTH / 4)
+    const thumbH = Math.round(HEIGHT / 4)
+    const cols = 10
+    const rows = Math.ceil(pngs.length / cols)
+    const composites = []
+    for (let idx = 0; idx < pngs.length; idx++) {
+      composites.push({
+        input: await sharp(join(frameSourceDir, pngs[idx])).resize({ width: thumbW, height: thumbH }).toBuffer(),
+        left: (idx % cols) * thumbW,
+        top: Math.floor(idx / cols) * thumbH,
+      })
+    }
+    const strip = await sharp({
+      create: { width: thumbW * cols, height: thumbH * rows, channels: 3, background: '#FAF7F1' },
     })
-  }
-  const strip = await sharp({
-    create: { width: thumbW * cols, height: thumbH * rows, channels: 3, background: '#FAF7F1' },
-  })
-    .composite(composites)
-    .png()
-    .toBuffer()
+      .composite(composites)
+      .png()
+      .toBuffer()
 
-  await mkdir(proofDir, { recursive: true })
-  await writeFile(join(proofDir, 'frame-strip.png'), strip)
-  await writeFile(join(proofDir, 'loop-first.png'), await readFile(join(framesDir, pngs[0])))
-  await writeFile(join(proofDir, 'loop-last.png'), await readFile(join(framesDir, pngs[pngs.length - 1])))
-  await writeFile(
-    join(proofDir, 'check-report.json'),
-    JSON.stringify({ video: videoPath, loopSsim, frames: pngs.length, problems, ok: problems.length === 0 }, null, 2),
-  )
+    await mkdir(proofDir, { recursive: true })
+    await writeFile(join(proofDir, 'frame-strip.png'), strip)
+    await writeFile(join(proofDir, 'loop-first.png'), await readFile(join(frameSourceDir, pngs[0])))
+    await writeFile(join(proofDir, 'loop-last.png'), await readFile(join(frameSourceDir, pngs[pngs.length - 1])))
+    await writeFile(
+      join(proofDir, 'check-report.json'),
+      JSON.stringify({ video: videoPath, loopSsim, frames: pngs.length, problems, ok: problems.length === 0 }, null, 2),
+    )
+  }
 
   if (problems.length) {
     console.error('OG_PREVIEW_CHECK_FAILED')

@@ -19,11 +19,17 @@ export async function buildBrokenCrossfade() {
   const framesDir = join(proofDir, 'broken-frames')
   await mkdir(framesDir, { recursive: true })
 
+  const listenMeta = await sharp(listen).metadata()
+  const quizSized = await sharp(quiz)
+    .resize({ width: listenMeta.width, height: listenMeta.height, fit: 'fill' })
+    .png()
+    .toBuffer()
+
   for (let i = 0; i < TOTAL_FRAMES; i++) {
     const t = 0.5 * (1 + Math.sin((i / TOTAL_FRAMES) * Math.PI * 2))
     const blended = await sharp(listen)
       .ensureAlpha()
-      .composite([{ input: quiz, blend: 'over', opacity: t * 0.45 + 0.3 }])
+      .composite([{ input: quizSized, blend: 'over', opacity: t * 0.45 + 0.3 }])
       .png()
       .toBuffer()
     const png = await compositeFrame({ bandPng, bodyPng: blended, bodyAlpha: 1 })

@@ -17,14 +17,18 @@ function runCheck(video) {
 }
 
 describe('check:og-preview', () => {
-  it('fails on deliberate crossfade corruption', async () => {
-    if (!existsSync(join(proof, 'reference-frame.png'))) return
-    await buildBrokenCrossfade()
-    const broken = join(proof, 'broken-crossfade.mp4')
-    const r = runCheck(broken)
-    expect(r.status).not.toBe(0)
-    expect(r.stderr + r.stdout).toMatch(/OG_PREVIEW_CHECK_FAILED/)
-  })
+  it(
+    'fails on deliberate crossfade corruption',
+    async () => {
+      if (!existsSync(join(proof, 'reference-frame.png'))) return
+      await buildBrokenCrossfade()
+      const broken = join(proof, 'broken-crossfade.mp4')
+      const r = runCheck(broken)
+      expect(r.status).not.toBe(0)
+      expect(r.stderr + r.stdout).toMatch(/OG_PREVIEW_CHECK_FAILED/)
+    },
+    600_000,
+  )
 
   it(
     'passes on the shipped og-preview mp4',
