@@ -1,11 +1,55 @@
 import sharp from 'sharp'
 import { BODY_TOP, BAND_BOTTOM, HEIGHT, WIDTH } from './timing.mjs'
 
+function hexToRgb(hex) {
+  const h = hex.replace('#', '')
+  return { r: parseInt(h.slice(0, 2), 16), g: parseInt(h.slice(2, 4), 16), b: parseInt(h.slice(4, 6), 16) }
+}
+
+const BODY_COLUMN_MAX = 860
+
+async function flattenBodyRgb(bodyPng, bodyWidth, bodyHeight, paperHex) {
+  const paperBody = await sharp({
+    create: { width: bodyWidth, height: bodyHeight, channels: 3, background: paperHex },
+  })
+    .png()
+    .toBuffer()
+
+  const meta = await sharp(bodyPng).metadata()
+  const sourceW = meta.width || BODY_COLUMN_MAX
+  const targetW = sourceW > BODY_COLUMN_MAX ? BODY_COLUMN_MAX : sourceW
+  const bodySized = await sharp(bodyPng)
+    .resize({ width: targetW, height: bodyHeight, fit: 'inside' })
+    .ensureAlpha()
+    .png()
+    .toBuffer()
+  const sizedMeta = await sharp(bodySized).metadata()
+  const left = Math.max(0, Math.round((bodyWidth - (sizedMeta.width || 0)) / 2))
+
+  return sharp(paperBody)
+    .composite([{ input: bodySized, top: 0, left, blend: 'over' }])
+    .removeAlpha()
+    .raw()
+    .toBuffer()
+}
+
+function blendRgbTowardPaper(flatRgb, bodyWidth, bodyHeight, alpha, paperRgb) {
+  const out = Buffer.alloc(bodyWidth * bodyHeight * 3)
+  const a = Math.max(0, Math.min(1, alpha))
+  for (let i = 0, px = 0; px < bodyWidth * bodyHeight; px++, i += 3) {
+    out[i] = Math.round(flatRgb[i] * a + paperRgb.r * (1 - a))
+    out[i + 1] = Math.round(flatRgb[i + 1] * a + paperRgb.g * (1 - a))
+    out[i + 2] = Math.round(flatRgb[i + 2] * a + paperRgb.b * (1 - a))
+  }
+  return out
+}
+
 /**
- * Composite one frame: fixed band from reference + body layer with optional alpha.
- * Never crossfade two bodies: opacity steps only (brief section 3).
+ * Composite one frame: fixed band from reference + body layer with optional alpha over paper.
+ * Body fade linearly blends flattened RGB toward paper (never through black).
  */
 export async function compositeFrame({ bandPng, bodyPng, bodyAlpha = 1, paperHex = '#FAF7F1' }) {
+  const paperRgb = hexToRgb(paperHex)
   const paper = await sharp({
     create: { width: WIDTH, height: HEIGHT, channels: 3, background: paperHex },
   })
@@ -15,21 +59,16 @@ export async function compositeFrame({ bandPng, bodyPng, bodyAlpha = 1, paperHex
   const band = await sharp(bandPng).extract({ left: 0, top: 0, width: WIDTH, height: BAND_BOTTOM }).toBuffer()
 
   const bodyHeight = HEIGHT - BODY_TOP
-  let bodyLayer = sharp(bodyPng).resize({ width: WIDTH, height: bodyHeight, fit: 'inside' }).ensureAlpha()
-  if (bodyAlpha < 1) bodyLayer = bodyLayer.linear(bodyAlpha, 0)
-  const bodyLayerBuf = await bodyLayer.png().toBuffer()
+  const flatRgb = await flattenBodyRgb(bodyPng, WIDTH, bodyHeight, paperHex)
+  const bodyRgb =
+    bodyAlpha >= 0.999 ? flatRgb : blendRgbTowardPaper(flatRgb, WIDTH, bodyHeight, bodyAlpha, paperRgb)
 
-  const bodyFull = await sharp({
-    create: { width: WIDTH, height: bodyHeight, channels: 4, background: { r: 250, g: 247, b: 241, alpha: 0 } },
-  })
-    .composite([{ input: bodyLayerBuf, top: 0, left: 0 }])
-    .png()
-    .toBuffer()
+  const bodyLayer = await sharp(bodyRgb, { raw: { width: WIDTH, height: bodyHeight, channels: 3 } }).png().toBuffer()
 
   return sharp(paper)
     .composite([
       { input: band, top: 0, left: 0 },
-      { input: bodyFull, top: BODY_TOP, left: 0 },
+      { input: bodyLayer, top: BODY_TOP, left: 0 },
     ])
     .png()
     .toBuffer()
@@ -49,7 +88,7 @@ export async function captureBodyPng(page, stagePath) {
   await page.evaluate(async () => {
     await document.fonts.ready
   })
-  const body = page.locator('[data-og-body="true"]')
+  const body = page.locator('[data-og-body="true"] .og-preview-body-inner')
   return body.screenshot({ type: 'png' })
 }
 
@@ -60,4 +99,9 @@ export async function captureFullPng(page, stagePath) {
     await document.fonts.ready
   })
   return page.locator('.og-preview-root').screenshot({ type: 'png' })
+}
+
+/** Downscale a 2x capture to canvas pixels. */
+export async function downscaleCapture(png, targetW, targetH) {
+  return sharp(png).resize({ width: targetW, height: targetH, fit: 'inside' }).png().toBuffer()
 }

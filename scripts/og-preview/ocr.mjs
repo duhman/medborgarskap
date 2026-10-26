@@ -14,7 +14,7 @@ export function requiredForBeat(beat) {
   const always = ['Medborgarskap', 'provamedborgarskap.se']
   switch (beat) {
     case 'listen':
-      return [...always, ['Stoppa', 'Lyssna', 'uppläsningen'], ['Politiska', 'partier']]
+      return [...always, ['Politiska', 'partier', 'val och partier']]
     case 'quiz-q':
       return [...always, ['Hur ofta hålls val']]
     case 'quiz-r':
@@ -24,7 +24,7 @@ export function requiredForBeat(beat) {
     case 'plan-4':
       return [...always, ['4 av 13', '4 av 13 kapitel'], ['kapitel övade']]
     case 'tagline':
-      return [...always, ['Plugga till medborgarskapsprovet', 'Plugga'], ['källa']]
+      return [...always, ['Plugga', 'medborgarskapsprovet'], ['källa', 'Med rätt']]
     case 'trans':
       return ['Medborgarskap']
     default:
@@ -50,7 +50,8 @@ export function ocrViolations(text, beat) {
   }
 
   for (const w of FORBIDDEN_WORDS) {
-    if (t.includes(w)) problems.push(`forbidden word "${w}"`)
+    const re = w.length <= 3 ? new RegExp(`\\b${w}\\b`, 'i') : new RegExp(w, 'i')
+    if (re.test(t)) problems.push(`forbidden word "${w}"`)
   }
   for (const [a, b] of FORBIDDEN_PAIRS) {
     if (t.includes(a) && t.includes(b)) problems.push(`forbidden pair "${a}" + "${b}"`)
@@ -75,6 +76,33 @@ export async function ocrPng(pngBuffer) {
     data: { text },
   } = await worker.recognize(pngBuffer, {}, { tessedit_pageseg_mode: '6' })
   return normalize(text)
+}
+
+function linesFromBlocks(blocks) {
+  const lines = []
+  for (const block of blocks ?? []) {
+    for (const para of block.paragraphs ?? []) {
+      for (const line of para.lines ?? []) {
+        const bbox = line.bbox ?? {}
+        lines.push({
+          text: line.text ?? '',
+          h: (bbox.y1 ?? 0) - (bbox.y0 ?? 0),
+          w: (bbox.x1 ?? 0) - (bbox.x0 ?? 0),
+        })
+      }
+    }
+  }
+  return lines
+}
+
+/** Line boxes with height in canvas pixels (for min text height gate). */
+export async function ocrWords(pngBuffer) {
+  workerPromise ??= createWorker('swe+eng')
+  const worker = await workerPromise
+  const {
+    data: { blocks },
+  } = await worker.recognize(pngBuffer, {}, { tessedit_pageseg_mode: '6', blocks: true })
+  return linesFromBlocks(blocks)
 }
 
 export async function terminateOcr() {

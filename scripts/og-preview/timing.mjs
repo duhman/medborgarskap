@@ -28,6 +28,7 @@ export function segmentFrameCount() {
 
 /** Beat label for OCR whitelist at a given frame index. */
 export function beatAtFrame(frameIndex) {
+  if (frameIndex === TOTAL_FRAMES - 1) return 'listen'
   let i = 0
   for (const seg of SEGMENTS) {
     if (frameIndex < i + seg.frames) {

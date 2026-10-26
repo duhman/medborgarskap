@@ -6,7 +6,7 @@ import { BeatQuiz } from '../og-preview/stages/BeatQuiz'
 import { BeatTagline } from '../og-preview/stages/BeatTagline'
 
 const stages = {
-  listen: () => <BeatListen autoPlay />,
+  listen: () => <BeatListen />,
   quiz: () => <BeatQuiz />,
   plan: () => <BeatPlan />,
   tagline: () => <BeatTagline />,

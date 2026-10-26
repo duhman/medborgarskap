@@ -463,7 +463,7 @@ export function QuizRunner({
               )}
               {isCorrect ? 'Rätt' : chosen ? 'Inte rätt' : 'Du hoppade över frågan'}
             </p>
-            <p>{q.explanationSv}</p>
+            <p className={ogPreview ? 'og-preview-explanation' : undefined}>{q.explanationSv}</p>
             {!ogPreview && (
               <ListenButton
                 id={`${q.id}:${attempt}:forklaring`}
@@ -476,9 +476,9 @@ export function QuizRunner({
             )}
             <SourceCitation
               source={q.source}
-              className={ogPreview ? 'og-preview-citation text-ink-2' : 'text-[0.9375rem] text-ink-2'}
+              className={ogPreview ? 'og-preview-citation text-accent' : 'text-[0.9375rem] text-ink-2'}
             />
-            {q.explanationEn && (
+            {q.explanationEn && !ogPreview && (
               <div>
                 <button
                   type="button"
@@ -506,26 +506,28 @@ export function QuizRunner({
         )}
 
         {/* On a phone the buttons stay in reach at the bottom of the screen while the question shows. */}
-        <div
-          className={`flex items-center gap-3 ${ogPreview ? '' : 'max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:-mx-4 max-sm:border-t max-sm:border-line-strong max-sm:bg-paper max-sm:px-4 max-sm:py-3'}`}
-        >
-          <button
-            type="submit"
-            className="mb-btn mb-btn--primary flex-1 sm:min-w-44 sm:flex-none"
-            {...(ogPreview ? { 'data-og-quiz': checked ? 'next' : 'submit' } : {})}
+        {!ogPreview || !checked ? (
+          <div
+            className={`flex items-center gap-3 ${ogPreview ? '' : 'max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:-mx-4 max-sm:border-t max-sm:border-line-strong max-sm:bg-paper max-sm:px-4 max-sm:py-3'}`}
           >
-            {checked ? (isLast ? 'Visa resultat' : 'Nästa fråga') : 'Svara'}
-          </button>
-          {!checked && (
             <button
-              type="button"
-              onClick={() => check(undefined)}
-              className="mb-btn border-transparent bg-transparent text-ink-2 hover:bg-paper-muted hover:text-ink"
+              type="submit"
+              className="mb-btn mb-btn--primary flex-1 sm:min-w-44 sm:flex-none"
+              {...(ogPreview ? { 'data-og-quiz': checked ? 'next' : 'submit' } : {})}
             >
-              Hoppa över
+              {checked ? (isLast ? 'Visa resultat' : 'Nästa fråga') : 'Svara'}
             </button>
-          )}
-        </div>
+            {!checked && !ogPreview && (
+              <button
+                type="button"
+                onClick={() => check(undefined)}
+                className="mb-btn border-transparent bg-transparent text-ink-2 hover:bg-paper-muted hover:text-ink"
+              >
+                Hoppa över
+              </button>
+            )}
+          </div>
+        ) : null}
         {checked && !ogPreview && (
           <p className="text-sm text-ink-3">
             Hittat ett fel i frågan? Meddela via{' '}

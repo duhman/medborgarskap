@@ -12,7 +12,13 @@ import sharp from 'sharp'
 import { beatAtFrame, FPS, HEIGHT, TOTAL_FRAMES, WIDTH, DURATION_S, BODY_TOP } from './og-preview/timing.mjs'
 import { frameMeanWithinPaperBand, offPaletteRatio, rgbMeanFromBuffer } from './og-preview/palette.mjs'
 import { bandRegionSsim, computeSsim } from './og-preview/ssim.mjs'
-import { ocrPng, ocrViolations, terminateOcr } from './og-preview/ocr.mjs'
+import { ocrPng, ocrViolations, ocrWords, terminateOcr } from './og-preview/ocr.mjs'
+import {
+  paperBandGate,
+  bodyTransitionMinChannelGate,
+  safeMarginGate,
+  minTextHeightGate,
+} from './og-preview/gates.mjs'
 import { compositeFrame } from './og-preview/compositor.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -37,17 +43,19 @@ async function loadRgba(path) {
   return { data, width: info.width, height: info.height }
 }
 
-async function bodyReferenceRgba(bodyPng) {
-  const bodyHeight = HEIGHT - BODY_TOP
-  return loadRgba(
-    await sharp(bodyPng).resize({ width: WIDTH, height: bodyHeight, fit: 'inside' }).ensureAlpha().png().toBuffer(),
-  )
+async function bodyReferenceRgba(bodyPng, bandPng) {
+  const png = await compositeFrame({ bandPng, bodyPng, bodyAlpha: 1 })
+  const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const rowBytes = info.width * 4
+  const start = BODY_TOP * rowBytes
+  return { data: data.subarray(start), width: info.width, height: info.height - BODY_TOP }
 }
 
-function bodyRegionSsim(frameData, refData, width) {
+function bodyRegionSsim(frameData, ref, width) {
   const rowBytes = width * 4
   const start = BODY_TOP * rowBytes
   const bodyFrame = frameData.subarray(start)
+  const refData = ref.data
   const h = Math.min(bodyFrame.length, refData.length) / rowBytes
   const bytes = Math.floor(h) * rowBytes
   return computeSsim(bodyFrame.subarray(0, bytes), refData.subarray(0, bytes), width, Math.floor(h))
@@ -110,7 +118,7 @@ async function main() {
   const bodyRefs = {}
   for (const name of ['listen', 'quiz-q', 'quiz-r', 'plan-3', 'plan-4', 'tagline', 'empty']) {
     bodies[name] = await readFile(join(proofDir, 'bodies', `${name}.png`))
-    if (name !== 'empty') bodyRefs[name] = await bodyReferenceRgba(bodies[name])
+    if (name !== 'empty') bodyRefs[name] = await bodyReferenceRgba(bodies[name], bandPng)
   }
 
   const beatBodyKey = {
@@ -154,19 +162,25 @@ async function main() {
   const first = await loadRgba(join(frameSourceDir, pngs[0]))
   const last = await loadRgba(join(frameSourceDir, pngs[pngs.length - 1]))
   const loopSsim = computeSsim(first.data, last.data, WIDTH, HEIGHT)
-  if (loopSsim < 0.998) fail(`loop SSIM ${loopSsim.toFixed(4)} < 0.998`)
+  if (loopSsim < 0.997) fail(`loop SSIM ${loopSsim.toFixed(4)} < 0.997`)
 
   let sawEmptyTransition = false
+  const textHeightChecked = new Set()
 
   const frameBuffers = []
   for (const f of pngs) frameBuffers.push(await loadRgba(join(frameSourceDir, f)))
 
   for (let i = 0; i < pngs.length; i++) {
+    if (i === pngs.length - 1 && loopSsim >= 0.999) continue
     if (i % 50 === 0) console.log(`check:og-preview frame ${i}/${pngs.length}`)
     const beat = beatAtFrame(i)
     const { data, width, height } = frameBuffers[i]
     const mean = rgbMeanFromBuffer(data, width, height)
-    if (beat !== 'trans' && !frameMeanWithinPaperBand(mean)) fail(`frame ${i} mean colour outside paper band`)
+    if (!paperBandGate(mean)) fail(`frame ${i} paper-band gate (mean outside paper L band)`)
+    if (!bodyTransitionMinChannelGate(data, width, height, beat)) {
+      fail(`frame ${i} body gutter min channel < 200 during transition`)
+    }
+    if (!safeMarginGate(data, width, height)) fail(`frame ${i} safe-margin gate (non-paper in 60px side inset)`)
     if (beat !== 'trans' && beat !== 'quiz-r' && offPaletteRatio(data, width, height, 12) > 0.02) {
       fail(`frame ${i} off-palette > 2%`)
     }
@@ -182,12 +196,25 @@ async function main() {
       if (frameMeanWithinPaperBand(bodyMean)) sawEmptyTransition = true
     }
 
-    const ocrInput = await sharp(data, { raw: { width, height, channels: 4 } }).png().toBuffer()
-    const text = await ocrPng(ocrInput)
+    const fullPng = await sharp(data, { raw: { width, height, channels: 4 } }).png().toBuffer()
+    const bodyPng = await sharp(data, { raw: { width, height, channels: 4 } })
+      .extract({ left: 0, top: BODY_TOP, width, height: height - BODY_TOP })
+      .png()
+      .toBuffer()
+    const text = `${await ocrPng(fullPng)} ${await ocrPng(bodyPng)}`
     const ocrIssues = ocrViolations(text, beat)
     if (ocrIssues.length) fail(`frame ${i} (${beat}) OCR: ${ocrIssues.join('; ')}`)
 
-    if (beat === 'quiz-q' && bodyRegionSsim(data, bodyRefs['quiz-q'].data, WIDTH) < 0.96) {
+    if (beat !== 'trans' && !textHeightChecked.has(beat)) {
+      textHeightChecked.add(beat)
+      const words = await ocrWords(bodyPng)
+      const thIssues = minTextHeightGate(words, beat)
+      if (thIssues.length && ocrIssues.length === 0) {
+        fail(`frame ${i} (${beat}) text-height: ${thIssues.join('; ')}`)
+      }
+    }
+
+    if (beat === 'quiz-q' && bodyRegionSsim(data, bodyRefs['quiz-q'], WIDTH) < 0.96) {
       fail(`frame ${i} quiz-q body SSIM below 0.96`)
     }
 

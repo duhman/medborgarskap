@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 48px;
+    padding: 0 60px;
     border-bottom: 1px solid var(--line-strong);
     background: var(--paper);
   }
@@ -28,9 +28,17 @@
     top: 131px;
     width: 1200px;
     height: 499px;
-    padding: 0 48px;
+    padding: 0 60px;
     overflow: hidden;
     background: var(--paper);
+    display: flex;
+    justify-content: center;
+  }
+
+  .og-preview-body-inner {
+    width: 100%;
+    max-width: 800px;
+    min-width: 720px;
   }
 
   /* Feed-size type at 1200px wide (brief section 5). */
@@ -69,6 +77,42 @@
 
   .og-preview-body .og-preview-quiz .og-preview-citation {
     font-size: 32px;
+    color: var(--accent);
+  }
+
+  .og-preview-body .og-preview-quiz .og-preview-explanation {
+    font-size: 32px;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  .og-preview-body .og-preview-listen-btn {
+    font-size: 34px;
+    font-weight: 500;
+    padding: 16px 28px;
+    border-radius: 2px;
+    background: var(--accent);
+    color: var(--accent-on);
+    gap: 14px;
+  }
+
+  .og-preview-body .og-preview-listen-btn svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .og-preview-body .og-preview-plan-panel {
+    font-size: 36px;
+  }
+
+  .og-preview-body .og-preview-plan-row {
+    font-size: 28px;
+  }
+
+  .og-preview-body .og-preview-tagline-url {
+    font-size: 30px;
+    font-family: var(--font-mono, 'IBM Plex Mono'), monospace;
+    color: var(--ink-2);
   }
 
   .og-preview-band .og-preview-wordmark {

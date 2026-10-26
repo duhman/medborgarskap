@@ -4,14 +4,20 @@
  * Usage: npm run build && node scripts/record-og-preview-video.mjs
  */
 import { spawn } from 'node:child_process'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:http'
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { extname, join, normalize } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
 import sharp from 'sharp'
-import { compositeFrame, captureBodyPng, captureFullPng, transitionAlphas } from './og-preview/compositor.mjs'
+import {
+  compositeFrame,
+  captureBodyPng,
+  captureFullPng,
+  transitionAlphas,
+  downscaleCapture,
+} from './og-preview/compositor.mjs'
 import { INIT_SCRIPT, progressSeed } from './og-preview/seed.mjs'
 import { SEGMENTS, TOTAL_FRAMES, WIDTH, HEIGHT, FPS, segmentFrameCount } from './og-preview/timing.mjs'
 
@@ -93,7 +99,7 @@ async function main() {
   const browser = await chromium.launch()
   const context = await browser.newContext({
     viewport: { width: WIDTH, height: HEIGHT },
-    deviceScaleFactor: 1,
+    deviceScaleFactor: 2,
     colorScheme: 'light',
   })
   await context.addInitScript(INIT_SCRIPT)
@@ -104,23 +110,28 @@ async function main() {
   await page.getByRole('heading', { name: 'Politiska val och partier' }).waitFor({ timeout: 15_000 })
   await page.getByText('Stoppa uppläsningen').waitFor({ timeout: 15_000 })
 
-  const listenFull = await captureFullPng(page, `${base}/og-preview/listen`)
+  const listenFullRaw = await captureFullPng(page, `${base}/og-preview/listen`)
+  const listenFull = await downscaleCapture(listenFullRaw, WIDTH, HEIGHT)
   const bandPng = listenFull
   await writeFile(join(proofDir, 'reference-frame.png'), listenFull)
 
   await setProgress(page, 3)
   await page.goto(`${base}/og-preview/plan`, { waitUntil: 'networkidle' })
-  const plan3 = await captureBodyPng(page, `${base}/og-preview/plan`)
+  const plan3 = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/plan`), WIDTH, HEIGHT - 131)
 
   await setProgress(page, 4)
   await page.goto(`${base}/og-preview/plan`, { waitUntil: 'networkidle' })
-  const plan4 = await captureBodyPng(page, `${base}/og-preview/plan`)
+  const plan4 = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/plan`), WIDTH, HEIGHT - 131)
 
-  const tagline = await captureBodyPng(page, `${base}/og-preview/tagline`)
+  const tagline = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/tagline`), WIDTH, HEIGHT - 131)
 
   await page.goto(`${base}/og-preview/quiz`, { waitUntil: 'networkidle' })
   await page.locator('.og-preview-quiz fieldset').waitFor()
-  const quizQ = await page.locator('.og-preview-quiz fieldset').screenshot({ type: 'png' })
+  const quizQ = await downscaleCapture(
+    await page.locator('.og-preview-quiz fieldset').screenshot({ type: 'png' }),
+    WIDTH,
+    HEIGHT - 131,
+  )
   await page.locator('[data-og-quiz="option-A"]').click()
   await page.locator('[data-og-quiz="submit"]').click()
   await page.waitForSelector('[data-og-quiz="reveal"]')
@@ -129,9 +140,13 @@ async function main() {
     content: `.og-preview-body { overflow: visible !important; height: auto !important; }`,
   })
   await page.locator('.og-preview-citation').scrollIntoViewIfNeeded()
-  const quizR = await page.locator('.og-preview-quiz').screenshot({ type: 'png' })
+  const quizR = await downscaleCapture(
+    await page.locator('[data-og-quiz="reveal-card"]').screenshot({ type: 'png' }),
+    WIDTH,
+    HEIGHT - 131,
+  )
 
-  const listenBody = await captureBodyPng(page, `${base}/og-preview/listen`)
+  const listenBody = await downscaleCapture(await captureBodyPng(page, `${base}/og-preview/listen`), WIDTH, HEIGHT - 131)
   const emptyBody = await sharp({
     create: { width: WIDTH, height: HEIGHT - 131, channels: 4, background: { r: 250, g: 247, b: 241, alpha: 0 } },
   })
@@ -190,6 +205,9 @@ async function main() {
       frameIndex++
     }
   }
+
+  const loopAnchor = await readFile(framePaths[0])
+  await writeFile(framePaths[framePaths.length - 1], loopAnchor)
 
   const mp4Path = join(publicDir, 'og-preview.mp4')
   await new Promise((resolve, reject) => {
