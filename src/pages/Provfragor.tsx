@@ -24,7 +24,7 @@ export function Provfragor() {
         </p>
         <p className="text-sm">
           Källa:{' '}
-          <ExternalLink href={officialLinks.faq}>UHR, Frågor och svar</ExternalLink>
+          <ExternalLink href={officialLinks.faq}>uhr.se, Frågor och svar</ExternalLink>
         </p>
       </header>
 
@@ -37,13 +37,12 @@ export function Provfragor() {
             <p className="mb-4 text-[1.0625rem] font-semibold leading-snug">{q.prompt}</p>
             <ol className="list-none space-y-2 pl-0">
               {q.options.map((opt) => (
-                <li key={opt.id} className="flex items-start gap-3 text-ink-2">
+                <li key={opt.id} className="flex items-start gap-3">
                   <span className="font-mono text-sm font-medium leading-6 text-ink-3">{opt.id}</span>
-                  <span className="leading-relaxed">{opt.text}</span>
+                  <span className="leading-relaxed text-ink">{opt.text}</span>
                 </li>
               ))}
             </ol>
-            <p className="mt-3 text-sm text-ink-3">{q.note}</p>
           </li>
         ))}
       </ul>

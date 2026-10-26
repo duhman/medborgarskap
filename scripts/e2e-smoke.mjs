@@ -12,6 +12,7 @@
  * (start `npm run preview` yourself). Set CHROMIUM_PATH to use a preinstalled Chromium.
  * Fails with E2E_FAILED and a list of problems.
  */
+import { mkdirSync } from 'node:fs'
 import { chromium, devices } from 'playwright'
 import { getA11yRoutes } from './a11y-routes.mjs'
 
@@ -88,6 +89,113 @@ async function checkMissingRoutes(browser, name) {
 async function answerCurrent(page, pick = 0) {
   await page.locator('form .mb-choice').nth(pick).click()
   await page.getByRole('button', { name: 'Svara' }).click()
+}
+
+async function expectBorderToken(page, locator, token, label) {
+  const expected = await page.evaluate((token) => {
+    const probe = document.createElement('div')
+    probe.style.cssText = `position:absolute;visibility:hidden;border:1px solid var(${token})`
+    document.body.appendChild(probe)
+    const color = getComputedStyle(probe).borderTopColor
+    probe.remove()
+    return color
+  }, token)
+
+  await page.mouse.move(0, 0)
+  await locator.hover()
+  await locator.evaluate((el) =>
+    new Promise((resolve) => {
+      const finish = () => resolve()
+      el.addEventListener('transitionend', finish, { once: true })
+      window.setTimeout(finish, 400)
+    }),
+  )
+
+  const deadline = Date.now() + 3000
+  let actual = ''
+  let hover = false
+  while (Date.now() < deadline) {
+    const reading = await locator.evaluate((el) => ({
+      actual: getComputedStyle(el).borderTopColor,
+      hover: el.matches(':hover'),
+    }))
+    actual = reading.actual
+    hover = reading.hover
+    if (actual === expected) return
+    await new Promise((resolve) => setTimeout(resolve, 50))
+  }
+  fail(`${label}: border ${actual}, expected ${expected} for ${token} (hover=${hover})`)
+}
+
+async function checkChoiceHoverBorders(browser, name) {
+  if (name !== 'desktop') return
+  const context = await browser.newContext(viewports[name])
+  const page = await context.newPage()
+  const label = `${name} choice hover`
+  const shotDir = process.env.CHOICE_HOVER_SCREENSHOT_DIR
+  if (shotDir) mkdirSync(shotDir, { recursive: true })
+
+  let checkedUnchecked = false
+  let graded = false
+  for (const pick of [3, 2, 1, 0]) {
+    await page.goto(BASE_URL + '/ovning/landet-sverige', { waitUntil: 'networkidle' })
+    await page.getByRole('button', { name: 'Svara' }).waitFor()
+    await page.waitForFunction(() => {
+      for (const sheet of document.styleSheets) {
+        try {
+          for (const rule of sheet.cssRules) {
+            if (rule.cssText?.includes('mb-choice:not(.mb-choice--correct)')) return true
+          }
+        } catch {
+          /* cross-origin sheet */
+        }
+      }
+      return false
+    })
+    await page.locator('form .mb-choice').first().waitFor()
+    if (!checkedUnchecked) {
+      const unchecked = page.locator('form .mb-choice').first()
+      await expectBorderToken(page, unchecked, '--ink-2', `${label} unchecked`)
+      if (shotDir) {
+        await unchecked.hover()
+        await page.screenshot({
+          path: `${shotDir}/choice-unchecked-hover-1280.png`,
+          fullPage: false,
+        })
+      }
+      checkedUnchecked = true
+    }
+    await page.locator('form .mb-choice').nth(pick).click()
+    await page.getByRole('button', { name: 'Svara' }).click()
+    if (await page.locator('form .mb-choice--wrong').count()) {
+      graded = true
+      break
+    }
+  }
+  if (!graded) fail(`${label}: could not submit a wrong answer`)
+
+  const muted = page.locator('form .mb-choice.mb-choice--muted').first()
+  await expectBorderToken(page, muted, '--ink-3', `${label} muted`)
+  if (shotDir) {
+    await muted.hover()
+    await page.screenshot({ path: `${shotDir}/mb-choice-muted-hover-after-1280.png`, fullPage: false })
+  }
+
+  const correct = page
+    .locator('form .mb-choice.mb-choice--correct')
+    .filter({ hasNot: page.locator('input:checked') })
+    .first()
+  if (!(await correct.count())) fail(`${label}: no unchecked correct row after wrong answer`)
+  await expectBorderToken(page, correct, '--ok', `${label} correct unchecked`)
+  if (shotDir) {
+    await correct.hover()
+    await page.screenshot({
+      path: `${shotDir}/mb-choice-correct-hover-after-wrong-1280.png`,
+      fullPage: false,
+    })
+  }
+
+  await context.close()
 }
 
 async function checkFlows(browser, name) {
@@ -221,6 +329,7 @@ const browser = await chromium.launch(
 try {
   for (const name of Object.keys(viewports)) {
     await checkRoutes(browser, name)
+    await checkChoiceHoverBorders(browser, name)
     await checkFlows(browser, name)
     await checkMissingRoutes(browser, name)
   }

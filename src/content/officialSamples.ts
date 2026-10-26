@@ -4,8 +4,6 @@ export type OfficialSampleQuestion = {
   id: number
   prompt: string
   options: QuizOption[]
-  /** UHR publicerar inte facit på webben; svar lämnas dolda i appen. */
-  note: string
 }
 
 export const officialSampleQuestions: OfficialSampleQuestion[] = [
@@ -18,7 +16,6 @@ export const officialSampleQuestions: OfficialSampleQuestion[] = [
       { id: 'C', text: 'Att formulera och stifta nya lagar' },
       { id: 'D', text: 'Att representera Sverige internationellt' },
     ],
-    note: 'Officiellt exempel från UHR, publicerat på uhr.se.',
   },
   {
     id: 2,
@@ -29,7 +26,6 @@ export const officialSampleQuestions: OfficialSampleQuestion[] = [
       { id: 'C', text: 'Landshövding' },
       { id: 'D', text: 'Statsminister' },
     ],
-    note: 'Officiellt exempel från UHR, publicerat på uhr.se.',
   },
   {
     id: 3,
@@ -41,7 +37,6 @@ export const officialSampleQuestions: OfficialSampleQuestion[] = [
       { id: 'C', text: 'Skog' },
       { id: 'D', text: 'Uran' },
     ],
-    note: 'Officiellt exempel från UHR, publicerat på uhr.se.',
   },
   {
     id: 4,
@@ -52,7 +47,6 @@ export const officialSampleQuestions: OfficialSampleQuestion[] = [
       { id: 'C', text: 'Danmark' },
       { id: 'D', text: 'Estland' },
     ],
-    note: 'Officiellt exempel från UHR, publicerat på uhr.se.',
   },
   {
     id: 5,
@@ -64,6 +58,5 @@ export const officialSampleQuestions: OfficialSampleQuestion[] = [
       { id: 'C', text: 'Personen måste först be om tillstånd att skriva inlägget' },
       { id: 'D', text: 'Personen får inte namnge politikerna som lagt förslaget' },
     ],
-    note: 'Officiellt exempel från UHR, publicerat på uhr.se.',
   },
 ]
