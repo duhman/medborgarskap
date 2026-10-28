@@ -57,7 +57,7 @@ export function SourceCitation({ source, className = 'text-ink-3', compact = fal
 }
 
 type OfficialProps = {
-  sources: OfficialSource[]
+  sources: Array<Omit<OfficialSource, 'publisher'> & { publisher: string }>
   className?: string
 }
 

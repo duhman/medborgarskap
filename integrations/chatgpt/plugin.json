@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "prova-medborgarskap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Search and read public, source-linked study material for the Swedish citizenship test.",
   "author": {
     "name": "Adrian Martén",
@@ -19,7 +19,7 @@
       "interface": {
         "displayName": "Prova medborgarskap",
         "shortDescription": "Svenskt medborgarskapsprov",
-        "longDescription": "Search and read public chapter summaries and FAQs for the Swedish citizenship test. Each fetched item includes its canonical page, official UHR or Migrationsverket sources, dates where available, and clear limitations. The integration is read-only and cannot access quizzes, progress, accounts, or private data.",
+        "longDescription": "Search public chapter summaries, FAQs and study-feature help for the Swedish citizenship test. Exam guidance cites UHR or Migrationsverket; feature descriptions cite Prova medborgarskap. Items include canonical links, source publishers, dates where available and limitations. Read-only: no access to personal answers, progress, study plans, accounts or private data.",
         "developerName": "Adrian Martén",
         "category": "Education & Research",
         "capabilities": [
@@ -96,7 +96,7 @@
         "demo_recording_url": "https://provamedborgarskap.se/integrations/chatgpt/review-1.0.0.html"
       },
       "publication": {
-        "release_notes": "First release: source-linked public study chapters and FAQs for the Swedish citizenship test."
+        "release_notes": "Adds public help for smart practice, study plans, listening and word cards, with explicit site-versus-official source attribution. No new tools or permissions."
       }
     }
   }

@@ -5,7 +5,7 @@ export type FaqEntry = {
   question: string
   /** Svar i stycken. Samma text används i FAQPage JSON-LD, så håll den synlig och ordagrann. */
   answer: string[]
-  sources: OfficialSource[]
+  sources: Array<OfficialSource | { publisher: 'Prova medborgarskap'; label: string; url: string; checkedAt: string }>
 }
 
 const CHECKED = '2026-10-24'
@@ -33,9 +33,13 @@ const mvVuxna: OfficialSource = {
 }
 
 /**
- * Vanliga frågor om medborgarskapsprovet. Varje svar återger bara vad UHR eller Migrationsverket
- * har publicerat, med källa och kontrolldatum. Gissa aldrig: står det "kommer" hos UHR, skriv det.
+ * Provregler återger myndighetskällorna; webbplatsens funktioner har egna källor.
+ * Gissa aldrig: står det "kommer" hos UHR, skriv det.
  */
+const siteSource = (path: string, label: string): FaqEntry['sources'] => [
+  { publisher: 'Prova medborgarskap', label, url: `https://provamedborgarskap.se${path}`, checkedAt: '2026-10-28' },
+]
+
 export const faqEntries: FaqEntry[] = [
   {
     id: 'nasta-prov',
@@ -116,6 +120,42 @@ export const faqEntries: FaqEntry[] = [
       'Övningarna på den här sidan är gratis, utan konto och utan reklam.',
     ],
     sources: [mvVuxna, uhrOm],
+  },
+  {
+    id: 'trana-smart',
+    question: 'Hur fungerar Träna smart och vyn över mina framsteg?',
+    answer: [
+      'Träna smart blandar nya frågor med frågor du har svarat fel på och frågor som är dags att repetera. Du väljer 10, 20 eller 40 frågor. När du svarar rätt flera gånger ökar tiden till nästa repetition.',
+      'Översikten per kapitel bygger bara på dina svar här på webbplatsen. Den är studiehjälp, inte ett officiellt provresultat eller en garanti för att du klarar medborgarskapsprovet. Historiken sparas i din webbläsare. ChatGPT-integrationen kan inte läsa den.',
+    ],
+    sources: siteSource('/ovning/smart', 'Träna smart'),
+  },
+  {
+    id: 'studieplan',
+    question: 'Hur gör jag en studieplan inför medborgarskapsprovet?',
+    answer: [
+      'På sidan Studieplan kan du välja 4, 8, 12 eller 16 veckor. Planen fördelar de 13 kapitlen i Sverige i fokus vecka för vecka och lägger in repetition på slutet. Kapitel bockas av när du har övat dem här.',
+      'Planens startdag och antal veckor sparas bara i din webbläsare. En plan fram till den planerade provperioden är inte ett bekräftat provdatum eller en anmälan till provet. ChatGPT-integrationen kan förklara funktionen men inte läsa eller ändra din plan.',
+    ],
+    sources: siteSource('/studieplan', 'Studieplan'),
+  },
+  {
+    id: 'lyssna',
+    question: 'Kan jag lyssna på frågor och lätt svenska?',
+    answer: [
+      'Ja, när din webbläsare har en svensk röst visas knappar för att läsa upp frågor, förklaringar, lätt svenska och ordkort. Uppläsningen använder webbläsarens talfunktion. Om knappen saknas behöver du en svensk röst på enheten. Tillgång utan internet beror på enhetens röst.',
+      'Kapitelsidorna länkar också till UHR:s ljudfiler för Sverige i fokus. De är separata från webbplatsens uppläsning av övningstext. Webbplatsens övningsfrågor och lätt svenska är fristående studiehjälp, inte UHR:s officiella prov.',
+    ],
+    sources: [...siteSource('/kapitel/landet-sverige', 'Kapitel med ljud, lätt svenska och ordkort'), uhrMaterial],
+  },
+  {
+    id: 'ordkort',
+    question: 'Hur övar jag viktiga ord med ordkort?',
+    answer: [
+      'Öppna ett kapitel och välj Öva orden med kort. Se ett ord, tänk på betydelsen och visa sedan förklaringen. Svara om du kunde ordet. Ord du inte kunde kommer tillbaka i samma omgång.',
+      'Ordkorten använder kapitlets ordlista. Den pågående omgången sparas inte när du lämnar sidan och påverkar inte historiken i Träna smart. Du kan lyssna på kortet om en svensk röst finns i webbläsaren.',
+    ],
+    sources: siteSource('/kapitel/landet-sverige#ordkort', 'Öva orden med kort'),
   },
   {
     id: 'anpassningar',

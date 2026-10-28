@@ -8,9 +8,9 @@ export function VanligaFragor() {
       <header className="space-y-4">
         <h1 className="text-3xl font-semibold sm:text-4xl">Vanliga frågor om medborgarskapsprovet</h1>
         <p className="text-lg leading-relaxed text-ink-2">
-          Korta svar om provet och kraven för svenskt medborgarskap. Varje svar bygger på vad UHR
-          och Migrationsverket har publicerat, med länk till källan och datum då vi kontrollerade
-          den. Vi är inte en myndighet: kontrollera alltid hos källan innan du fattar beslut.
+          Korta svar om provet, kraven för svenskt medborgarskap och hur du studerar här. Svar om
+          provet och kraven har källor från UHR och Migrationsverket. Svar om webbplatsens egna
+          funktioner länkar till Prova medborgarskap. Källorna har datum för vår kontroll. Vi är inte en myndighet: kontrollera alltid hos källan innan du fattar beslut.
         </p>
       </header>
 

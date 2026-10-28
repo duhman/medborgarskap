@@ -142,7 +142,7 @@ describe('official UHR samples', () => {
 })
 
 describe('FAQ', () => {
-  it('has unique ids, an answer and a dated official source for every entry, and no long dashes', () => {
+  it('has unique ids, an answer and a dated, attributable source for every entry, and no long dashes', () => {
     expect(new Set(faqEntries.map((f) => f.id)).size).toBe(faqEntries.length)
     for (const f of faqEntries) {
       expect(f.answer.length, f.id).toBeGreaterThan(0)

@@ -61,3 +61,11 @@ The final four-file archive has SHA-256 `c23306beaf1d126e2c0333bdacfad11d01b1472
 OpenAI accepted the final ZIP into the same verified/configured draft. The incomplete-review-information blocker cleared. The remaining privacy finding is non-blocking: the automatic policy assessment could not be completed, and the portal allows submission for additional review. It is not evidence of privacy-policy approval.
 
 All six final declarations remain unchecked: Terms/Plugin Guidelines and compliance, applicable laws, no transfers/trades, third-party content/API rights, suitability for under-18s, and no targeting/sharing of personal information about under-13s. The final Submit button remains disabled pending explicit user confirmation. The test connection is installed; the public directory listing is not submitted, approved or published.
+
+## Product feature discovery, 28 October 2026
+
+Following Adrian's explicit approval on 25 October, version 1.0.0 was submitted and the publisher confirmed **In review**, **Configured**, and **Not published**. This supersedes the pending-declarations notes above; no newer publisher status is asserted here.
+
+The public FAQ now explains smart practice and its progress overview, study plans, browser read-aloud versus UHR audio, and ephemeral word-card rounds. The existing search/fetch tools expose these answers with dated Prova medborgarskap source links. Exam-rule answers retain their separate UHR/Migrationsverket sources and saved check dates. Feature descriptions are not official guidance, test-result predictions, or access to private progress. The AI-readable index links to the same four FAQ anchors, and the privacy page lists locally stored plan settings and per-question repetition history.
+
+Tool names, inputs and access permissions are unchanged. Package 1.0.1 corrects the description to distinguish site-feature help from official guidance. The submitted 1.0.0 archive remains historical; 1.0.1 publisher delivery is recorded after verification.
