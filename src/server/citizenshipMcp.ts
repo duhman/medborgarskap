@@ -300,7 +300,7 @@ function withSafetyHeaders(response: Response, corsOrigin?: string) {
 
 function createServer() {
   const server = new McpServer(
-    { name: 'provamedborgarskap', version: '1.0.0' },
+    { name: 'provamedborgarskap', version: '1.0.1' },
     {
       instructions:
         'Use only these public study chapters and FAQ entries. Cite the returned canonical page and source URLs. Distinguish official UHR or Migrationsverket sources from descriptions of the site features. The service is read-only and cannot access quiz answers, progress, accounts, or private data. It cannot decide personal eligibility for citizenship or the test.',
