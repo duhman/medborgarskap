@@ -61,7 +61,7 @@
     "oxlint": "^1.81.0",
     "pdfjs-dist": "6.4.299",
     "playwright": "1.55.1",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.5",
     "tesseract.js": "^6.0.1",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
