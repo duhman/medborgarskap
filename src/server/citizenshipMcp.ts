@@ -35,7 +35,7 @@ export type PublicDocument = {
   metadata: {
     sourceURLs: string[]
     checkedAt: string | null
-    sourceDates: Array<{ url: string; checkedAt: string | null }>
+    sourceDates: Array<{ url: string; publisher: string; checkedAt: string | null }>
     questionReviewedAt: string | null
     limitations: string[]
   }
@@ -51,7 +51,7 @@ const publicDocuments: PublicDocument[] = [
     metadata: {
       sourceURLs: [sverigeIFokusPdfUrl],
       checkedAt: null,
-      sourceDates: [{ url: sverigeIFokusPdfUrl, checkedAt: null }],
+      sourceDates: [{ url: sverigeIFokusPdfUrl, publisher: 'UHR', checkedAt: null }],
       questionReviewedAt: chapter.review?.reviewedAt ?? null,
       limitations: [
         `Sammanfattningen bygger på UHR:s Sverige i fokus, korrigerad version ${SOURCE_PDF_VERSION}.`,
@@ -69,10 +69,12 @@ const publicDocuments: PublicDocument[] = [
     metadata: {
       sourceURLs: faq.sources.map((source) => source.url),
       checkedAt: null,
-      sourceDates: faq.sources.map((source) => ({ url: source.url, checkedAt: source.checkedAt })),
+      sourceDates: faq.sources.map((source) => ({ url: source.url, publisher: source.publisher, checkedAt: source.checkedAt })),
       questionReviewedAt: null,
       limitations: [
-        'UHR och Migrationsverket kan ändra sina krav, datum och avgifter. Kontrollera alltid den länkade myndighetskällan innan du fattar beslut.',
+        ...(faq.sources.some((source) => source.publisher === 'Prova medborgarskap')
+          ? ['Beskriver webbplatsens egna funktioner, inte ett myndighetsbesked. Verktyget kan inte läsa eller ändra din studieplan, repetitionshistorik eller andra privata framsteg.']
+          : ['UHR och Migrationsverket kan ändra sina krav, datum och avgifter. Kontrollera alltid den länkade myndighetskällan innan du fattar beslut.']),
         'Verktyget ger allmän information och kan inte avgöra en persons rätt till svenskt medborgarskap eller prov.',
       ],
     },
@@ -86,7 +88,7 @@ const publicDocuments: PublicDocument[] = [
     metadata: {
       sourceURLs: [officialLinks.medborgarskapsprov],
       checkedAt: uhrStatus.checkedAt,
-      sourceDates: [{ url: officialLinks.medborgarskapsprov, checkedAt: uhrStatus.checkedAt }],
+      sourceDates: [{ url: officialLinks.medborgarskapsprov, publisher: 'UHR', checkedAt: uhrStatus.checkedAt }],
       questionReviewedAt: null,
       limitations: [
         'UHR kan ändra tidplanen. Datum, plats, provtid, antal frågor, avgift och anmälan är bara bekräftade när UHR har publicerat dem.',
@@ -124,7 +126,7 @@ const documentSchema = z
       .object({
         sourceURLs: z.array(sourceUrlSchema).min(1),
         checkedAt: z.string().date().nullable(),
-        sourceDates: z.array(z.object({ url: sourceUrlSchema, checkedAt: z.string().date().nullable() }).strict()).min(1),
+        sourceDates: z.array(z.object({ url: sourceUrlSchema, publisher: z.string().min(1), checkedAt: z.string().date().nullable() }).strict()).min(1),
         questionReviewedAt: z.string().date().nullable(),
         limitations: z.array(z.string()).min(1),
       })
@@ -298,10 +300,10 @@ function withSafetyHeaders(response: Response, corsOrigin?: string) {
 
 function createServer() {
   const server = new McpServer(
-    { name: 'provamedborgarskap', version: '1.0.0' },
+    { name: 'provamedborgarskap', version: '1.0.1' },
     {
       instructions:
-        'Use only these public study chapters and FAQ entries. Cite the returned canonical page and official source URLs. The service is read-only and cannot access quiz answers, progress, accounts, or private data. It cannot decide personal eligibility for citizenship or the test.',
+        'Use only these public study chapters and FAQ entries. Cite the returned canonical page and source URLs. Distinguish official UHR or Migrationsverket sources from descriptions of the site features. The service is read-only and cannot access quiz answers, progress, accounts, or private data. It cannot decide personal eligibility for citizenship or the test.',
     },
   )
   const annotations = {
@@ -333,7 +335,7 @@ function createServer() {
     {
       title: 'Fetch public citizenship-study material',
       description:
-        'Fetch one allowlisted public study chapter or FAQ entry by an ID returned from search. It never fetches arbitrary URLs and returns official source URLs, dates and limitations.',
+        'Fetch one allowlisted public study chapter or FAQ entry by an ID returned from search. It never fetches arbitrary URLs and returns source URLs, dates and limitations. Sources for site features are Prova medborgarskap pages, not official guidance.',
       inputSchema: fetchInputSchema.shape,
       outputSchema: fetchOutputSchema.shape,
       annotations,

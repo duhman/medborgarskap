@@ -19,7 +19,7 @@ const staticPageDescriptions: Record<string, string> = {
   '/ovning/smart':
     'Träna smart inför medborgarskapsprovet: dina fel och frågor att repetera kommer först, och du ser hur redo du är per kapitel.',
   '/vanliga-fragor':
-    'När är nästa medborgarskapsprov, hur ser det ut och vem måste skriva det? Korta svar med källor från UHR och Migrationsverket.',
+    'Svar om medborgarskapsprovet med myndighetskällor, plus hjälp med studieplan, Träna smart, uppläsning och ordkort på Prova medborgarskap.',
   '/om': 'Om Medborgarskap, källor och hur sidan hänger ihop med UHR:s officiella material.',
   '/integritet': 'Integritetspolicy för Medborgarskap: analys, cookies och hur du väljer bort spårning.',
   '/villkor': 'Användarvillkor för Medborgarskap, fristående studiehjälp till medborgarskapsprovet.',

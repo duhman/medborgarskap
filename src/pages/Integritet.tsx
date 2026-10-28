@@ -17,7 +17,7 @@ function ClearProgress() {
         Rensa mina sparade uppgifter
       </button>
       <p role="status" className="text-ink-2">
-        {cleared ? 'Klart. Dina framsteg, fel och svar är borttagna från den här webbläsaren.' : ''}
+        {cleared ? 'Klart. Dina framsteg, svar, repetitionshistorik och studieplan är borttagna från den här webbläsaren.' : ''}
       </p>
     </div>
   )
@@ -28,7 +28,7 @@ export function Integritet() {
     <article className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Integritetspolicy</h1>
-        <p className="text-sm text-ink-2">Senast uppdaterad: 25 oktober 2026</p>
+        <p className="text-sm text-ink-2">Senast uppdaterad: 28 oktober 2026</p>
       </header>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
@@ -56,8 +56,15 @@ export function Integritet() {
         <p>
           Din webbläsare sparar dina svar i vägledningen &quot;Behöver jag provet?&quot;, dina
           resultat i övningarna, frågor du har svarat fel på och var du är i en påbörjad övning.
+          För Träna smart sparas också antal rätt och fel per fråga, följden av rätta svar och
+          datum för senaste svaret. Din studieplans startdag och antal veckor sparas här också.
           Det sparas i webbläsarens lokala lagring (localStorage). Uppgifterna stannar på din enhet
           och skickas inte till oss. Du kan rensa dem här eller i webbläsarens inställningar.
+        </p>
+        <p>
+          En omgång med ordkort finns bara medan du är kvar på sidan och sparas inte i
+          localStorage. ChatGPT-integrationen kan inte läsa eller ändra din studieplan,
+          repetitionshistorik eller andra lokalt sparade uppgifter.
         </p>
         <ClearProgress />
         <p>

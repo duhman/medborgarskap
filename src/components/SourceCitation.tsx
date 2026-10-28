@@ -57,7 +57,7 @@ export function SourceCitation({ source, className = 'text-ink-3', compact = fal
 }
 
 type OfficialProps = {
-  sources: OfficialSource[]
+  sources: Array<Omit<OfficialSource, 'publisher'> & { publisher: string }>
   className?: string
 }
 
@@ -69,7 +69,7 @@ export function OfficialSourceCitation({ sources, className = 'text-xs text-ink-
           Källa:{' '}
           <a
             href={s.url}
-            className="mb-link-quiet"
+            className="mb-link-quiet underline underline-offset-2"
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${s.publisher}, ${s.label}, öppnas i ny flik`}

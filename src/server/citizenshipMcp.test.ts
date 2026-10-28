@@ -98,6 +98,30 @@ describe('Prova medborgarskap public MCP', () => {
     })
   })
 
+  it('finds feature FAQs with dated site sources and no implied official endorsement or private access', async () => {
+    for (const [query, id, path] of [
+      ['Träna smart', 'trana-smart', '/ovning/smart'],
+      ['studieplan', 'studieplan', '/studieplan'],
+      ['lyssna', 'lyssna', '/kapitel/landet-sverige'],
+      ['ordkort', 'ordkort', '/kapitel/landet-sverige#ordkort'],
+    ]) {
+      expect(searchPublicDocuments(query!).results.map((r) => r.id)).toContain(`faq:${id}`)
+      const response = await handleCitizenshipMcp(
+        rpcRequest('tools/call', { name: 'fetch', arguments: { id: `faq:${id}` } }),
+      )
+      expect((await responseJson(response)).result?.structuredContent).toMatchObject({
+        id: `faq:${id}`,
+        url: `https://provamedborgarskap.se/vanliga-fragor#${id}`,
+        metadata: {
+          sourceURLs: expect.arrayContaining([`https://provamedborgarskap.se${path}`]),
+          sourceDates: expect.arrayContaining([{ url: `https://provamedborgarskap.se${path}`, publisher: 'Prova medborgarskap', checkedAt: '2026-10-28' }]),
+          checkedAt: null,
+          limitations: expect.arrayContaining([expect.stringContaining('inte ett myndighetsbesked')]),
+        },
+      })
+    }
+  })
+
   it('keeps the dated UHR status separate from chapter and FAQ source dates', async () => {
     const chapter = await handleCitizenshipMcp(
       rpcRequest('tools/call', { name: 'fetch', arguments: { id: 'chapter:landet-sverige' } }),

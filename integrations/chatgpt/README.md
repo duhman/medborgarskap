@@ -11,7 +11,7 @@ This is the portable Agent Plugins package for Prova medborgarskap's public, rea
 The service exposes two read-only tools:
 
 - `search({ query })` searches the public chapter-summary and FAQ corpus and returns no more than ten document IDs, titles and canonical URLs.
-- `fetch({ id })` returns one allowlisted public chapter or FAQ with its text, canonical URL, official source URLs, source check date where present, and limitations.
+- `fetch({ id })` returns one allowlisted public chapter or FAQ with its text, canonical URL, source URLs and publishers, source check dates where present, and limitations. Exam guidance cites UHR or Migrationsverket; feature help cites Prova medborgarskap.
 
 `fetch` never accepts URLs. The service has no accounts, quiz answers, progress, private documents, or write tools. It cannot decide whether a person qualifies for citizenship or must take the test. Dates and requirements can change, so users must check the linked official UHR or Migrationsverket source before acting.
 
