@@ -47,6 +47,8 @@ export type ProgressState = {
   history: Record<string, QuestionHistory>
   /** The visitor's study plan, if they made one. */
   plan?: StudyPlanSettings
+  /** Ids of questions the visitor saved to come back to, in the order they were saved. */
+  bookmarks: string[]
 }
 
 const defaultState = (): ProgressState => ({
@@ -55,6 +57,7 @@ const defaultState = (): ProgressState => ({
   pathway: {},
   mistakes: [],
   history: {},
+  bookmarks: [],
 })
 
 /** Used when the browser refuses to store anything (blocked storage), so answers still show. */
@@ -73,6 +76,7 @@ function readState(): ProgressState {
       pathway: parsed.pathway ?? {},
       mistakes: parsed.mistakes ?? [],
       history: parsed.history ?? {},
+      bookmarks: parsed.bookmarks ?? [],
       ...(parsed.plan ? { plan: parsed.plan } : {}),
     }
   } catch {
@@ -154,6 +158,13 @@ export function recordAnswers(answers: { id: string; correct: boolean | null }[]
     }
   }
   state.mistakes = [...mistakes]
+  writeState(state)
+}
+
+/** Saves a question to come back to, or removes it if it was saved. */
+export function toggleBookmark(id: string): void {
+  const state = readState()
+  state.bookmarks = state.bookmarks.includes(id) ? state.bookmarks.filter((b) => b !== id) : [...state.bookmarks, id]
   writeState(state)
 }
 

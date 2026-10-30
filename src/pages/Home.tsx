@@ -68,7 +68,12 @@ const practice = [
   {
     to: '/ovning/mina-fel',
     title: 'Öva dina fel',
-    text: 'Frågor som du har svarat fel på. De sparas bara i din webbläsare.',
+    text: 'Frågor som du har svarat fel på, eller de du oftast missar. Sparas bara i din webbläsare.',
+  },
+  {
+    to: '/ovning/sparade',
+    title: 'Sparade frågor',
+    text: 'Frågor du har sparat under övningarna för att komma tillbaka till.',
   },
 ] as const
 

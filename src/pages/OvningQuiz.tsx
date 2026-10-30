@@ -74,6 +74,11 @@ export function OvningQuiz() {
               Provsimulering med alla kapitel
             </Link>
           </li>
+          <li>
+            <Link to="/ovning/sparade" className="mb-link-quiet inline-flex min-h-11 items-center">
+              Dina sparade frågor
+            </Link>
+          </li>
         </ul>
       </nav>
     </article>

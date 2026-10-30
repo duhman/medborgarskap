@@ -337,6 +337,19 @@ async function checkFlows(browser, name) {
   await page.getByRole('button', { name: 'Jag kunde det' }).click()
   if (!(await page.getByText(/^1\s*av\s*\d+\s*kan du$/).count())) fail(`${name}: word card not counted as known`)
 
+  // Saved questions: save the graded question, find it on /ovning/sparade, practise it, remove it.
+  await page.goto(BASE_URL + '/ovning/landet-sverige', { waitUntil: 'networkidle' })
+  await answerCurrent(page, 0)
+  await page.getByRole('button', { name: 'Spara frågan' }).click()
+  if (!(await page.getByRole('button', { name: 'Sparad, ta bort', pressed: true }).count())) fail(`${name}: bookmark not marked as saved`)
+  await page.goto(BASE_URL + '/ovning/sparade', { waitUntil: 'networkidle' })
+  if (!(await page.getByText(/Du har 1 sparad fråga/).count())) fail(`${name}: saved question not listed`)
+  await page.getByRole('button', { name: 'Öva de sparade frågorna' }).click()
+  if (!(await page.getByText(/Fråga 1 av 1/).count())) fail(`${name}: saved questions practice did not start`)
+  await page.getByRole('button', { name: 'Tillbaka till listan' }).click()
+  await page.getByRole('button', { name: /^Ta bort/ }).click()
+  if (!(await page.getByText(/Du har inga sparade frågor/).count())) fail(`${name}: saved question not removed`)
+
   // Exam simulation: 20 questions with the clock, one answer, a reload keeps the clock and the
   // answer, then hand in early and see a result per chapter without a pass mark.
   await page.goto(BASE_URL + '/ovning/prov', { waitUntil: 'networkidle' })

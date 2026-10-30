@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { QuizQuestion } from '../content/types'
 import type { QuestionHistory } from './progress'
-import { chapterNumberOfId, countDue, daysOverdue, masteryOf, pickSmartQuestions, readiness } from './review'
+import { chapterNumberOfId, countDue, daysOverdue, lastWrongIds, masteryOf, oftenWrongIds, pickSmartQuestions, readiness } from './review'
 import { seededRandom } from './quiz'
 
 const q = (id: string) => ({ id }) as QuizQuestion
@@ -51,5 +51,28 @@ describe('smart practice', () => {
     expect(readiness(history, null, 20)).toEqual({ total: 20, known: 1, learning: 1, wrong: 1, new: 17 })
     expect(chapterNumberOfId('k12-q3')).toBe(12)
     expect(chapterNumberOfId('old')).toBeNull()
+  })
+})
+
+describe('wrong-answer sets', () => {
+  const hist = (right: number, wrong: number, streak: number, last: string): QuestionHistory => ({ right, wrong, streak, last })
+  const history: Record<string, QuestionHistory> = {
+    'k1-q1': hist(3, 4, 0, '2026-10-01'),
+    'k1-q2': hist(5, 1, 2, '2026-10-20'),
+    'k2-q1': hist(0, 2, 0, '2026-10-25'),
+    'k2-q2': hist(1, 2, 1, '2026-10-10'),
+    'k3-q1': hist(9, 0, 9, '2026-10-24'),
+  }
+
+  it('lists the questions missed most often, most misses first, at least twice wrong', () => {
+    expect(oftenWrongIds(history)).toEqual(['k1-q1', 'k2-q1', 'k2-q2'])
+    expect(oftenWrongIds(history, 3)).toEqual(['k1-q1'])
+    expect(oftenWrongIds({})).toEqual([])
+  })
+
+  it('lists the questions still wrong, most recently missed first, with a cap', () => {
+    expect(lastWrongIds(history)).toEqual(['k2-q1', 'k1-q1'])
+    expect(lastWrongIds(history, 1)).toEqual(['k2-q1'])
+    expect(lastWrongIds({})).toEqual([])
   })
 })

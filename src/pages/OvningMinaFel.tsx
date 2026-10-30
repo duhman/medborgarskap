@@ -4,7 +4,10 @@ import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
 import { useAllQuestions } from '../content/chapters/load'
 import type { QuizQuestion } from '../content/types'
-import { getMistakeIds, subscribeProgress } from '../lib/progress'
+import { getMistakeIds, subscribeProgress, useProgressState } from '../lib/progress'
+import { lastWrongIds, oftenWrongIds } from '../lib/review'
+
+const SET_SIZE = 10
 
 // Saved ids are joined to a string so the snapshot compares by value between renders.
 const readMistakes = () => getMistakeIds().join(',')
@@ -61,14 +64,19 @@ function NoMistakes() {
 }
 
 function MistakesPractice({ ids, onStart }: { ids: string; onStart: () => void }) {
-  const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
+  const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number; label: string } | null>(null)
   const allQuestions = useAllQuestions()
+  const { history } = useProgressState()
   const idSet = new Set(ids.split(','))
   const mistakes = allQuestions.filter((q) => idSet.has(q.id))
+  const byId = new Map(allQuestions.map((q) => [q.id, q]))
+  const pick = (list: string[]) => list.map((id) => byId.get(id)).filter((q) => q !== undefined).slice(0, SET_SIZE)
+  const often = pick(oftenWrongIds(history))
+  const latest = pick(lastWrongIds(history))
 
-  function start() {
+  function start(questions = mistakes, label = 'dina fel') {
     onStart()
-    setSet((prev) => ({ questions: mistakes, round: (prev?.round ?? 0) + 1 }))
+    setSet((prev) => ({ questions, round: (prev?.round ?? 0) + 1, label }))
   }
 
   // A new round practises what is still wrong, not the questions answered right last time.
@@ -82,7 +90,7 @@ function MistakesPractice({ ids, onStart }: { ids: string; onStart: () => void }
       <QuizRunner
         key={set.round}
         slug="mina-fel"
-        chapterTitle="dina fel"
+        chapterTitle={set.label}
         questions={set.questions}
         saveResult={false}
         onRetry={retry}
@@ -98,9 +106,30 @@ function MistakesPractice({ ids, onStart }: { ids: string; onStart: () => void }
         Du har <GfNum value={mistakes.length} /> {mistakes.length === 1 ? 'fråga' : 'frågor'} att öva
         på.
       </p>
-      <button type="button" onClick={start} className="mb-btn mb-btn--primary">
+      <button type="button" onClick={() => start()} className="mb-btn mb-btn--primary">
         Öva på dem nu
       </button>
+      {(often.length > 0 || latest.length > 1) && (
+        <div className="space-y-2 border-t border-line-strong pt-4">
+          <p className="text-sm text-ink-3">Eller ett mindre urval, högst <GfNum value={SET_SIZE} /> frågor:</p>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            {often.length > 0 && (
+              <button type="button" onClick={() => start(often, 'oftast fel')} className="mb-btn mb-btn--secondary">
+                Oftast fel (<GfNum value={often.length} />)
+              </button>
+            )}
+            {latest.length > 1 && (
+              <button type="button" onClick={() => start(latest, 'senaste fel')} className="mb-btn mb-btn--secondary">
+                Senaste fel (<GfNum value={latest.length} />)
+              </button>
+            )}
+          </div>
+          <p className="text-sm text-ink-3">
+            Oftast fel: frågor du svarat fel på minst två gånger, flest fel först. Senaste fel: de du
+            senast svarade fel på.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

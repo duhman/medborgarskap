@@ -14,6 +14,7 @@ import {
   type QuizSession,
 } from '../lib/progress'
 import { reportErrorLinks } from '../lib/report'
+import { BookmarkButton } from './BookmarkButton'
 import { GfNum } from './GfNum'
 import { ListenButton } from './ListenButton'
 import { ProgressMeter } from './ProgressMeter'
@@ -304,6 +305,7 @@ export function QuizRunner({
                     </dl>
                     <p className="text-[0.9375rem] text-ink-2">{x.explanationSv}</p>
                     <SourceCitation source={x.source} className="text-sm text-ink-3" />
+                    <BookmarkButton id={x.id} className="text-sm" />
                     {chapter && (
                       <p className="text-sm">
                         <Link to={`/kapitel/${chapter.slug}`} className="mb-link-quiet inline-flex min-h-11 items-center">
@@ -497,6 +499,7 @@ export function QuizRunner({
               compact={ogPreview}
               className={ogPreview ? 'og-preview-citation' : 'text-[0.9375rem] text-ink-2'}
             />
+            {!ogPreview && <BookmarkButton id={q.id} />}
             {q.explanationEn && !ogPreview && (
               <div>
                 <button

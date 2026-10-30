@@ -15,6 +15,7 @@ const staticPageNames: Record<string, string> = {
   '/ovning/mina-fel': 'Öva dina fel',
   '/ovning/smart': 'Träna smart',
   '/ovning/prov': 'Provsimulering',
+  '/ovning/sparade': 'Sparade frågor',
   '/vanliga-fragor': 'Vanliga frågor om medborgarskapsprovet',
   '/om': 'Om Medborgarskap',
   '/integritet': 'Integritetspolicy',

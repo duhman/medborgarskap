@@ -15,6 +15,7 @@ import {
   savePathwayAnswers,
   saveQuizSession,
   subscribeProgress,
+  toggleBookmark,
   type PathwayAnswers,
 } from './progress'
 
@@ -177,5 +178,30 @@ describe('question history', () => {
     recordAnswers([{ id: 'k1-q1', correct: false }], new Date(2026, 9, 26, 9))
     expect(getProgressState().history['k1-q1']).toEqual({ right: 2, wrong: 1, streak: 0, last: '2026-10-26' })
     expect(localDay(new Date(2026, 0, 5))).toBe('2026-01-05')
+  })
+})
+
+describe('bookmarks', () => {
+  beforeEach(() => resetProgressForTests())
+
+  it('saves and removes a question, keeps order, and survives a reload of state', () => {
+    expect(getProgressState().bookmarks).toEqual([])
+    toggleBookmark('k1-q2')
+    toggleBookmark('k3-q1')
+    expect(getProgressState().bookmarks).toEqual(['k1-q2', 'k3-q1'])
+    toggleBookmark('k1-q2')
+    expect(getProgressState().bookmarks).toEqual(['k3-q1'])
+    expect(JSON.parse(localStorage.getItem('medborgarskap-progress-v1') ?? '{}').bookmarks).toEqual(['k3-q1'])
+  })
+
+  it('reads saved progress without a bookmarks field as having none', () => {
+    localStorage.setItem('medborgarskap-progress-v1', JSON.stringify({ visitedChapters: [], quizResults: [] }))
+    expect(getProgressState().bookmarks).toEqual([])
+  })
+
+  it('is cleared with everything else', () => {
+    toggleBookmark('k1-q1')
+    clearAllProgress()
+    expect(getProgressState().bookmarks).toEqual([])
   })
 })
