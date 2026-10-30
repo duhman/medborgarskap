@@ -1,23 +1,35 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { setAnalyticsOptOut, useAnalyticsOptOut } from '../lib/analyticsOptOut'
+import { analyticsConfigured, setAnalyticsConsent, useAnalyticsConsent } from '../lib/analyticsConsent'
 import { clearAllProgress } from '../lib/progress'
 
-/** Opt out of (or back in to) PostHog. Read after hydration like other saved state. */
+/** Yes or no to visitor statistics. Read after hydration like other saved state. */
 function AnalyticsChoice() {
-  const optedOut = useAnalyticsOptOut()
+  const consent = useAnalyticsConsent()
+  if (!analyticsConfigured) {
+    return <p className="text-ink-2">Statistik är inte påslagen på den här versionen av sidan, så det finns inget att välja.</p>
+  }
   return (
-    <div className="space-y-2">
+    <fieldset className="space-y-2">
+      <legend className="font-medium text-ink">Får sidan skicka besöksstatistik från den här webbläsaren?</legend>
       <label className="mb-choice">
-        <input type="checkbox" checked={optedOut} onChange={(e) => setAnalyticsOptOut(e.target.checked)} />
-        <span>Skicka inte besöksstatistik från den här webbläsaren</span>
+        <input type="radio" name="statistik" checked={consent === 'granted'} onChange={() => setAnalyticsConsent('granted')} />
+        <span>Ja, skicka statistik</span>
+      </label>
+      <label className="mb-choice">
+        <input type="radio" name="statistik" checked={consent === 'denied'} onChange={() => setAnalyticsConsent('denied')} />
+        <span>Nej, skicka ingen statistik</span>
       </label>
       <p role="status" className="text-ink-2">
-        {optedOut
-          ? 'Klart. Ingen besöksstatistik skickas från den här webbläsaren. Valet sparas i localStorage.'
-          : ''}
+        {consent === 'granted'
+          ? 'Statistik skickas. Du kan ändra dig när som helst.'
+          : consent === 'denied'
+            ? 'Ingen statistik skickas. Det slumpade id:t är borttaget från webbläsaren.'
+            : consent === null
+              ? 'Du har inte valt än, så ingen statistik skickas.'
+              : ''}
       </p>
-    </div>
+    </fieldset>
   )
 }
 
@@ -47,7 +59,7 @@ export function Integritet() {
     <article className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Integritetspolicy</h1>
-        <p className="text-sm text-ink-2">Senast uppdaterad: 29 oktober 2026</p>
+        <p className="text-sm text-ink-2">Senast uppdaterad: 30 oktober 2026</p>
       </header>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
@@ -106,7 +118,9 @@ export function Integritet() {
           delas inte med någon annan.
         </p>
         <p>
-          Du kan välja bort statistiken här. Valet gäller den här webbläsaren och börjar gälla direkt.
+          Statistiken skickas bara om du säger ja, i rutan överst på sidan eller här. Innan dess
+          laddas inte ens verktyget. Valet gäller den här webbläsaren, börjar gälla direkt och kan
+          ändras när som helst. Säger du nej tas det slumpade id:t bort.
         </p>
         <AnalyticsChoice />
       </section>
@@ -151,7 +165,7 @@ export function Integritet() {
         <h2 className="text-xl font-semibold text-ink">Spårning och försäljning</h2>
         <p>
           Vi sätter inte in marknadsföringsspårare, visar ingen reklam och säljer inte
-          personuppgifter. Besöksstatistiken ovan är det enda vi mäter, och den kan väljas bort.
+          personuppgifter. Besöksstatistiken ovan är det enda vi mäter, och den skickas bara om du sagt ja.
           Om detta ändras uppdateras den här sidan.
         </p>
       </section>
