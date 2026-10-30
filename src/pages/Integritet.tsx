@@ -1,6 +1,25 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { setAnalyticsOptOut, useAnalyticsOptOut } from '../lib/analyticsOptOut'
 import { clearAllProgress } from '../lib/progress'
+
+/** Opt out of (or back in to) PostHog. Read after hydration like other saved state. */
+function AnalyticsChoice() {
+  const optedOut = useAnalyticsOptOut()
+  return (
+    <div className="space-y-2">
+      <label className="mb-choice">
+        <input type="checkbox" checked={optedOut} onChange={(e) => setAnalyticsOptOut(e.target.checked)} />
+        <span>Skicka inte besöksstatistik från den här webbläsaren</span>
+      </label>
+      <p role="status" className="text-ink-2">
+        {optedOut
+          ? 'Klart. Ingen besöksstatistik skickas från den här webbläsaren. Valet sparas i localStorage.'
+          : ''}
+      </p>
+    </div>
+  )
+}
 
 function ClearProgress() {
   const [cleared, setCleared] = useState(false)
@@ -28,7 +47,7 @@ export function Integritet() {
     <article className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Integritetspolicy</h1>
-        <p className="text-sm text-ink-2">Senast uppdaterad: 28 oktober 2026</p>
+        <p className="text-sm text-ink-2">Senast uppdaterad: 29 oktober 2026</p>
       </header>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
@@ -74,6 +93,22 @@ export function Integritet() {
         </p>
       </section>
 
+      <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85" aria-labelledby="statistik">
+        <h2 id="statistik" className="text-xl font-semibold text-ink">Besöksstatistik</h2>
+        <p>
+          För att se vilka sidor som används och om något går sönder använder vi verktyget PostHog,
+          med servrar i EU. Det samlar in sidvisningar, laddningstider och tekniska fel, tillsammans
+          med webbläsartyp, ungefärlig plats från IP-adressen och ett slumpat id som sparas i
+          webbläsarens localStorage. Inga cookies sätts. Vi skickar inte dina övningssvar, din
+          studieplan eller något du skriver. Statistiken används bara för att förbättra sidan och
+          delas inte med någon annan.
+        </p>
+        <p>
+          Du kan välja bort statistiken här. Valet gäller den här webbläsaren och börjar gälla direkt.
+        </p>
+        <AnalyticsChoice />
+      </section>
+
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
         <h2 className="text-xl font-semibold text-ink">Teknisk drift och loggar</h2>
         <p>
@@ -113,8 +148,9 @@ export function Integritet() {
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
         <h2 className="text-xl font-semibold text-ink">Spårning och försäljning</h2>
         <p>
-          Vi sätter inte in marknadsföringsspårare och säljer inte personuppgifter. Om detta
-          ändras uppdateras den här sidan.
+          Vi sätter inte in marknadsföringsspårare, visar ingen reklam och säljer inte
+          personuppgifter. Besöksstatistiken ovan är det enda vi mäter, och den kan väljas bort.
+          Om detta ändras uppdateras den här sidan.
         </p>
       </section>
 

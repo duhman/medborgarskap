@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import type { PostHog } from 'posthog-js'
-import { isAnalyticsOptedOut } from '../lib/analyticsOptOut'
+import { isAnalyticsOptedOut, subscribeAnalyticsOptOut } from '../lib/analyticsOptOut'
 
 type AnalyticsProviderProps = {
   children: ReactNode
@@ -39,10 +39,14 @@ async function initPostHog(): Promise<PostHog | null> {
     capture_pageview: false,
     capture_pageleave: true,
     capture_performance: true,
+    // Uncaught errors and unhandled rejections, so a page that breaks for visitors shows up
+    // somewhere (there is no other runtime log for a static site).
+    capture_exceptions: true,
     disable_session_recording: true,
     disable_surveys: true,
     enable_heatmaps: false,
-    persistence: 'localStorage+cookie',
+    // localStorage only: the privacy page promises no cookies.
+    persistence: 'localStorage',
   })
 
   return posthog
@@ -68,6 +72,31 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       cancelTask()
     }
   }, [])
+
+  // Opting out on the privacy page stops the running client at once. Opting back in resumes it,
+  // or starts it if this page load began opted out.
+  useEffect(() => {
+    let cancelled = false
+    const apply = () => {
+      if (isAnalyticsOptedOut()) {
+        posthog?.opt_out_capturing()
+      } else if (posthog) {
+        if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing()
+      } else {
+        initPostHog()
+          .then((client) => {
+            if (!cancelled && client) setPostHog(client)
+          })
+          .catch(() => undefined)
+      }
+    }
+    if (posthog) apply()
+    const unsubscribe = subscribeAnalyticsOptOut(apply)
+    return () => {
+      cancelled = true
+      unsubscribe()
+    }
+  }, [posthog])
 
   useEffect(() => {
     if (!posthog) return
