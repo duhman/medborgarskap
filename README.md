@@ -51,7 +51,7 @@ export const uhrStatus = {
 ## Innehåll och frågor
 
 - Kapitelmetadata: `src/content/chapters/meta.ts`
-- Fullt innehåll (kapitel 1-3): `src/content/chapters/*.ts`
+- Fullt innehåll per kapitel (13 kapitel, frågor, lätt svenska, ordlista): `src/content/chapters/*.ts`
 - UHR:s fem exempel: `src/content/officialSamples.ts`
 - Frågemodell: `src/content/types.ts`
 
@@ -59,7 +59,7 @@ Lägg till nya övningsfrågor som original MC med `source: { chapter, page? }`,
 
 ## Framsteg
 
-Quizresultat och pathway-svar sparas i `localStorage` (`medborgarskap-progress-v1`). Inga konton i v1.
+Quizresultat, fel, repetitionshistorik, studieplan och pathway-svar sparas i `localStorage` (`medborgarskap-progress-v1`). Inga konton i v1. Besöksstatistik via PostHog (EU) kan väljas bort på /integritet.
 
 ## Stack
 
