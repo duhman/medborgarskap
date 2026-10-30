@@ -73,15 +73,29 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     }
   }, [])
 
-  // Opting out on the privacy page stops the running client at once; opting back in resumes it.
+  // Opting out on the privacy page stops the running client at once. Opting back in resumes it,
+  // or starts it if this page load began opted out.
   useEffect(() => {
-    if (!posthog) return
+    let cancelled = false
     const apply = () => {
-      if (isAnalyticsOptedOut()) posthog.opt_out_capturing()
-      else if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing()
+      if (isAnalyticsOptedOut()) {
+        posthog?.opt_out_capturing()
+      } else if (posthog) {
+        if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing()
+      } else {
+        initPostHog()
+          .then((client) => {
+            if (!cancelled && client) setPostHog(client)
+          })
+          .catch(() => undefined)
+      }
     }
-    apply()
-    return subscribeAnalyticsOptOut(apply)
+    if (posthog) apply()
+    const unsubscribe = subscribeAnalyticsOptOut(apply)
+    return () => {
+      cancelled = true
+      unsubscribe()
+    }
   }, [posthog])
 
   useEffect(() => {
