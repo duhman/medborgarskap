@@ -74,7 +74,8 @@ export function Integritet() {
         <h2 className="text-xl font-semibold text-ink">Det som sparas i din webbläsare</h2>
         <p>
           Din webbläsare sparar dina svar i vägledningen &quot;Behöver jag provet?&quot;, dina
-          resultat i övningarna, frågor du har svarat fel på och var du är i en påbörjad övning.
+          resultat i övningarna, frågor du har svarat fel på, frågor du har sparat och var du är i en
+          påbörjad övning.
           För Träna smart sparas också antal rätt och fel per fråga, följden av rätta svar och
           datum för senaste svaret. Din studieplans startdag och antal veckor sparas här också, liksom ett påbörjat prov i
           Provsimulering och dina tio senaste provresultat.

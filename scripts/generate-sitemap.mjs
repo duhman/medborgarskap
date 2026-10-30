@@ -23,6 +23,7 @@ const pages = [
   ['/ovning/mina-fel', ['src/pages/OvningMinaFel.tsx']],
   ['/ovning/smart', ['src/pages/OvningSmart.tsx', 'src/lib/review.ts']],
   ['/ovning/prov', ['src/pages/OvningProv.tsx', 'src/lib/exam.ts']],
+  ['/ovning/sparade', ['src/pages/OvningSparade.tsx']],
   ['/vanliga-fragor', ['src/pages/VanligaFragor.tsx', 'src/content/faq.ts']],
   ['/om', ['src/pages/Om.tsx']],
   ['/integritet', ['src/pages/Integritet.tsx']],

@@ -107,3 +107,20 @@ export function readiness(
   r.new = Math.max(0, total - r.known - r.learning - r.wrong)
   return r
 }
+
+/** Ids missed at least `min` times, most misses first, then most recent. For "oftast fel". */
+export function oftenWrongIds(history: Readonly<Record<string, QuestionHistory>>, min = 2): string[] {
+  return Object.entries(history)
+    .filter(([, h]) => h.wrong >= min)
+    .sort(([, a], [, b]) => b.wrong - a.wrong || b.last.localeCompare(a.last))
+    .map(([id]) => id)
+}
+
+/** Ids whose latest answer was wrong, most recent first, at most `max`. For "senaste fel". */
+export function lastWrongIds(history: Readonly<Record<string, QuestionHistory>>, max = Infinity): string[] {
+  return Object.entries(history)
+    .filter(([, h]) => h.streak === 0)
+    .sort(([, a], [, b]) => b.last.localeCompare(a.last))
+    .slice(0, max)
+    .map(([id]) => id)
+}
