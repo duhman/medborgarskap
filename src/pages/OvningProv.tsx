@@ -112,7 +112,7 @@ function Picker({ onStart, brokenSession }: { onStart: (count: number, timed: bo
         <label className="mb-choice">
           <input type="checkbox" checked={timed} onChange={(e) => setTimed(e.target.checked)} />
           <span>
-            Med klocka, <GfNum value={1.5} /> minuter per fråga. Provet lämnas in automatiskt när tiden är ute.
+            Med klocka, <GfNum value="1,5" /> minuter per fråga. Provet lämnas in automatiskt när tiden är ute.
           </span>
         </label>
         <div className="grid grid-cols-3 gap-3">
@@ -175,7 +175,8 @@ function Running({ session, questions, onSubmit, onAbort }: RunningProps) {
   const [confirming, setConfirming] = useState(false)
   const [overview, setOverview] = useState(false)
   const headingRef = useRef<HTMLParagraphElement>(null)
-  const focusHeading = useRef(false)
+  // The size buttons unmount when the exam starts, so the counter takes focus on mount.
+  const focusHeading = useRef(true)
 
   useEffect(() => {
     if (focusHeading.current) {
@@ -314,7 +315,11 @@ function Running({ session, questions, onSubmit, onAbort }: RunningProps) {
   )
 }
 
-/** Counts down once a second. Reads aloud once at five minutes left, then hands in at zero. */
+/**
+ * Counts down once a second. The visible clock is never announced; a separate status line says
+ * "fem minuter kvar" and "en minut kvar" once each, so a screen reader is not read the time
+ * every second. Hands in at zero.
+ */
 function Clock({ deadline, onExpire }: { deadline: string | null; onExpire: () => void }) {
   const [left, setLeft] = useState(() => msLeft(deadline))
   const expired = useRef(false)
@@ -336,11 +341,15 @@ function Clock({ deadline, onExpire }: { deadline: string | null; onExpire: () =
 
   if (left === null) return null
   const low = left <= WARN_MS
+  const notice = left <= 60_000 ? 'En minut kvar.' : low ? 'Fem minuter kvar.' : ''
   return (
     <p className={`gf-num tabular-nums ${low ? 'font-semibold text-[var(--error)]' : 'text-ink-2'}`}>
       <span className="sr-only">Tid kvar: </span>
-      <span role="timer" aria-live={low ? 'polite' : 'off'} aria-atomic="true">
+      <span role="timer" aria-live="off" aria-atomic="true">
         {formatTimeLeft(left)}
+      </span>
+      <span role="status" className="sr-only">
+        {notice}
       </span>
     </p>
   )
