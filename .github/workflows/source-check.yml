@@ -5,8 +5,11 @@
 # Cost: about one runner minute a week; the repository is public, so Actions minutes are free.
 name: source-check
 
-# Manual only (no Actions budget). Run `npm run check:sources` locally instead.
+# Every Monday morning (Swedish time), and by hand from the Actions tab. Turned back on
+# 2026-10-30 at Adrian's request; see docs/agent-scope-infra-approved.md.
 on:
+  schedule:
+    - cron: '17 5 * * 1'
   workflow_dispatch:
 
 permissions:
