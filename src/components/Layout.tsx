@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { ConsentBanner } from './ConsentBanner'
 import { Disclaimer } from './Disclaimer'
 import { Nav } from './Nav'
 import { PageErrorBoundary } from './PageErrorBoundary'
@@ -30,6 +31,7 @@ export function Layout() {
       </a>
       <StatusStrip />
       <Nav />
+      <ConsentBanner />
       <main
         id="main-content"
         tabIndex={-1}

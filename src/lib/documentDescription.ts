@@ -24,7 +24,7 @@ const staticPageDescriptions: Record<string, string> = {
   '/vanliga-fragor':
     'Svar om medborgarskapsprovet med myndighetskällor, plus hjälp med studieplan, Träna smart, uppläsning och ordkort på Prova medborgarskap.',
   '/om': 'Om Medborgarskap, källor och hur sidan hänger ihop med UHR:s officiella material.',
-  '/integritet': 'Integritetspolicy för Medborgarskap: analys, cookies och hur du väljer bort spårning.',
+  '/integritet': 'Integritetspolicy för Medborgarskap: vad som sparas i webbläsaren och besöksstatistik som bara skickas om du säger ja.',
   '/villkor': 'Användarvillkor för Medborgarskap, fristående studiehjälp till medborgarskapsprovet.',
 }
 

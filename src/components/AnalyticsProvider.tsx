@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import type { PostHog } from 'posthog-js'
-import { isAnalyticsOptedOut, subscribeAnalyticsOptOut } from '../lib/analyticsOptOut'
+import { hasAnalyticsConsent, subscribeAnalyticsConsent } from '../lib/analyticsConsent'
 
 type AnalyticsProviderProps = {
   children: ReactNode
@@ -25,13 +25,14 @@ async function initPostHog(): Promise<PostHog | null> {
     return null
   }
 
-  if (isAnalyticsOptedOut()) {
+  // Nothing is loaded or sent before the visitor says yes (ConsentBanner, /integritet).
+  if (!hasAnalyticsConsent()) {
     return null
   }
 
   const { default: posthog } = await import('posthog-js')
-  // The visitor may have opted out while the library was loading.
-  if (isAnalyticsOptedOut()) {
+  // The visitor may have said no while the library was loading.
+  if (!hasAnalyticsConsent()) {
     return null
   }
   posthog.init(key, {
@@ -47,6 +48,8 @@ async function initPostHog(): Promise<PostHog | null> {
     enable_heatmaps: false,
     // localStorage only: the privacy page promises no cookies.
     persistence: 'localStorage',
+    // A last guard: drop anything captured after the visitor said no.
+    before_send: (event) => (hasAnalyticsConsent() ? event : null),
   })
 
   return posthog
@@ -73,15 +76,15 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     }
   }, [])
 
-  // Opting out on the privacy page stops the running client at once. Opting back in resumes it,
-  // or starts it if this page load began opted out.
+  // A no stops the running client at once. A later yes resumes it, or starts it when this page
+  // load began without consent.
   useEffect(() => {
     let cancelled = false
     const apply = () => {
-      if (isAnalyticsOptedOut()) {
+      if (!hasAnalyticsConsent()) {
         posthog?.opt_out_capturing()
       } else if (posthog) {
-        if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing()
+        if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing({ captureEventName: false })
       } else {
         initPostHog()
           .then((client) => {
@@ -91,7 +94,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       }
     }
     if (posthog) apply()
-    const unsubscribe = subscribeAnalyticsOptOut(apply)
+    const unsubscribe = subscribeAnalyticsConsent(apply)
     return () => {
       cancelled = true
       unsubscribe()

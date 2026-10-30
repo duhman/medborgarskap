@@ -15,7 +15,7 @@
     "lint:ci": "oxlint && node scripts/check-agent-scope.mjs",
     "check:agent-scope": "node scripts/check-agent-scope.mjs",
     "check:route-meta": "node scripts/check-route-meta.mjs",
-    "check:all": "npm run verify && npm run check:quotes && node scripts/run-browser-checks.mjs",
+    "check:all": "VITE_PUBLIC_POSTHOG_KEY=phc_e2e_consent VITE_PUBLIC_POSTHOG_HOST=https://posthog.e2e.invalid npm run verify && npm run check:quotes && node scripts/run-browser-checks.mjs",
     "verify": "npm run tsc && npm run tsc:api && npm run check:mcp-node-runtime && npm run lint:ci && npm run check:route-meta && npm run test && npm run check:chatgpt-package && npm run build && npm run check:cascade && npm run check:og-preview",
     "record:og-preview": "node scripts/record-og-preview-video.mjs",
     "check:og-preview": "node scripts/check-og-preview-video.mjs",

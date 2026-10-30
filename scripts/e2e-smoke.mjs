@@ -398,6 +398,61 @@ async function checkFlows(browser, name) {
   await context.close()
 }
 
+/** The analytics host the consent check builds with (see check:all). Never a real server. */
+const ANALYTICS_HOST = 'posthog.e2e.invalid'
+
+/**
+ * Consent: nothing goes to the analytics host before a yes or after a no; a yes starts sending;
+ * a no deletes the PostHog id. Needs a build with VITE_PUBLIC_POSTHOG_KEY and
+ * VITE_PUBLIC_POSTHOG_HOST=https://posthog.e2e.invalid (npm run check:all does that).
+ */
+async function checkConsent(browser, name) {
+  const context = await browser.newContext(viewports[name])
+  let sent = 0
+  await context.route(`https://${ANALYTICS_HOST}/**`, (route) => {
+    sent += 1
+    return route.fulfill({ status: 200, contentType: 'application/json', body: '{}' })
+  })
+  const page = await context.newPage()
+  const quiet = () => page.waitForTimeout(4500) // past the idle-callback start (3 s timeout)
+
+  await page.goto(BASE_URL + '/', { waitUntil: 'networkidle' })
+  const banner = page.getByRole('region', { name: 'Får vi räkna besök?' })
+  if (!(await banner.count())) {
+    console.warn(`${name}: consent check skipped, this build has no analytics key`)
+    await context.close()
+    return
+  }
+  await quiet()
+  if (sent !== 0) fail(`${name} consent: ${sent} analytics requests before any answer`)
+
+  // No: the banner goes, the choice survives a reload, still nothing is sent.
+  await page.getByRole('button', { name: 'Nej tack' }).click()
+  if (!(await page.getByText('Ingen statistik skickas från den här webbläsaren.').count())) fail(`${name} consent: no confirmation after no`)
+  await page.reload({ waitUntil: 'networkidle' })
+  if (await banner.count()) fail(`${name} consent: banner shown again after no`)
+  await quiet()
+  if (sent !== 0) fail(`${name} consent: ${sent} analytics requests after no`)
+
+  // Yes on the privacy page starts sending without a reload.
+  await page.goto(BASE_URL + '/integritet', { waitUntil: 'networkidle' })
+  await page.getByLabel('Ja, skicka statistik').check()
+  await page.waitForFunction(() => Object.keys(localStorage).some((k) => /^ph_.+_posthog$/.test(k)), null, { timeout: 10_000 }).catch(() => null)
+  await quiet()
+  if (sent === 0) fail(`${name} consent: no analytics requests after yes`)
+
+  // No again: the id is deleted and sending stops.
+  await page.getByLabel('Nej, skicka ingen statistik').check()
+  const hasId = await page.evaluate(() => Object.keys(localStorage).some((k) => /^ph_.+_posthog$/.test(k)))
+  if (hasId) fail(`${name} consent: PostHog id left in localStorage after no`)
+  const before = sent
+  await page.goto(BASE_URL + '/kapitel', { waitUntil: 'networkidle' })
+  await quiet()
+  if (sent !== before) fail(`${name} consent: ${sent - before} analytics requests after changing to no`)
+
+  await context.close()
+}
+
 const browser = await chromium.launch(
   process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
 )
@@ -407,6 +462,7 @@ try {
     await checkChoiceHoverBorders(browser, name)
     await checkFlows(browser, name)
     await checkMissingRoutes(browser, name)
+    await checkConsent(browser, name)
   }
 } finally {
   await browser.close()
