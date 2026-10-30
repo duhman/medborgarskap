@@ -69,6 +69,11 @@ export function OvningQuiz() {
               Öva dina fel
             </Link>
           </li>
+          <li>
+            <Link to="/ovning/prov" className="mb-link-quiet inline-flex min-h-11 items-center">
+              Provsimulering med alla kapitel
+            </Link>
+          </li>
         </ul>
       </nav>
     </article>
