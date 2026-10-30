@@ -17,7 +17,7 @@ function ClearProgress() {
         Rensa mina sparade uppgifter
       </button>
       <p role="status" className="text-ink-2">
-        {cleared ? 'Klart. Dina framsteg, svar, repetitionshistorik och studieplan är borttagna från den här webbläsaren.' : ''}
+        {cleared ? 'Klart. Dina framsteg, svar, repetitionshistorik, provresultat och studieplan är borttagna från den här webbläsaren.' : ''}
       </p>
     </div>
   )
@@ -57,7 +57,8 @@ export function Integritet() {
           Din webbläsare sparar dina svar i vägledningen &quot;Behöver jag provet?&quot;, dina
           resultat i övningarna, frågor du har svarat fel på och var du är i en påbörjad övning.
           För Träna smart sparas också antal rätt och fel per fråga, följden av rätta svar och
-          datum för senaste svaret. Din studieplans startdag och antal veckor sparas här också.
+          datum för senaste svaret. Din studieplans startdag och antal veckor sparas här också, liksom ett påbörjat prov i
+          Provsimulering och dina tio senaste provresultat.
           Det sparas i webbläsarens lokala lagring (localStorage). Uppgifterna stannar på din enhet
           och skickas inte till oss. Du kan rensa dem här eller i webbläsarens inställningar.
         </p>

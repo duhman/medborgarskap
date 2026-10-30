@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react'
+import { clearExamData } from './exam'
 import type { StudyPlanSettings } from './studyPlan'
 
 const STORAGE_KEY = 'medborgarskap-progress-v1'
@@ -301,6 +302,7 @@ export function clearQuizSession(slug: string): void {
 /** Removes everything this site saved in this browser: progress, mistakes, answers and unfinished quizzes. */
 export function clearAllProgress(): void {
   memoryFallback = undefined
+  clearExamData()
   try {
     for (const key of Object.keys(localStorage)) {
       if (key === STORAGE_KEY || key.startsWith(SESSION_PREFIX)) localStorage.removeItem(key)

@@ -114,6 +114,9 @@ export function KapitelIndex() {
           <Link to="/ovning/blandat" className="mb-btn mb-btn--secondary">
             Blandade frågor
           </Link>
+          <Link to="/ovning/prov" className="mb-btn mb-btn--secondary">
+            Provsimulering
+          </Link>
           <Link to="/ovning/mina-fel" className="mb-btn mb-btn--secondary">
             Öva dina fel
           </Link>

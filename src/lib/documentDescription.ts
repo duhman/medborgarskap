@@ -18,6 +18,8 @@ const staticPageDescriptions: Record<string, string> = {
   '/ovning/mina-fel': 'Öva på frågorna du svarat fel på. Sparas bara i din webbläsare.',
   '/ovning/smart':
     'Träna smart inför medborgarskapsprovet: dina fel och frågor att repetera kommer först, och du ser hur redo du är per kapitel.',
+  '/ovning/prov':
+    'Gratis provsimulering inför medborgarskapsprovet: frågor från alla 13 kapitel utan facit förrän du lämnar in, med valfri klocka och resultat per kapitel.',
   '/vanliga-fragor':
     'Svar om medborgarskapsprovet med myndighetskällor, plus hjälp med studieplan, Träna smart, uppläsning och ordkort på Prova medborgarskap.',
   '/om': 'Om Medborgarskap, källor och hur sidan hänger ihop med UHR:s officiella material.',

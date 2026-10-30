@@ -92,7 +92,7 @@ export function useAllQuestions(): QuizQuestion[] {
 export function preloadRouteData(pathname: string): Promise<unknown> {
   const path = pathname.replace(/\/+$/, '')
   // /ovning/mina-fel loads questions only once it knows there are saved mistakes.
-  if (path === '/ovning/blandat' || path === '/ovning/smart') return loadAllChapters()
+  if (path === '/ovning/blandat' || path === '/ovning/smart' || path === '/ovning/prov') return loadAllChapters()
   const slug = path.match(/^\/(?:kapitel|ovning)\/([^/]+)$/)?.[1]
   if (slug && isChapterSlug(slug)) return loadChapter(slug)
   return Promise.resolve()

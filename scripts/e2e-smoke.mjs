@@ -337,6 +337,26 @@ async function checkFlows(browser, name) {
   await page.getByRole('button', { name: 'Jag kunde det' }).click()
   if (!(await page.getByText(/^1\s*av\s*\d+\s*kan du$/).count())) fail(`${name}: word card not counted as known`)
 
+  // Exam simulation: 20 questions with the clock, one answer, a reload keeps the clock and the
+  // answer, then hand in early and see a result per chapter without a pass mark.
+  await page.goto(BASE_URL + '/ovning/prov', { waitUntil: 'networkidle' })
+  await page.getByRole('button', { name: /^20\s*frågor, 30 min$/ }).click()
+  if (!(await page.getByText(/Fråga 1 av 20/).count())) fail(`${name}: exam did not start`)
+  if (!(await page.getByRole('timer').count())) fail(`${name}: exam shows no clock`)
+  await page.locator('fieldset .mb-choice').first().click()
+  await page.getByRole('button', { name: 'Nästa' }).click()
+  await page.reload({ waitUntil: 'networkidle' })
+  if (!(await page.getByText(/Fråga 2 av 20/).count())) fail(`${name}: exam did not continue after reload`)
+  if (!(await page.getByText(/1 besvarade/).count())) fail(`${name}: exam answer lost on reload`)
+  await page.getByRole('button', { name: 'Lämna in nu' }).click()
+  await page.getByRole('button', { name: 'Lämna in och se resultat' }).click()
+  if (!(await page.getByRole('heading', { name: /av 20 rätt/ }).count())) fail(`${name}: exam shows no result`)
+  if (!(await page.getByText(/19 frågor lämnades obesvarade/).count())) fail(`${name}: exam does not count unanswered`)
+  if (!(await page.getByRole('table', { name: 'Rätt per kapitel' }).count())) fail(`${name}: exam shows no per-chapter table`)
+  if (!(await page.getByText(/så vi visar ingen/).count())) fail(`${name}: exam result must say no pass mark is shown`)
+  await page.getByRole('button', { name: 'Nytt prov' }).click()
+  if (!(await page.getByText(/Dina tidigare prov/).count())) fail(`${name}: exam result not kept in history`)
+
   // Checklist answers survive a reload.
   await page.goto(BASE_URL + '/behover-jag', { waitUntil: 'networkidle' })
   await page.locator('input[name="age"]').first().check()

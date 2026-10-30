@@ -56,6 +56,11 @@ const practice = [
     text: 'Dina fel och frågor att repetera kommer först. Se hur redo du är i varje kapitel.',
   },
   {
+    to: '/ovning/prov',
+    title: 'Provsimulering',
+    text: 'Frågor från alla kapitel utan facit förrän du lämnar in, med valfri klocka.',
+  },
+  {
     to: '/ovning/blandat',
     title: 'Blandade frågor',
     text: 'Frågor från alla kapitel i slumpad ordning.',

@@ -16,6 +16,7 @@ import { syncRouteJsonLd } from './seo/syncJsonLd'
 import { OvningBlandat } from './pages/OvningBlandat'
 import { OvningMinaFel } from './pages/OvningMinaFel'
 import { OvningSmart } from './pages/OvningSmart'
+import { OvningProv } from './pages/OvningProv'
 import { OvningQuiz } from './pages/OvningQuiz'
 import { Provfragor } from './pages/Provfragor'
 import { Studieplan } from './pages/Studieplan'
@@ -85,6 +86,7 @@ export function AppRoutes() {
           <Route path="ovning/blandat" element={<OvningBlandat />} />
           <Route path="ovning/mina-fel" element={<OvningMinaFel />} />
           <Route path="ovning/smart" element={<OvningSmart />} />
+          <Route path="ovning/prov" element={<OvningProv />} />
           <Route path="ovning/:slug" element={<OvningQuiz />} />
           <Route path="provfragor" element={<Provfragor />} />
           <Route path="studieplan" element={<Studieplan />} />
