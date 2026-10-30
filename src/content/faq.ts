@@ -29,7 +29,7 @@ const mvVuxna: OfficialSource = {
   publisher: 'Migrationsverket',
   label: 'Medborgarskap för vuxna',
   url: MV_VUXNA,
-  checkedAt: CHECKED,
+  checkedAt: '2026-10-30',
 }
 
 /**
@@ -83,6 +83,7 @@ export const faqEntries: FaqEntry[] = [
     answer: [
       'Kravet på kunskaper i svenska finns kvar, men provet i svenska kan införas senare än planerat. Tills vidare kan du visa kunskaperna på andra sätt, till exempel med godkänt betyg i den högsta kursen i SFI, godkänt betyg i svenska från Komvux eller godkänt resultat på Tisus.',
       'Under övergångsperioden godtas också ett annat kunskapsprov som visar funktionell nivå, till exempel Swedex. Nivån som krävs är B1 för läs- och hörförståelse och A2 för muntlig och skriftlig färdighet.',
+      'Enligt Migrationsverket går det inte längre att göra ett Swedex-test från och med 31 december 2026. Migrationsverket ska informera om ett annat prov kan användas i stället under 2027.',
     ],
     sources: [
       mvVuxna,

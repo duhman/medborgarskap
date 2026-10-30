@@ -22,7 +22,7 @@ bun run verify
 
 **Accessibility:** Playwright axe on all routes, part of `npm run check:all`. Install the browser once with `npm run test:a11y:install-browser -- --with-deps`.
 
-**No GitHub Actions:** CI and the weekly source check only run when started by hand (zero Actions budget). Before every merge run `npm run check:all` locally: verify, quotes against the PDF, then `scripts/run-browser-checks.mjs` (axe light/dark, Grundform contrast, e2e) against a Vercel-like static server. Run `npm run check:sources` now and then for the official pages.
+**GitHub Actions:** CI (`ci.yml`) only runs when started by hand. The official-source check (`source-check.yml`) runs every Monday and opens or updates one issue when UHR, Migrationsverket or the PDF changes; read and close that issue. Before every merge run `npm run check:all` locally: verify, quotes against the PDF, then `scripts/run-browser-checks.mjs` (axe light/dark, Grundform contrast, e2e) against a Vercel-like static server.
 
 **End to end:** `npm run test:e2e` with `BASE_URL` set (add `CHROMIUM_PATH=...` to use a preinstalled Chromium); `check:all` does this for you. Do not point it at `vite preview`, which serves the home HTML for every route. It loads every sitemap route on a phone and a desktop viewport (console errors, hydration mismatches, horizontal scroll) and walks the study flows, including resume and offline.
 
