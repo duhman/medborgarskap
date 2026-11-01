@@ -277,6 +277,15 @@ export const politiskaValOchPartier: ChapterContent = {
         page: 14,
         quote:
           'För att rösta i kommun- och regionvalen behöver man inte vara svensk medborgare',
+        supplementarySources: [
+          {
+            publisher: 'Sveriges riksdag',
+            label: 'Kommunallag (2017:725), 1 kap. 7 §',
+            url: 'https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/kommunallag-2017725_sfs-2017-725/',
+            checkedAt: '2026-11-01',
+            quote: 'varit folkbokförd i Sverige tre år i följd före valdagen.',
+          },
+        ],
       },
     },
     {

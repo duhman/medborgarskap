@@ -5,7 +5,8 @@ import { shuffled } from './quiz'
  * Provsimulering: a set of questions from every chapter, answered without feedback and scored at
  * the end, with an optional clock. UHR has not published the number of questions or the time for
  * the next sitting, so the visitor picks the size and the clock runs at 1.5 minutes per question.
- * No pass mark is shown: UHR sets it afterwards.
+ * No pass mark is shown: UHR has not published one for the next sitting. The historical 28/40
+ * threshold for the 15 August 2026 trial is not a rule for a future sitting.
  */
 
 export const EXAM_SIZES = [20, 40, 60] as const

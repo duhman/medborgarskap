@@ -1,3 +1,14 @@
+/** A current, official source that qualifies or updates an authored PDF question. */
+export type SupplementarySource = {
+  publisher: string
+  label: string
+  url: string
+  /** Date this exact claim was checked against the linked official source. */
+  checkedAt: string
+  /** Short, verbatim evidence for the supplementary claim. */
+  quote: string
+}
+
 export type QuestionSource = {
   chapter: number
   page?: number
@@ -6,6 +17,11 @@ export type QuestionSource = {
    * scripts/__tests__/quotes-pdf.test.mjs kontrollerar i CI att det finns på angiven sida i PDF:en.
    */
   quote?: string
+  /**
+   * Current official evidence that supplements, but never replaces, the Sverige i fokus source
+   * above. This is needed where a later law or rule changes the book's context.
+   */
+  supplementarySources?: SupplementarySource[]
 }
 
 /** Granskning av ett kapitels frågor mot en viss version av Sverige i fokus. */
@@ -69,6 +85,14 @@ export function validateQuestion(q: QuizQuestion): string[] {
   }
   if (q.source.chapter < 1 || q.source.chapter > 13) {
     errors.push(`Question ${q.id}: source.chapter must be 1-13`)
+  }
+  for (const source of q.source.supplementarySources ?? []) {
+    if (!source.publisher.trim() || !source.label.trim() || !source.quote.trim() || !/^https:\/\//.test(source.url)) {
+      errors.push(`Question ${q.id}: supplementary source must have publisher, label, https URL and quote`)
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(source.checkedAt)) {
+      errors.push(`Question ${q.id}: supplementary source checkedAt must be YYYY-MM-DD`)
+    }
   }
   return errors
 }

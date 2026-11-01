@@ -51,6 +51,28 @@ export function SourceCitation({ source, className = 'text-ink-3', compact = fal
           )}
           <span className="sr-only">, öppnas i ny flik</span>
         </a>
+        {source.supplementarySources && source.supplementarySources.length > 0 && (
+          <ul className="mt-3 space-y-2 text-sm not-italic">
+            {source.supplementarySources.map((supplement) => (
+              <li key={`${supplement.publisher}-${supplement.url}`}>
+                <p>
+                  Kompletterande aktuell källa:{' '}
+                  <a
+                    href={supplement.url}
+                    className="mb-link-quiet"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {supplement.publisher}, {supplement.label}
+                    <span className="sr-only">, öppnas i ny flik</span>
+                  </a>
+                  , kontrollerad <GfNum value={supplement.checkedAt} />.
+                </p>
+                <p className="mt-1 text-ink-2">”{supplement.quote}”</p>
+              </li>
+            ))}
+          </ul>
+        )}
       </figcaption>
     </figure>
   )

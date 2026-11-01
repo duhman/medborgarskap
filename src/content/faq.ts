@@ -13,6 +13,8 @@ const CHECKED = '2026-10-24'
 const UHR_OM = 'https://www.uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/'
 const UHR_MATERIAL = 'https://www.uhr.se/medborgarskapsprovet/utbildningsmaterial/'
 const UHR_ANPASSNINGAR = 'https://www.uhr.se/medborgarskapsprovet/anpassningar/'
+const UHR_RESULT =
+  'https://www.uhr.se/om-uhr/nyheter/2026-nyheter/resultaten-fran-medborgarskapsprovet-i-samhallskunskap-klara/'
 const MV_VUXNA =
   'https://www.migrationsverket.se/du-vill-ansoka/svenskt-medborgarskap/medborgarskap-for-vuxna/medborgarskap-for-vuxna.html'
 const MV_SVENSKA_NYHET =
@@ -24,6 +26,12 @@ const uhrMaterial: OfficialSource = {
   label: 'Utbildningsmaterial',
   url: UHR_MATERIAL,
   checkedAt: CHECKED,
+}
+const uhrResult: OfficialSource = {
+  publisher: 'UHR',
+  label: 'Resultaten från medborgarskapsprovet i samhällskunskap klara',
+  url: UHR_RESULT,
+  checkedAt: '2026-11-01',
 }
 const mvVuxna: OfficialSource = {
   publisher: 'Migrationsverket',
@@ -55,9 +63,9 @@ export const faqEntries: FaqEntry[] = [
     question: 'Hur ser medborgarskapsprovet ut?',
     answer: [
       'Provet är på svenska, skrivs på papper och består av flervalsfrågor med fyra svarsalternativ, där ett svar är rätt.',
-      'UHR har ännu inte publicerat provtid, antal frågor eller avgift för nästa tillfälle. Provet i augusti 2026 var ett utprövningsprov.',
+      'Provet den 15 augusti 2026 var ett utprövningsprov. UHR fastställde då godkäntgränsen till 28 av 40 poäng. UHR har inte publicerat provtid, antal frågor, avgift eller godkäntgräns för nästa tillfälle.',
     ],
-    sources: [uhrOm],
+    sources: [uhrOm, uhrResult],
   },
   {
     id: 'vem-maste',

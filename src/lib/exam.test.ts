@@ -98,6 +98,7 @@ describe('scoreExam', () => {
         { chapter: 2, score: 0, total: 1 },
       ],
     })
+    expect(result).not.toHaveProperty('passed')
   })
 })
 

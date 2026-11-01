@@ -1,0 +1,15 @@
+{
+  "version": "2026-11-01.v1",
+  "generatedFrom": "authored-chapter-content",
+  "reviewStatus": "structurally-validated-human-semantic-review-pending",
+  "generatedCaseCount": 780,
+  "canonicalQuestionCount": 389,
+  "heldoutCaseCount": 650,
+  "corpusSha256": "361a13049d8ef717229cd841d362da960ccdeeed7d849ba55fbcdbd81502c784",
+  "sourcesSha256": "a9272965fbcd376ed9fa566de144bfe4912c501ac52a9cb2ede9c4bee057dbf0",
+  "policyFixtureCount": 12,
+  "policySha256": "6bb15874c6f2397b3eba6d39210f33990f572f825a4bff547d9612bfc63b5ab2",
+  "artifact": "medborgarskap-v1.jsonl",
+  "canonicalSourcesArtifact": "medborgarskap-v1.sources.json",
+  "policyArtifact": "medborgarskap-policy-v1.json"
+}
