@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { analyticsConfigured, setAnalyticsConsent, useAnalyticsConsent } from '../lib/analyticsConsent'
 import { clearAllProgress } from '../lib/progress'
+import { tutorPilotEnabled } from '../components/TutorHelp'
 
 /** Yes or no to visitor statistics. Read after hydration like other saved state. */
 function AnalyticsChoice() {
@@ -59,7 +60,7 @@ export function Integritet() {
     <article className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Integritetspolicy</h1>
-        <p className="text-sm text-ink-2">Senast uppdaterad: 30 oktober 2026</p>
+        <p className="text-sm text-ink-2">Senast uppdaterad: 1 november 2026</p>
       </header>
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
@@ -152,6 +153,38 @@ export function Integritet() {
           villkor, inställningar och integritetspolicy. Integrationen kan inte radera det samtalet.
         </p>
       </section>
+
+      {tutorPilotEnabled && (
+        <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
+          <h2 className="text-xl font-semibold text-ink">Frivillig AI-hjälp i övningen</h2>
+          <p>
+            I pilotkapitlet kan du efter ett svar be om en extra förklaring. Innan något skickas visar
+            vi vad som delas och ber dig bekräfta det. Till vår tjänst skickas bara frågans id, det
+            svarsalternativ du valde, valt språk och hjälpsätt. Tjänsten lägger sedan till den
+            offentliga frågan, svarsalternativen, facit, förklaringen och godkända källutdrag innan
+            den frågar OpenAI. Din övriga övningshistorik, dina sparade frågor och fri text skickas
+            inte.
+          </p>
+          <p>
+            Valet är separat från besöksstatistik och sparas inte i webbläsaren. För att skydda
+            tjänsten mot missbruk används ett HMAC-baserat id från IP-adressen och ett dagligt antal
+            förfrågningar. Id:t behålls till slutet av UTC-dagen, högst 24 timmar. En kontrollerad
+            extra förklaring för offentligt frågematerial kan också ligga i en tillfällig cache i upp
+            till tio minuter. Vercels tekniska driftloggar är separata och beskrivs ovan. Vi ber
+            OpenAI att inte lagra API-svaret, men det är inte en garanti för att inga uppgifter
+            behandlas där. OpenAI kan behandla uppgifterna för säkerhet och missbruksövervakning i
+            upp till 30 dagar enligt sina standardvillkor, om inte kontots inställningar säger något
+            annat. Att begära extra hjälp är frivilligt och den vanliga förklaringen och källan finns
+            alltid kvar.
+          </p>
+          <p>
+            Detta är skilt från den skrivskyddade ChatGPT-integrationen ovan. Den integrationen kan
+            fortfarande bara söka och hämta offentligt studiematerial och kan inte läsa dina
+            övningssvar. Den frivilliga AI-hjälpen är det enda undantaget för det aktuella valda
+            svarsalternativet.
+          </p>
+        </section>
+      )}
 
       <section className="surface-raised space-y-3 p-5 text-sm leading-relaxed text-ink/85">
         <h2 className="text-xl font-semibold text-ink">Externa länkar</h2>

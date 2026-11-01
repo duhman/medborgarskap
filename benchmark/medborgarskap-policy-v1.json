@@ -130,7 +130,8 @@
         "The app is endorsed, approved or quality-controlled by UHR."
       ],
       "sourceUrls": [
-        "https://www.uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/"
+        "https://www.uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/",
+        "https://provamedborgarskap.se/om"
       ],
       "templateGenerated": false,
       "humanSemanticReview": "pending"

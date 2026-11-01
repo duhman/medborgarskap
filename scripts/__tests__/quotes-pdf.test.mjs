@@ -10,9 +10,17 @@ import { allChapters } from '../../src/content/chapters/all'
 const file = process.env.SOURCE_PDF_TEXT
 const available = !!file && existsSync(file)
 
+/**
+ * PDF pages start with a running header and a standalone page number. Strip only
+ * that exact two-line chrome so a quote can continue into the next page.
+ */
+function stripPageChrome(s) {
+  return s.replace(/^[^\n]*sverige\s+i\s+fokus[^\n]*\n\d+\s*\n/i, '')
+}
+
 /** Compare text without whitespace, hyphens or soft hyphens, which differ with line breaks. */
 function normalizeForQuote(s) {
-  return s.replace(/[\s­\-‐-―]/g, '').replace(/[”“"]/g, '"').replace(/[’‘]/g, "'")
+  return stripPageChrome(s).replace(/[\s­\-‐-―]/g, '').replace(/[”“"]/g, '"').replace(/[’‘]/g, "'")
 }
 
 /** For a quote that is not found: how far it matches, and what the PDF has from that point. */
@@ -34,6 +42,18 @@ function closestMatch(needle, normalized) {
   if (best.length === 0) return 'no matching prefix'
   return `matches ${best.length} of ${needle.length} chars on page ${best.page}, then the PDF has "${best.after}"`
 }
+
+describe('PDF quote normalization', () => {
+  it('removes a running header and standalone page number at a page boundary', () => {
+    const page = 'Kapitel 12 - Sverige i fokus - Utbildningsmaterial\n43\nutövas i Sverige ökat.'
+    expect(normalizeForQuote(page)).toBe(normalizeForQuote('utövas i Sverige ökat.'))
+  })
+
+  it('keeps substantive text that merely mentions Sverige i fokus', () => {
+    const text = 'Sverige i fokus är utbildningsmaterialet som används här.\nInnehållet fortsätter.'
+    expect(stripPageChrome(text)).toBe(text)
+  })
+})
 
 describe.skipIf(!available)('quotes match Sverige i fokus', () => {
   const { pages } = available

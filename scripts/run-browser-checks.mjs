@@ -56,7 +56,10 @@ const env = {
   BASE_URL: `http://localhost:${PORT}`,
 }
 let failed = false
-for (const script of ['scripts/check-search-visibility.mjs', 'scripts/a11y-axe.mjs', 'scripts/grundform-contrast.mjs', 'scripts/e2e-smoke.mjs']) {
+const scripts = process.argv.includes('--tutor-only')
+  ? ['scripts/tutor-e2e.mjs']
+  : ['scripts/check-search-visibility.mjs', 'scripts/a11y-axe.mjs', 'scripts/grundform-contrast.mjs', 'scripts/e2e-smoke.mjs', 'scripts/tutor-e2e.mjs']
+for (const script of scripts) {
   console.log(`\n> node ${script}`)
   // Async spawn: the static server above runs in this process and must keep answering.
   const code = await new Promise((resolve) => {

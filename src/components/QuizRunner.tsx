@@ -19,6 +19,7 @@ import { GfNum } from './GfNum'
 import { ListenButton } from './ListenButton'
 import { ProgressMeter } from './ProgressMeter'
 import { SourceCitation } from './SourceCitation'
+import { TutorHelp } from './TutorHelp'
 
 type Props = {
   slug: string
@@ -521,6 +522,10 @@ export function QuizRunner({
           </div>
         )}
 
+        {checked && !ogPreview && (
+          <TutorHelp key={q.id} chapterSlug={slug} questionId={q.id} selectedOptionId={chosen ?? null} />
+        )}
+
         {hint && (
           <p role="alert" className="text-[0.9375rem] text-[var(--error)]">
             Välj ett svar först, eller hoppa över frågan.
@@ -553,11 +558,11 @@ export function QuizRunner({
         {checked && !ogPreview && (
           <p className="text-sm text-ink-3">
             Hittat ett fel i frågan? Meddela via{' '}
-            <a href={report.email} className="mb-link-quiet">
+            <a href={report.email} className="mb-link-quiet underline underline-offset-2">
               e-post
             </a>{' '}
             eller{' '}
-            <a href={report.github} className="mb-link-quiet" target="_blank" rel="noopener noreferrer">
+            <a href={report.github} className="mb-link-quiet underline underline-offset-2" target="_blank" rel="noopener noreferrer">
               GitHub
               <span className="sr-only">, öppnas i ny flik</span>
             </a>
