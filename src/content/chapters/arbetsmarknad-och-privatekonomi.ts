@@ -520,14 +520,24 @@ export const arbetsmarknadOchPrivatekonomi: ChapterContent = {
       ],
       correctOptionId: 'A',
       explanationSv:
-        'För att få ersättning från A-kassan måste man ha arbetat tillräckligt under en bestämd period och vara aktivt arbetssökande. Materialet talar om timmar, men sedan den 1 oktober 2025 räknas kravet i inkomst från arbete.',
+        'För att få ersättning från A-kassan måste man uppfylla villkor och vara aktivt arbetssökande. Materialet talar om timmar. För beslut från och med den 1 oktober 2025 räknas kravet i inkomst från arbete, medan ersättningsperioder som började före datumet följer äldre regler.',
       explanationEn:
-        'To get benefits from the A-kassa you must have worked enough during a set period and be actively looking for work. The material mentions hours, but since 1 October 2025 the requirement is measured in income from work.',
+        'To receive A-kassa benefits you must meet the conditions and actively look for work. The material mentions hours. For decisions from 1 October 2025, the requirement is based on income from work, while benefit periods that started before that date follow the older rules.',
       source: {
         chapter: 8,
         page: 29,
         quote:
           'För att få ersättning måste man ha arbetat tillräckligt många timmar under en bestämd period och vara aktivt arbetssökande.',
+        supplementarySources: [
+          {
+            publisher: 'Inspektionen för arbetslöshetsförsäkringen',
+            label: 'Nya regler för arbetslöshetsförsäkringen från den 1 oktober',
+            url: 'https://www.iaf.se/pressrum/aktuellt-och-pressmeddelanden/nya-regler-for-arbetsloshetsforsakringen-fran-den-1-oktober/',
+            checkedAt: '2026-11-01',
+            quote:
+              'från den 1 oktober 2025 och senare. Personer som redan har fått beslut om arbetslöshetsersättning tidigare får sin ersättning enligt det tidigare regelverket.',
+          },
+        ],
       },
     },
     {

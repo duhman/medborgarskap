@@ -135,7 +135,7 @@ export const valfardssamhallet: ChapterContent = {
     },
     {
       id: 'k9-q3',
-      prompt: 'Vem ser till att det finns tillgång till skolor och utbildning?',
+      prompt: 'Vilken samhällsnivå ska enligt kapitlet se till att det finns skolor och utbildning?',
       options: [
         { id: 'A', text: 'Staten' },
         { id: 'B', text: 'Regionen' },

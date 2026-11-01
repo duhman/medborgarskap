@@ -383,8 +383,9 @@ function Result({ questions, answers, onAgain }: ResultProps) {
           </p>
         )}
         <p className="text-sm text-ink-3">
-          UHR sätter gränsen för godkänt i efterhand, så vi visar ingen. Se i stället vilka kapitel som
-          behöver mer tid.
+          I UHR:s utprövningsprov den 15 augusti 2026 var godkäntgränsen 28 av 40. UHR har inte
+          publicerat någon godkäntgräns för nästa prov, så vi visar ingen här. Se i stället vilka
+          kapitel som behöver mer tid.
         </p>
         <table className="w-full text-left text-[0.9375rem]">
           <caption className="sr-only">Rätt per kapitel</caption>

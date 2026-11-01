@@ -279,6 +279,7 @@ async function checkFlows(browser, name) {
   }
 
   // Always pick the last option to get some wrong answers, then finish.
+  let checkedSupplementarySource = false
   for (let i = 0; i < 80; i += 1) {
     const next = page.getByRole('button', { name: /Nästa fråga|Visa resultat/ })
     if (await next.count()) {
@@ -287,7 +288,21 @@ async function checkFlows(browser, name) {
     }
     if (!(await page.getByRole('button', { name: 'Svara' }).count())) break
     await answerCurrent(page, 3)
+    if (await page.locator('form input[name="k5-q5"]').count()) {
+      const citation = page.locator('form figure').filter({
+        has: page.locator('a[href*="skarpta-regler-for-unga-lagovertradare_hd01juu41"]'),
+      })
+      if (await citation.count() !== 1) fail(`${name}: current-law explanation must link its supplementary official source`)
+      else {
+        if (!(await citation.locator('blockquote').count())) fail(`${name}: supplementary source replaced the primary PDF quote`)
+        if (!(await citation.getByRole('link', { name: /Sverige i fokus/ }).count())) fail(`${name}: supplementary source replaced the primary PDF link`)
+        if (!/kontrollerad\s+\d{4}-\d{2}-\d{2}/.test(await citation.textContent() ?? '')) fail(`${name}: supplementary source has no reviewed date`)
+        if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) fail(`${name}: supplementary evidence causes horizontal scroll`)
+      }
+      checkedSupplementarySource = true
+    }
   }
+  if (!checkedSupplementarySource) fail(`${name}: supplementary evidence flow was not exercised`)
   if (!(await page.locator('#quiz-result').count())) fail(`${name}: no result screen`)
 
   // Mistakes list now has questions.
@@ -367,6 +382,8 @@ async function checkFlows(browser, name) {
   if (!(await page.getByText(/19 frågor lämnades obesvarade/).count())) fail(`${name}: exam does not count unanswered`)
   if (!(await page.getByRole('table', { name: 'Rätt per kapitel' }).count())) fail(`${name}: exam shows no per-chapter table`)
   if (!(await page.getByText(/så vi visar ingen/).count())) fail(`${name}: exam result must say no pass mark is shown`)
+  if (!(await page.getByText(/15 augusti 2026.*28 av 40/).count())) fail(`${name}: exam result must date the historical trial threshold`)
+  if (!(await page.getByText(/inte publicerat någon godkäntgräns för nästa prov/).count())) fail(`${name}: exam result must keep the next threshold unknown`)
   await page.getByRole('button', { name: 'Nytt prov' }).click()
   if (!(await page.getByText(/Dina tidigare prov/).count())) fail(`${name}: exam result not kept in history`)
 

@@ -269,18 +269,18 @@ export const manskligaRattigheter: ChapterContent = {
     {
       id: 'k7-q10',
       prompt:
-        'Amira lever i ett land där hennes liv är i fara. Hon flyr till ett annat land. Vad har hon rätt till enligt FN:s förklaring om de mänskliga rättigheterna?',
+        'Amira lever i ett land där hon riskerar förföljelse. Hon flyr till ett annat land. Vad har hon rätt att göra enligt FN:s förklaring om de mänskliga rättigheterna?',
       options: [
         { id: 'A', text: 'Att genast bli medborgare i det nya landet' },
-        { id: 'B', text: 'Att söka asyl och få skydd i det nya landet' },
+        { id: 'B', text: 'Att söka asyl i ett annat land' },
         { id: 'C', text: 'Att få ett arbete i det nya landet inom en månad' },
         { id: 'D', text: 'Att få rösta i nästa val i det nya landet' },
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Enligt förklaringen har alla rätt att fly till, söka asyl och få skydd i ett annat land om livet är i fara.',
+        'Enligt FN:s förklaring har alla rätt att söka och åtnjuta asyl i andra länder undan förföljelse.',
       explanationEn:
-        'According to the declaration, everyone whose life is in danger has the right to flee, seek asylum and get protection in another country.',
+        'According to the declaration, everyone has the right to seek and enjoy asylum in other countries from persecution.',
       source: {
         chapter: 7,
         page: 22,

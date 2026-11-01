@@ -28,7 +28,10 @@ export function StatusStrip() {
             <span className="font-medium text-ink">Anmälan:</span>{' '}
             {uhrStatus.registrationOpen ? 'öppen' : 'stängd enligt uhr.se'}
           </p>
-          <p>{uhrStatus.notes}</p>
+          <p>
+            {uhrStatus.notes}{' '}
+            <ExternalLink href={officialLinks.trialResults}>UHR:s resultat</ExternalLink>.
+          </p>
           <p>
             Senast kontrollerad mot uhr.se: <span className="gf-num">{uhrStatus.checkedAt}</span>.
             Kontrollera alltid datum och anmälan på{' '}

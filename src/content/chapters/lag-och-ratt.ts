@@ -201,6 +201,15 @@ export const lagOchRatt: ChapterContent = {
         chapter: 5,
         page: 19,
         quote: 'I Sverige är en person straffmyndig och kan bli åtalad för ett brott från 15 års ålder.',
+        supplementarySources: [
+          {
+            publisher: 'Sveriges riksdag',
+            label: 'Skärpta regler för unga lagöverträdare',
+            url: 'https://www.riksdagen.se/sv/dokument-och-lagar/dokument/betankande/skarpta-regler-for-unga-lagovertradare_hd01juu41/',
+            checkedAt: '2026-11-01',
+            quote: 'Straffbarhetsåldern sänks till 14 år för allvarliga brott under en period om fem år.',
+          },
+        ],
       },
     },
     {
