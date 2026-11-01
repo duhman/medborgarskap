@@ -1,3 +1,5 @@
+import { practiceDisclaimer } from '../config/appFacts'
+
 export function Disclaimer({ compact = false }: { compact?: boolean }) {
   return (
     <p
@@ -7,9 +9,7 @@ export function Disclaimer({ compact = false }: { compact?: boolean }) {
           : 'surface-raised px-4 py-3 text-sm leading-relaxed text-ink/80'
       }
     >
-      Medborgarskap är en fristående studiehjälp. Vi är inte knutna till UHR, Skolverket eller
-      Migrationsverket. Övningsfrågor är egna (utom tydligt märkta UHR-exempel). Beslut om
-      medborgarskap och kunskapskrav fattas av myndigheter, inte av den här webbplatsen.
+      {practiceDisclaimer}
     </p>
   )
 }

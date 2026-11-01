@@ -12635,13 +12635,13 @@
     "source": {
       "chapter": 12,
       "page": 42,
-      "quote": "I takt med att invandringen har ökat har också mängden av religioner",
-      "normalizedQuoteSha256": "bf0ce937a64e9e14fdf689d51ce973729d8c9dad896cfe84612fabf59b72f640",
+      "quote": "I takt med att invandringen har ökat har också mängden av religioner som utövas i Sverige ökat.",
+      "normalizedQuoteSha256": "fb02d0a4891fd1eff998b8e3484dd515853bf4827c84ee8751b1855f34daa560",
       "pdfVersion": "2026-08-10",
       "reviewedAt": "2026-10-24",
       "supplementarySources": []
     },
-    "canonicalQuestionSha256": "c0428e926c5279a682117fa2f6c06650e51d14b3089fbd8c298a89202659bebe"
+    "canonicalQuestionSha256": "84e0f7455db5a27661adf2a6e817de37d9cde050feb421647ff42f60144fbb5e"
   },
   {
     "id": "k12-q17",

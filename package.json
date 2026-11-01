@@ -15,8 +15,8 @@
     "lint:ci": "oxlint && node scripts/check-agent-scope.mjs",
     "check:agent-scope": "node scripts/check-agent-scope.mjs",
     "check:route-meta": "node scripts/check-route-meta.mjs",
-    "check:all": "VITE_PUBLIC_POSTHOG_KEY=phc_e2e_consent VITE_PUBLIC_POSTHOG_HOST=https://posthog.e2e.invalid npm run verify && npm run check:quotes && node scripts/run-browser-checks.mjs",
-    "verify": "npm run tsc && npm run tsc:api && npm run check:mcp-node-runtime && npm run lint:ci && npm run check:route-meta && npm run benchmark:check && npm run test && npm run check:chatgpt-package && npm run build && npm run check:cascade && npm run check:og-preview",
+    "check:all": "VITE_PUBLIC_TUTOR_ENABLED=true VITE_PUBLIC_POSTHOG_KEY=phc_e2e_consent VITE_PUBLIC_POSTHOG_HOST=https://posthog.e2e.invalid npm run verify && npm run check:quotes && node scripts/run-browser-checks.mjs",
+    "verify": "npm run tsc && npm run tsc:api && npm run check:mcp-node-runtime && npm run check:tutor-node-runtime && npm run lint:ci && npm run check:route-meta && npm run benchmark:check && npm run test && npm run check:chatgpt-package && npm run build && npm run check:tutor-client && npm run check:cascade && npm run check:og-preview",
     "record:og-preview": "node scripts/record-og-preview-video.mjs",
     "check:og-preview": "node scripts/check-og-preview-video.mjs",
     "check:og-preview-gates": "node scripts/og-preview/run-gate-regression.mjs",
@@ -38,6 +38,11 @@
     "package:chatgpt": "node scripts/package-chatgpt.mjs",
     "check:mcp": "node scripts/check-mcp.mjs",
     "check:mcp-node-runtime": "node scripts/check-mcp-node-runtime.mjs",
+    "check:tutor-node-runtime": "node scripts/check-tutor-node-runtime.mjs",
+    "check:tutor-client": "node scripts/check-tutor-client.mjs",
+    "test:tutor-e2e": "node scripts/tutor-e2e.mjs",
+    "benchmark:models": "node scripts/benchmark/run-models.mjs",
+    "benchmark:decisions": "node scripts/benchmark/run-decisions.mjs",
     "check:quotes": "node scripts/extract-pdf-text.mjs --out /tmp/sverige-i-fokus.pages.json && SOURCE_PDF_TEXT=/tmp/sverige-i-fokus.pages.json vitest run scripts/__tests__/quotes-pdf.test.mjs"
   },
   "dependencies": {

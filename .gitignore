@@ -11,6 +11,8 @@ node_modules
 a11y-results
 dist
 dist-ssr
+benchmark-results/
+.vercel/
 *.local
 
 # Editor directories and files

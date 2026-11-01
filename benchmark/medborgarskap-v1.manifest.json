@@ -5,10 +5,10 @@
   "generatedCaseCount": 780,
   "canonicalQuestionCount": 389,
   "heldoutCaseCount": 650,
-  "corpusSha256": "361a13049d8ef717229cd841d362da960ccdeeed7d849ba55fbcdbd81502c784",
-  "sourcesSha256": "a9272965fbcd376ed9fa566de144bfe4912c501ac52a9cb2ede9c4bee057dbf0",
+  "corpusSha256": "ff35fe0fd55110c41e7662df6ead623ddf73df244ea1d7fbf11cda45e030e5f6",
+  "sourcesSha256": "334ef9d1324260fb07f2a897d05499eee4787117f473e24c5d80bc5f7947100b",
   "policyFixtureCount": 12,
-  "policySha256": "6bb15874c6f2397b3eba6d39210f33990f572f825a4bff547d9612bfc63b5ab2",
+  "policySha256": "952b3f6684ec80af1c5b2a58652e5d7c3b9f2cc2b6c7f847d3a1ad48a1449fba",
   "artifact": "medborgarskap-v1.jsonl",
   "canonicalSourcesArtifact": "medborgarskap-v1.sources.json",
   "policyArtifact": "medborgarskap-policy-v1.json"
