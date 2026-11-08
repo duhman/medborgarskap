@@ -4,14 +4,22 @@ import { GfNum } from '../components/GfNum'
 import { QuizRunner } from '../components/QuizRunner'
 import { useAllQuestions } from '../content/chapters/load'
 import { chapterMetaList } from '../content/chapters/meta'
+import type { QuizQuestion } from '../content/types'
 import { toggleBookmark, useProgressState } from '../lib/progress'
 
 export function OvningSparade() {
   const pool = useAllQuestions()
   const { bookmarks } = useProgressState()
-  const [round, setRound] = useState(0)
+  // A round keeps the questions it started with. Removing a bookmark during the round (the button
+  // under each answer) must not change the list under the runner, or the feedback would belong to
+  // another question and the last question would run past the end of the list.
+  const [set, setSet] = useState<{ questions: QuizQuestion[]; round: number } | null>(null)
   const byId = new Map(pool.map((q) => [q.id, q]))
   const saved = bookmarks.map((id) => byId.get(id)).filter((q) => q !== undefined)
+
+  function start() {
+    setSet((prev) => (saved.length > 0 ? { questions: saved, round: (prev?.round ?? 0) + 1 } : null))
+  }
 
   return (
     <article className="space-y-8">
@@ -24,19 +32,19 @@ export function OvningSparade() {
         </p>
       </header>
 
-      {round > 0 && saved.length > 0 ? (
+      {set ? (
         <>
           <QuizRunner
-            key={round}
+            key={set.round}
             slug="sparade"
             chapterTitle="sparade frågor"
-            questions={saved}
+            questions={set.questions}
             saveResult={false}
-            onRetry={() => setRound((n) => n + 1)}
+            onRetry={start}
             retryLabel="Öva de sparade igen"
             autoFocus
           />
-          <button type="button" onClick={() => setRound(0)} className="mb-link-quiet inline-flex min-h-11 items-center">
+          <button type="button" onClick={() => setSet(null)} className="mb-link-quiet inline-flex min-h-11 items-center">
             Tillbaka till listan
           </button>
         </>
@@ -54,7 +62,7 @@ export function OvningSparade() {
             <p className="text-lg">
               Du har <GfNum value={saved.length} /> {saved.length === 1 ? 'sparad fråga' : 'sparade frågor'}.
             </p>
-            <button type="button" onClick={() => setRound(1)} className="mb-btn mb-btn--primary">
+            <button type="button" onClick={start} className="mb-btn mb-btn--primary">
               Öva de sparade frågorna
             </button>
           </div>

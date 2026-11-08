@@ -265,6 +265,13 @@ export function TutorHelp({ chapterSlug, questionId, selectedOptionId, enabled =
   return (
     <section
       ref={rootRef}
+      // The panel sits inside the quiz form. Enter in one of its fields (the consent checkbox) would
+      // submit that form and move on to the next question, closing the panel.
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' && (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement)) {
+          event.preventDefault()
+        }
+      }}
       className="surface-raised space-y-3 p-4 sm:p-5"
       aria-labelledby={`tutor-${questionId}`}
       aria-busy={state === 'checking' || state === 'requesting'}

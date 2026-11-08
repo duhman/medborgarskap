@@ -37,7 +37,7 @@ export function OvningProv() {
   const pool = useAllQuestions()
   const savedRaw = useSyncExternalStore(subscribeExam, getExamSessionRaw, () => null)
   const session = parseExamSession(savedRaw)
-  const [finished, setFinished] = useState<{ questions: QuizQuestion[]; answers: ExamSession['answers']; timed: boolean } | null>(null)
+  const [finished, setFinished] = useState<{ questions: QuizQuestion[]; answers: ExamSession['answers']; byClock: boolean } | null>(null)
 
   const byId = new Map(pool.map((q) => [q.id, q]))
   const running = session && !finished ? session.ids.map((id) => byId.get(id)).filter((q): q is QuizQuestion => !!q) : null
@@ -51,13 +51,18 @@ export function OvningProv() {
     saveExamSession({ ids: questions.map((q) => q.id), answers: {}, index: 0, startedAt: now.toISOString(), deadline })
   }
 
-  function submit(s: ExamSession, questions: QuizQuestion[]) {
-    const { score } = scoreExam(questions, s.answers)
-    addExamResult({ finishedAt: new Date().toISOString(), score, total: questions.length, timed: s.deadline !== null })
-    // Right and wrong answers feed the mistakes list and smart practice, like other rounds.
-    recordAnswers(questions.map((q) => ({ id: q.id, correct: s.answers[q.id] === undefined ? null : s.answers[q.id] === q.correctOptionId })))
-    setFinished({ questions, answers: s.answers, timed: s.deadline !== null })
-    clearExamSession()
+  function submit(s: ExamSession, questions: QuizQuestion[], byClock: boolean) {
+    // Another tab with the same exam may have handed it in already (both clocks reach zero at
+    // once). Then it has saved the result and the answers; this tab only shows them.
+    const stillRunning = parseExamSession(getExamSessionRaw())?.startedAt === s.startedAt
+    if (stillRunning) {
+      const { score } = scoreExam(questions, s.answers)
+      addExamResult({ finishedAt: new Date().toISOString(), score, total: questions.length, timed: s.deadline !== null })
+      // Right and wrong answers feed the mistakes list and smart practice, like other rounds.
+      recordAnswers(questions.map((q) => ({ id: q.id, correct: s.answers[q.id] === undefined ? null : s.answers[q.id] === q.correctOptionId })))
+    }
+    setFinished({ questions, answers: s.answers, byClock })
+    if (stillRunning) clearExamSession()
   }
 
   return (
@@ -76,10 +81,17 @@ export function OvningProv() {
         <Result
           questions={finished.questions}
           answers={finished.answers}
+          byClock={finished.byClock}
           onAgain={() => setFinished(null)}
         />
       ) : session && running && !brokenSession ? (
-        <Running session={session} questions={running} onSubmit={() => submit(session, running)} onAbort={clearExamSession} />
+        <Running
+          session={session}
+          questions={running}
+          onSubmit={() => submit(session, running, false)}
+          onExpire={() => submit(session, running, true)}
+          onAbort={clearExamSession}
+        />
       ) : (
         <Picker onStart={start} brokenSession={!!brokenSession} />
       )}
@@ -163,10 +175,12 @@ type RunningProps = {
   session: ExamSession
   questions: QuizQuestion[]
   onSubmit: () => void
+  /** The clock reached zero, now or while the page was closed. */
+  onExpire: () => void
   onAbort: () => void
 }
 
-function Running({ session, questions, onSubmit, onAbort }: RunningProps) {
+function Running({ session, questions, onSubmit, onExpire, onAbort }: RunningProps) {
   const total = questions.length
   const index = Math.min(session.index, total - 1)
   const q = questions[index]
@@ -193,6 +207,8 @@ function Running({ session, questions, onSubmit, onAbort }: RunningProps) {
   function go(to: number) {
     focusHeading.current = true
     setOverview(false)
+    // The hand-in question belongs to the moment it was asked, not to the next question shown.
+    setConfirming(false)
     update({ index: Math.max(0, Math.min(total - 1, to)) })
   }
 
@@ -209,7 +225,7 @@ function Running({ session, questions, onSubmit, onAbort }: RunningProps) {
         <p className="text-ink-3">
           <GfNum value={answered} /> besvarade
         </p>
-        <Clock deadline={session.deadline} onExpire={onSubmit} />
+        <Clock deadline={session.deadline} onExpire={onExpire} />
       </div>
       <div aria-hidden="true" className="h-2.5 bg-[var(--line)]">
         <div className="h-full bg-accent transition-[width] duration-200" style={{ width: `${(answered / total) * 100}%` }} />
@@ -358,10 +374,12 @@ function Clock({ deadline, onExpire }: { deadline: string | null; onExpire: () =
 type ResultProps = {
   questions: QuizQuestion[]
   answers: ExamSession['answers']
+  /** Handed in by the clock, not by the visitor. */
+  byClock: boolean
   onAgain: () => void
 }
 
-function Result({ questions, answers, onAgain }: ResultProps) {
+function Result({ questions, answers, byClock, onAgain }: ResultProps) {
   const result: ExamScore = scoreExam(questions, answers)
   const missed = questions.filter((x) => answers[x.id] !== x.correctOptionId)
   const headingRef = useRef<HTMLHeadingElement>(null)
@@ -376,6 +394,12 @@ function Result({ questions, answers, onAgain }: ResultProps) {
         <h2 id="exam-result" ref={headingRef} tabIndex={-1} className="text-3xl font-semibold outline-none">
           <GfNum value={result.score} /> av <GfNum value={result.total} /> rätt
         </h2>
+        {byClock && (
+          <p className="text-ink-2">
+            Tiden tog slut, så provet lämnades in automatiskt. Det gäller också om sidan var stängd när
+            tiden gick ut.
+          </p>
+        )}
         {result.unanswered > 0 && (
           <p className="text-ink-2">
             <GfNum value={result.unanswered} /> {result.unanswered === 1 ? 'fråga lämnades' : 'frågor lämnades'} obesvarad

@@ -147,6 +147,13 @@ export function formatTimeLeft(ms: number): string {
 const listeners = new Set<() => void>()
 const notify = () => listeners.forEach((l) => l())
 
+/**
+ * Used when the browser refuses to store anything (blocked storage), so an exam can still be
+ * started, answered and handed in during this visit. undefined = read localStorage.
+ */
+let memorySession: string | null | undefined
+let memoryHistory: string | null | undefined
+
 export function subscribeExam(listener: () => void): () => void {
   listeners.add(listener)
   const onStorage = (e: StorageEvent) => {
@@ -160,16 +167,20 @@ export function subscribeExam(listener: () => void): () => void {
 }
 
 export function saveExamSession(session: ExamSession): void {
+  const raw = JSON.stringify(session)
   try {
-    localStorage.setItem(SESSION_STORE, JSON.stringify(session))
+    localStorage.setItem(SESSION_STORE, raw)
+    memorySession = undefined
   } catch {
     // Blocked storage: the exam still runs in memory for this visit.
+    memorySession = raw
   }
   notify()
 }
 
 /** The saved exam as a string, so useSyncExternalStore compares it by value. */
 export function getExamSessionRaw(): string | null {
+  if (memorySession !== undefined) return memorySession
   try {
     return localStorage.getItem(SESSION_STORE)
   } catch {
@@ -200,6 +211,7 @@ export function parseExamSession(raw: string | null): ExamSession | undefined {
 }
 
 export function clearExamSession(): void {
+  if (memorySession !== undefined) memorySession = null
   try {
     localStorage.removeItem(SESSION_STORE)
   } catch {
@@ -210,7 +222,7 @@ export function clearExamSession(): void {
 
 export function getExamHistory(): ExamResult[] {
   try {
-    const parsed: unknown = JSON.parse(localStorage.getItem(HISTORY_STORE) ?? '[]')
+    const parsed: unknown = JSON.parse(getExamHistoryRaw() ?? '[]')
     return Array.isArray(parsed) ? (parsed as ExamResult[]) : []
   } catch {
     return []
@@ -219,15 +231,19 @@ export function getExamHistory(): ExamResult[] {
 
 /** Newest first, at most ten. */
 export function addExamResult(result: ExamResult): void {
+  const raw = JSON.stringify([result, ...getExamHistory()].slice(0, HISTORY_MAX))
   try {
-    localStorage.setItem(HISTORY_STORE, JSON.stringify([result, ...getExamHistory()].slice(0, HISTORY_MAX)))
+    localStorage.setItem(HISTORY_STORE, raw)
+    memoryHistory = undefined
   } catch {
-    // Blocked storage: the result still shows on screen.
+    // Blocked storage: keep the history for this visit.
+    memoryHistory = raw
   }
   notify()
 }
 
 export function getExamHistoryRaw(): string | null {
+  if (memoryHistory !== undefined) return memoryHistory
   try {
     return localStorage.getItem(HISTORY_STORE)
   } catch {
@@ -237,6 +253,8 @@ export function getExamHistoryRaw(): string | null {
 
 /** Removes the running exam and the result history (used by "clear everything" on the privacy page). */
 export function clearExamData(): void {
+  memorySession = undefined
+  memoryHistory = undefined
   try {
     localStorage.removeItem(SESSION_STORE)
     localStorage.removeItem(HISTORY_STORE)

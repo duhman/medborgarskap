@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import type { PostHog } from 'posthog-js'
-import { hasAnalyticsConsent, subscribeAnalyticsConsent } from '../lib/analyticsConsent'
+import { hasAnalyticsConsent, purgeAnalyticsStorage, subscribeAnalyticsConsent } from '../lib/analyticsConsent'
 
 type AnalyticsProviderProps = {
   children: ReactNode
@@ -82,9 +82,16 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     let cancelled = false
     const apply = () => {
       if (!hasAnalyticsConsent()) {
-        posthog?.opt_out_capturing()
+        if (posthog) {
+          posthog.opt_out_capturing()
+          // Opting out writes PostHog's own flag to localStorage after the choice was saved, so
+          // purge again: a no leaves nothing from PostHog behind (before_send still drops events).
+          purgeAnalyticsStorage()
+        }
       } else if (posthog) {
-        if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing({ captureEventName: false })
+        // Not has_opted_out_capturing(): the purge above removed the flag it reads, so after a no
+        // PostHog would look opted in while its persistence is still switched off.
+        posthog.opt_in_capturing({ captureEventName: false })
       } else {
         initPostHog()
           .then((client) => {

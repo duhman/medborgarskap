@@ -49,7 +49,7 @@ function ClearProgress() {
         Rensa mina sparade uppgifter
       </button>
       <p role="status" className="text-ink-2">
-        {cleared ? 'Klart. Dina framsteg, svar, repetitionshistorik, provresultat och studieplan är borttagna från den här webbläsaren.' : ''}
+        {cleared ? 'Klart. Dina framsteg, svar, repetitionshistorik, provresultat, studieplan och valet att visa engelska förklaringar är borttagna från den här webbläsaren.' : ''}
       </p>
     </div>
   )

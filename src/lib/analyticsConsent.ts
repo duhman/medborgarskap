@@ -34,7 +34,8 @@ export function hasAnalyticsConsent(): boolean {
 export function purgeAnalyticsStorage(): void {
   try {
     for (const key of Object.keys(localStorage)) {
-      if (/^ph_.+_posthog$/.test(key) || key === '__ph_opt_in_out') localStorage.removeItem(key)
+      // posthog-js names its opt-out flag after the project key: __ph_opt_in_out_<key>.
+      if (/^ph_.+_posthog$/.test(key) || key.startsWith('__ph_opt_in_out')) localStorage.removeItem(key)
     }
   } catch {
     // Blocked storage: nothing was saved.

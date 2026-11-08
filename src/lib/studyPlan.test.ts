@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { chapterMetaList } from '../content/chapters/meta'
-import { addDays, buildPlan, currentWeek, reviewWeeks, weeksUntil } from './studyPlan'
+import { addDays, buildPlan, currentWeek, planEnded, reviewWeeks, weeksUntil } from './studyPlan'
 
 describe('study plan', () => {
   it.each([1, 2, 3, 4, 8, 12, 16, 22, 30])('covers every chapter once, in order, in %i weeks', (weeks) => {
@@ -29,5 +29,13 @@ describe('study plan', () => {
     expect(currentWeek(s, '2027-06-01')).toBe(8)
     expect(weeksUntil('2026-10-25', '2027-04-01')).toBe(22)
     expect(addDays('2026-12-30', 3)).toBe('2027-01-02')
+  })
+
+  it('knows when the plan is over', () => {
+    const s = { start: '2026-10-26', weeks: 4 }
+    expect(planEnded(s, '2026-10-26')).toBe(false)
+    expect(planEnded(s, '2026-11-22')).toBe(false)
+    expect(planEnded(s, '2026-11-23')).toBe(true)
+    expect(planEnded(s, '2027-01-01')).toBe(true)
   })
 })
