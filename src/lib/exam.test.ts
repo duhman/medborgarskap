@@ -1,8 +1,9 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { QuizQuestion } from '../content/types'
 import { seededRandom } from './quiz'
 import {
   addExamResult,
+  clearExamData,
   clearExamSession,
   examMinutes,
   formatTimeLeft,
@@ -138,6 +139,27 @@ describe('exam session and history', () => {
 
   it('returns an empty history for broken data', () => {
     localStorage.setItem('medborgarskap-exam-history-v1', '{"not":"a list"}')
+    expect(getExamHistory()).toEqual([])
+  })
+
+  it('keeps the exam and its history in memory when the browser blocks storage', () => {
+    const blocked = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('blocked', 'SecurityError')
+    })
+    try {
+      const session = { ids: ['k1-q1'], answers: {}, index: 0, startedAt: '2026-11-08T09:00:00.000Z', deadline: null }
+      saveExamSession(session)
+      expect(parseExamSession(getExamSessionRaw())).toEqual(session)
+      saveExamSession({ ...session, index: 1 })
+      expect(parseExamSession(getExamSessionRaw())?.index).toBe(1)
+      addExamResult({ finishedAt: '2026-11-08', score: 3, total: 20, timed: false })
+      expect(getExamHistory()).toHaveLength(1)
+      clearExamSession()
+      expect(getExamSessionRaw()).toBeNull()
+    } finally {
+      blocked.mockRestore()
+      clearExamData()
+    }
     expect(getExamHistory()).toEqual([])
   })
 })

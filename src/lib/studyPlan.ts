@@ -73,3 +73,8 @@ export function weeksUntil(today: string, day: string): number {
 export function addDays(day: string, n: number): string {
   return new Date(Date.parse(`${day}T00:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10)
 }
+
+/** Whether the plan's last week is over on `today` (the day after its last day or later). */
+export function planEnded(settings: StudyPlanSettings, today: string): boolean {
+  return today >= addDays(settings.start, settings.weeks * 7)
+}

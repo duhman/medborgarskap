@@ -14,6 +14,7 @@ import {
   type QuizSession,
 } from '../lib/progress'
 import { reportErrorLinks } from '../lib/report'
+import { readShowEn, subscribeShowEn, writeShowEn } from '../lib/showEn'
 import { BookmarkButton } from './BookmarkButton'
 import { GfNum } from './GfNum'
 import { ListenButton } from './ListenButton'
@@ -44,37 +45,6 @@ const LETTERS = 'ABCD'
 
 /** Meter blocks get too thin past this many questions; use a plain bar instead. */
 const MAX_METER_BLOCKS = 20
-
-/** Remembers in this browser that the visitor wants the English explanations open. */
-const SHOW_EN_KEY = 'medborgarskap-show-en'
-
-const showEnListeners = new Set<() => void>()
-/** Used when storage is blocked, so the choice still lasts for this visit. */
-let showEnMemory: boolean | undefined
-
-function subscribeShowEn(listener: () => void): () => void {
-  showEnListeners.add(listener)
-  return () => showEnListeners.delete(listener)
-}
-
-function readShowEn(): boolean {
-  if (showEnMemory !== undefined) return showEnMemory
-  try {
-    return localStorage.getItem(SHOW_EN_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
-function writeShowEn(value: boolean): void {
-  try {
-    localStorage.setItem(SHOW_EN_KEY, value ? '1' : '0')
-    showEnMemory = undefined
-  } catch {
-    showEnMemory = value
-  }
-  showEnListeners.forEach((listener) => listener())
-}
 
 /** A second click on the same spot right after "Nästa fråga" should not warn about a missing answer. */
 const ADVANCE_GUARD_MS = 400
@@ -329,12 +299,15 @@ export function QuizRunner({
   const report = reportErrorLinks(q)
   const isLast = index + 1 === total
   const session = parseQuizSession(savedSession)
-  // Offer to continue only before this visit has answered anything.
+  // Offer to continue only before this visit has answered or picked anything. A run saved by
+  // another tab must not replace a question this tab is in the middle of answering.
   const resume =
     session &&
     attempt === 0 &&
     index === 0 &&
     !checked &&
+    selected === undefined &&
+    !hint &&
     session.index > 0 &&
     session.index < total &&
     Object.keys(session.answers).every((id) => questions.some((x) => x.id === id))

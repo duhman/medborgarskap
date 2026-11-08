@@ -365,6 +365,23 @@ async function checkFlows(browser, name) {
   await page.getByRole('button', { name: /^Ta bort/ }).click()
   if (!(await page.getByText(/Du har inga sparade frågor/).count())) fail(`${name}: saved question not removed`)
 
+  // Removing the bookmark during a saved-questions round keeps the round's question (it used to
+  // swap the question under the feedback and crash on the last one).
+  await page.goto(BASE_URL + '/ovning/landet-sverige', { waitUntil: 'networkidle' })
+  const restart = page.getByRole('button', { name: 'Börja från början' })
+  if (await restart.count()) await restart.click()
+  await answerCurrent(page, 0)
+  await page.getByRole('button', { name: 'Spara frågan' }).click()
+  await page.goto(BASE_URL + '/ovning/sparade', { waitUntil: 'networkidle' })
+  await page.getByRole('button', { name: 'Öva de sparade frågorna' }).click()
+  await page.getByRole('button', { name: 'Hoppa över' }).click()
+  await page.getByRole('button', { name: 'Sparad, ta bort' }).click()
+  if (!(await page.getByText(/Fråga 1 av 1/).count())) fail(`${name}: removing a bookmark mid-round changed the round`)
+  await page.getByRole('button', { name: 'Visa resultat' }).click()
+  if (!(await page.getByRole('heading', { name: /av 1 rätt/ }).count())) fail(`${name}: saved round shows no result after removing its bookmark`)
+  await page.getByRole('button', { name: 'Öva de sparade igen' }).click()
+  if (!(await page.getByText(/Du har inga sparade frågor/).count())) fail(`${name}: retry after removing the last bookmark should show the empty list`)
+
   // Exam simulation: 20 questions with the clock, one answer, a reload keeps the clock and the
   // answer, then hand in early and see a result per chapter without a pass mark.
   await page.goto(BASE_URL + '/ovning/prov', { waitUntil: 'networkidle' })

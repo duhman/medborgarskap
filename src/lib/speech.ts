@@ -17,6 +17,11 @@ export function swedishVoice(voices: readonly SpeechSynthesisVoice[]): SpeechSyn
 
 const listeners = new Set<() => void>()
 let current: string | null = null
+/**
+ * Counts reading runs. cancel() ends the old utterances asynchronously, so their end event can
+ * arrive after a new run of the same text has started; only the newest run may clear `current`.
+ */
+let run = 0
 
 function notify() {
   listeners.forEach((l) => l())
@@ -52,6 +57,7 @@ export function useSpeakingId(): string | null {
 /** Stops reading. With an id, only if that is what is being read. */
 export function stopSpeaking(id?: string): void {
   if (id !== undefined && current !== id) return
+  run += 1
   synth()?.cancel()
   if (current !== null) {
     current = null
@@ -66,6 +72,7 @@ export function speak(id: string, parts: readonly string[]): void {
   const voice = swedishVoice(s.getVoices())
   if (!voice) return
   s.cancel()
+  const thisRun = ++run
   current = id
   notify()
   parts.forEach((text, i) => {
@@ -75,7 +82,7 @@ export function speak(id: string, parts: readonly string[]): void {
     u.rate = 0.9
     if (i === parts.length - 1) {
       u.onend = u.onerror = () => {
-        if (current === id) {
+        if (run === thisRun) {
           current = null
           notify()
         }
@@ -83,4 +90,9 @@ export function speak(id: string, parts: readonly string[]): void {
     }
     s.speak(u)
   })
+}
+
+/** Test helper: the id being read now. */
+export function getSpeakingIdForTests(): string | null {
+  return current
 }

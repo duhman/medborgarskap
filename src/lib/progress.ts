@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import { clearExamData } from './exam'
+import { clearShowEn } from './showEn'
 import type { StudyPlanSettings } from './studyPlan'
 
 const STORAGE_KEY = 'medborgarskap-progress-v1'
@@ -314,6 +315,7 @@ export function clearQuizSession(slug: string): void {
 export function clearAllProgress(): void {
   memoryFallback = undefined
   clearExamData()
+  clearShowEn()
   try {
     for (const key of Object.keys(localStorage)) {
       if (key === STORAGE_KEY || key.startsWith(SESSION_PREFIX)) localStorage.removeItem(key)

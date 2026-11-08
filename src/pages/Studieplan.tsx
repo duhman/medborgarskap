@@ -9,6 +9,7 @@ import {
   buildPlan,
   currentWeek,
   PLAN_WEEK_CHOICES,
+  planEnded,
   weeksUntil,
   type StudyPlanSettings,
 } from '../lib/studyPlan'
@@ -93,7 +94,10 @@ type PlanProps = {
 
 function Plan({ plan, progress, headingRef }: PlanProps) {
   const weeks = buildPlan(getAllChapters(), plan.weeks)
-  const now = currentWeek(plan, localDay())
+  const today = localDay()
+  const ended = planEnded(plan, today)
+  // After the last week no week is "now"; the plan is over until the visitor makes a new one.
+  const now = ended ? plan.weeks + 1 : currentWeek(plan, today)
   const practised = new Set(progress.quizResults.map((r) => r.slug))
   const visited = new Set(progress.visitedChapters)
   const behind = weeks
@@ -106,11 +110,22 @@ function Plan({ plan, progress, headingRef }: PlanProps) {
     <>
       <section aria-labelledby="plan-heading" className="surface-raised space-y-3 p-5 sm:p-6">
         <h2 id="plan-heading" ref={headingRef} tabIndex={-1} className="text-lg font-semibold outline-none">
-          Vecka <GfNum value={now} /> av <GfNum value={plan.weeks} />
+          {ended ? (
+            'Planen är slut'
+          ) : (
+            <>
+              Vecka <GfNum value={now} /> av <GfNum value={plan.weeks} />
+            </>
+          )}
         </h2>
         <p>
           <GfNum value={done} /> av 13 kapitel övade.{' '}
-          {behind > 0 ? (
+          {ended ? (
+            <>
+              Den sista veckan slutade {formatDay(addDays(plan.start, plan.weeks * 7 - 1))}. Gör en ny plan längst ner om du
+              vill fortsätta plugga.
+            </>
+          ) : behind > 0 ? (
             <>
               Du har <GfNum value={behind} /> kapitel kvar från tidigare
               veckor.
@@ -179,7 +194,12 @@ function Plan({ plan, progress, headingRef }: PlanProps) {
         })}
       </ol>
 
-      <button type="button" onClick={() => saveStudyPlan(undefined)} className="mb-link-quiet inline-flex min-h-11 items-center">
+      <button
+        type="button"
+        onClick={() => {
+          if (window.confirm('Vill du ta bort planen och göra en ny?')) saveStudyPlan(undefined)
+        }}
+        className="mb-link-quiet inline-flex min-h-11 items-center">
         Gör en ny plan
       </button>
     </>
