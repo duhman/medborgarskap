@@ -52,17 +52,24 @@ export function OvningProv() {
   }
 
   function submit(s: ExamSession, questions: QuizQuestion[], byClock: boolean) {
-    // Another tab with the same exam may have handed it in already (both clocks reach zero at
-    // once). Then it has saved the result and the answers; this tab only shows them.
-    const stillRunning = parseExamSession(getExamSessionRaw())?.startedAt === s.startedAt
-    if (stillRunning) {
+    // Another tab with the same exam may hand it in at the same moment (both clocks reach zero
+    // together). Only the tab that still finds the session saves the result and the answers;
+    // the check, the writes and the removal run under one cross-tab lock where the browser has
+    // the Web Locks API.
+    const handIn = () => {
+      if (parseExamSession(getExamSessionRaw())?.startedAt !== s.startedAt) return
       const { score } = scoreExam(questions, s.answers)
       addExamResult({ finishedAt: new Date().toISOString(), score, total: questions.length, timed: s.deadline !== null })
       // Right and wrong answers feed the mistakes list and smart practice, like other rounds.
       recordAnswers(questions.map((q) => ({ id: q.id, correct: s.answers[q.id] === undefined ? null : s.answers[q.id] === q.correctOptionId })))
+      clearExamSession()
     }
     setFinished({ questions, answers: s.answers, byClock })
-    if (stillRunning) clearExamSession()
+    if (typeof navigator !== 'undefined' && navigator.locks) {
+      void navigator.locks.request('medborgarskap-exam-hand-in', handIn).catch(handIn)
+    } else {
+      handIn()
+    }
   }
 
   return (

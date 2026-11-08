@@ -1,11 +1,10 @@
 import { useSyncExternalStore } from 'react'
 import { clearExamData } from './exam'
+import { clearShowEn } from './showEn'
 import type { StudyPlanSettings } from './studyPlan'
 
 const STORAGE_KEY = 'medborgarskap-progress-v1'
 const SESSION_PREFIX = 'medborgarskap-quiz-v1:'
-/** The "show English explanations" choice, written by QuizRunner. Cleared with everything else. */
-export const SHOW_EN_KEY = 'medborgarskap-show-en'
 
 export type QuizResult = {
   slug: string
@@ -316,9 +315,10 @@ export function clearQuizSession(slug: string): void {
 export function clearAllProgress(): void {
   memoryFallback = undefined
   clearExamData()
+  clearShowEn()
   try {
     for (const key of Object.keys(localStorage)) {
-      if (key === STORAGE_KEY || key === SHOW_EN_KEY || key.startsWith(SESSION_PREFIX)) localStorage.removeItem(key)
+      if (key === STORAGE_KEY || key.startsWith(SESSION_PREFIX)) localStorage.removeItem(key)
     }
   } catch {
     // Blocked storage: nothing was saved.

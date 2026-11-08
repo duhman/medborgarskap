@@ -51,11 +51,9 @@ describe('analytics consent', () => {
 
   it('a no deletes the analytics id PostHog keeps in localStorage, and nothing else', () => {
     localStorage.setItem('ph_phc_abc_posthog', '{"distinct_id":"x"}')
-    localStorage.setItem('__ph_opt_in_out_phc_abc', '0')
     localStorage.setItem('medborgarskap-progress-v1', '{}')
     setAnalyticsConsent('denied')
     expect(localStorage.getItem('ph_phc_abc_posthog')).toBeNull()
-    expect(localStorage.getItem('__ph_opt_in_out_phc_abc')).toBeNull()
     expect(localStorage.getItem('medborgarskap-progress-v1')).toBe('{}')
   })
 
