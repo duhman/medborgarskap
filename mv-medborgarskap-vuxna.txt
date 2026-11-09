@@ -4,7 +4,8 @@ Lyssna
 Viktigt att veta
 Ansök
 Krav för att bli svensk medborgare
-För att du ska kunna bli svensk medborgare efter det att du har fyllt 18 år måste du uppfylla vissa krav. Följande krav måste vara uppfyllda innan du ansöker.
+För att du ska kunna bli svensk medborgare efter det att du har fyllt 18 år måste du uppfylla vissa krav. Observera: Om du ansöker utan att uppfylla kraven, kan Migrationsverket komma att avslå ansökan direkt.
+Följande krav måste vara uppfyllda innan du ansöker.
 Du ska ha något av följande:
 permanent uppehållstillstånd
 uppehållsstatus
@@ -116,14 +117,23 @@ Du ska visa att du har kunskaper om det svenska samhället genom godkänt betyg 
 årskurs 9 i grundskolan eller anpassade grundskolan eller från specialskolans årskurs 9–10
 gymnasieskolan, anpassade gymnasieskolan eller folkhögskolestudier på gymnasial nivå
 kommunal vuxenutbildning, Komvux.
+Om du läser en kurs i samhällskunskap eller samhällsorienterade ämnen på Komvux som lägst motsvarar grundskolenivå för årskurs nio så är det tillräckligt för att nå upp till kunskapskravet. Om du har studerat på folkhögskola krävs en kurs på gymnasial nivå.
+Detta innebär att godkända betyg på någon av nedanstående, nuvarande kurser på Komvux uppfyller kraven på kunskaper om det svenska samhället:
+Grundläggande kurs i samhällsorienterande ämnen – inledande kurs
+Grundläggande kurs i samhällsorienterande ämnen – fortsättningskurs
+Samhällskunskap – grundläggande nivå
+Samhällskunskap nivå 1a1
+Samhällskunskap nivå 1a2
+Samhällskunskap nivå 1b
+Samhällskunskap nivå 2b
 Medborgarskapsprov i svenska
-Om du inte kan visa att du har tillräckliga kunskaper i svenska genom godkända meriter, kan du få göra ett medborgarskapsprov i svenska.
-Provet i svenska kan införas senare än planerat. Kravet på kunskaper i svenska finns kvar, men tills vidare kan du visa dina kunskaper på andra sätt, till exempel genom att ha godkänt
+Det finns för tillfället inget medborgarskapsprov i svenska och det kommer att dröja några år innan ett sådant finns på plats. Vi publicerar information här om när det blir möjligt att göra provet i svenska.
+Kravet på kunskaper i svenska finns kvar och tills vidare kan du visa dina kunskaper på andra sätt, till exempel genom att ha godkänt
 betyg i svenska eller svenska som andraspråk från kommunal vuxenutbildning
 betyg i den högsta kursen i svenska för invandrare (sfi)
 resultat på Tisus, ett kunskapsprov som prövar de kunskaper i svenska som krävs för högskolestudier i Sverige.
-Under övergångsperioden kan du också visa dina kunskaper genom resultat från ett annat kunskapsprov i svenska som med hög grad av säkerhet visar att du har kunskaper på funktionell nivå, till exempel Swedex. Från och med 31 december 2026 kommer det inte längre vara möjligt att göra ett Swedex-test. Migrationsverket kommer att informera om det går att använda ett annat prov istället för Swedex under 2027.
-Mer information om vilka meriter som godtas finns ovan. Vi publicerar information om när du kan göra provet i svenska.
+Under en övergångsperiod kan du också visa dina kunskaper genom resultat från ett annat kunskapsprov i svenska som med hög grad av säkerhet visar att du har kunskaper på funktionell nivå, till exempel Swedex. Från och med 31 december 2026 kommer det inte längre vara möjligt att göra ett Swedex-test.
+Mer information om vilka meriter som godtas finns ovan.
 Medborgarskapsprov om det svenska samhället
 Om du inte kan visa att du har tillräckliga kunskaper om det svenska samhället genom godkända meriter kan du behöva göra ett medborgarskapsprov om det svenska samhället.
 Det första provet om det svenska samhället genomfördes i augusti 2026. Nya provtillfällen planeras.
