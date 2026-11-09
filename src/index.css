@@ -298,9 +298,19 @@
     touch-action: manipulation;
   }
 
-  /* A long press on a control should not select its label. Content text stays selectable. */
-  button,
-  summary {
+  /*
+   * Links lost the browser's tap flash above, so they dim while pressed instead. Buttons and
+   * answer rows have their own :active state.
+   */
+  a:not(.mb-btn):active {
+    opacity: 0.6;
+  }
+
+  /*
+   * A long press on a button should not select its label. Summaries stay selectable: the exam
+   * status row holds the next sitting date, which people copy.
+   */
+  button {
     -webkit-user-select: none;
     user-select: none;
   }

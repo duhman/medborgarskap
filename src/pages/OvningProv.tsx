@@ -391,7 +391,9 @@ function Result({ questions, answers, byClock, onAgain }: ResultProps) {
   const missed = questions.filter((x) => answers[x.id] !== x.correctOptionId)
   const headingRef = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
-    headingRef.current?.focus()
+    // Focus scrolls with the page's smooth scroll otherwise; the result should simply be there.
+    headingRef.current?.focus({ preventScroll: true })
+    headingRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
   }, [])
 
   return (

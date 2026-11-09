@@ -87,7 +87,15 @@ export function QuizRunner({
   useEffect(() => {
     const target = focusTarget.current
     focusTarget.current = null
-    if (target === 'feedback') feedbackRef.current?.focus()
+    if (target === 'feedback') {
+      // Same as below: no smooth scroll on an action repeated every question.
+      const el = feedbackRef.current
+      el?.focus({ preventScroll: true })
+      // Like focus's own "center if needed", minus the sticky answer bar on phones.
+      if (el && el.getBoundingClientRect().top > window.innerHeight - 120) {
+        el.scrollIntoView({ block: 'center', behavior: 'instant' })
+      }
+    }
     if (target === 'counter' || target === 'result') {
       // The new question or the result starts at the top of the runner, so show it from there.
       // Focusing alone left the counter above the viewport after a long explanation.
@@ -423,8 +431,8 @@ export function QuizRunner({
                 {/* On a phone the tag sits above the text, so long answers keep their width. */}
                 <span className="flex flex-1 flex-col-reverse gap-1 sm:flex-row sm:items-center sm:gap-3">
                   <span className="flex-1">{opt.text}</span>
-                  {checked && isAnswer && <span className="mb-choice__tag mb-enter">Rätt svar</span>}
-                  {checked && isChosen && !isAnswer && <span className="mb-choice__tag mb-enter">Ditt svar</span>}
+                  {checked && isAnswer && <span className={`mb-choice__tag ${ogPreview ? '' : 'mb-enter'}`}>Rätt svar</span>}
+                  {checked && isChosen && !isAnswer && <span className={`mb-choice__tag ${ogPreview ? '' : 'mb-enter'}`}>Ditt svar</span>}
                 </span>
               </label>
             )
