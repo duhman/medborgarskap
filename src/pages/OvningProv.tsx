@@ -203,7 +203,7 @@ function Running({ session, questions, onSubmit, onExpire, onAbort }: RunningPro
     if (focusHeading.current) {
       focusHeading.current = false
       headingRef.current?.focus({ preventScroll: true })
-      headingRef.current?.scrollIntoView({ block: 'start' })
+      headingRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
     }
   })
 
@@ -235,7 +235,7 @@ function Running({ session, questions, onSubmit, onExpire, onAbort }: RunningPro
         <Clock deadline={session.deadline} onExpire={onExpire} />
       </div>
       <div aria-hidden="true" className="h-2.5 bg-[var(--line)]">
-        <div className="h-full bg-accent transition-[width] duration-200" style={{ width: `${(answered / total) * 100}%` }} />
+        <div className="mb-fill" style={{ transform: `scaleX(${answered / total})` }} />
       </div>
 
       <fieldset key={q.id} className="surface-raised space-y-2 p-4 sm:p-5">

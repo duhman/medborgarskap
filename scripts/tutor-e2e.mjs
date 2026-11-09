@@ -36,6 +36,8 @@ async function startQuestion(page) {
 }
 
 async function assertAccessible(page, label) {
+  // Revealed content fades in (.mb-enter); axe would measure contrast on a half-faded frame.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((animation) => animation.finished)))
   const result = await new AxeBuilder({ page }).include('main').analyze()
   assert.deepEqual(result.violations.map((violation) => ({ id: violation.id, targets: violation.nodes.map((node) => node.target) })), [], `${label}: accessibility violations`)
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${label}: horizontal overflow`)

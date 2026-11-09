@@ -34,9 +34,14 @@ export function OvningQuiz() {
             <span>
               Alla frågor i övningen (<GfNum value={chapter.questions.length} />)
             </span>
-            <span aria-hidden="true" className="text-ink-3 transition-transform duration-150 group-open:rotate-180">
-              ▾
-            </span>
+            {/* Same chevron as the other open-close rows on the site. */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 12 12"
+              className="size-3 shrink-0 text-ink-3 transition-transform duration-150 group-open:rotate-180"
+            >
+              <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
           </summary>
           <ol className="list-decimal space-y-1 pb-2 pl-6 text-[0.9375rem] text-ink-2 marker:font-mono marker:text-ink-3">
             {chapter.questions.map((q) => (

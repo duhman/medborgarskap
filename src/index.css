@@ -52,6 +52,9 @@
   --radius-md: var(--radius-control);
   --radius-lg: var(--radius-control);
   --radius-xl: var(--radius-control);
+  /* Tailwind transition-* utilities use the Grundform motion tokens, not Tailwind's softer default curve. */
+  --default-transition-duration: var(--dur-quick);
+  --default-transition-timing-function: var(--ease-out);
 }
 
 @layer components {
@@ -98,20 +101,26 @@
     color: var(--site-accent-on);
   }
 
-  .mb-btn--primary:hover {
-    background-color: var(--site-accent-deep);
-    border-color: var(--site-accent-deep);
-    color: var(--site-accent-on);
+  /*
+   * Hover only where a real pointer hovers. On a phone a tap leaves :hover stuck on the
+   * button until the next tap elsewhere; press feedback comes from :active instead.
+   */
+  @media (hover: hover) and (pointer: fine) {
+    .mb-btn--primary:hover {
+      background-color: var(--site-accent-deep);
+      border-color: var(--site-accent-deep);
+      color: var(--site-accent-on);
+    }
+
+    .mb-btn--secondary:hover {
+      background-color: var(--bg-sunk);
+      color: var(--ink);
+    }
   }
 
   .mb-btn--secondary {
     background-color: var(--bg-raised);
     border-color: var(--ink);
-    color: var(--ink);
-  }
-
-  .mb-btn--secondary:hover {
-    background-color: var(--bg-sunk);
     color: var(--ink);
   }
 
@@ -135,13 +144,22 @@
     background-color: var(--bg-raised);
     cursor: pointer;
     transition:
+      transform var(--dur-instant) var(--ease-out),
       border-color var(--dur-quick) var(--ease-out),
       background-color var(--dur-quick) var(--ease-out);
   }
 
-  .mb-choice:where(:not(.mb-choice--correct):not(.mb-choice--wrong):not(.mb-choice--muted)):hover {
-    border-color: var(--ink-2);
-    background-color: var(--bg-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .mb-choice:where(:not(.mb-choice--correct):not(.mb-choice--wrong):not(.mb-choice--muted)):hover {
+      border-color: var(--ink-2);
+      background-color: var(--bg-raised);
+    }
+  }
+
+  /* The row answers the finger the moment it lands, before the radio changes on release. */
+  .mb-choice:where(:not(.mb-choice--correct):not(.mb-choice--wrong):not(.mb-choice--muted)):active {
+    transform: scale(0.99);
+    background-color: var(--bg-sunk);
   }
 
   .mb-choice:has(input:checked) {
@@ -211,6 +229,32 @@
     color: var(--ink);
   }
 
+  /*
+   * Content that appears because the visitor acted (quiz feedback, a revealed word, an opened
+   * section) rises 4 px into place instead of popping in. One short entrance per container,
+   * no stagger: these show tens of times in a study session. Under reduced motion Grundform
+   * cuts every animation to 1 ms, so the content just appears.
+   */
+  .mb-enter,
+  details[open] > :not(summary) {
+    animation: mb-rise var(--dur-base) var(--ease-out) both;
+  }
+
+  @keyframes mb-rise {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  /* Fill bars grow with transform, not width, so a step never re-lays out the page. */
+  .mb-fill {
+    height: 100%;
+    background-color: var(--site-accent);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
   /* Mono section label with a 1 px ink rule below (Grundform section head). */
   .mb-section-head {
     padding-bottom: var(--space-2);
@@ -237,6 +281,39 @@
     }
   }
 
+  /*
+   * Phone polish: no grey flash over tapped controls (they have their own :active state),
+   * no font inflation in landscape, and no 300 ms double-tap wait on controls.
+   */
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  a,
+  button,
+  summary,
+  label,
+  [role='button'] {
+    touch-action: manipulation;
+  }
+
+  /* A long press on a control should not select its label. Content text stays selectable. */
+  button,
+  summary {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* iOS zooms into any field under 16 px and does not zoom back out. */
+  @media (pointer: coarse) {
+    input:not([type='radio']):not([type='checkbox']),
+    select,
+    textarea {
+      font-size: max(16px, 1em);
+    }
+  }
+
   .skip-link {
     position: fixed;
     top: 0.75rem;
@@ -254,7 +331,7 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: transform 150ms ease-out;
+    /* Shown by Tab, so it appears at once: keyboard actions are never animated. */
   }
 
   .skip-link:focus-visible {

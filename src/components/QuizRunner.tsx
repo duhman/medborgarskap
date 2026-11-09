@@ -91,7 +91,8 @@ export function QuizRunner({
     if (target === 'counter' || target === 'result') {
       // The new question or the result starts at the top of the runner, so show it from there.
       // Focusing alone left the counter above the viewport after a long explanation.
-      rootRef.current?.scrollIntoView({ block: 'start' })
+      // Instant, not the page's smooth scroll: this runs on every question and often from Enter.
+      rootRef.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
       const el = target === 'counter' ? counterRef.current : resultRef.current
       el?.focus({ preventScroll: true })
     }
@@ -354,10 +355,7 @@ export function QuizRunner({
               <ProgressMeter value={index + (checked ? 1 : 0)} max={total} />
             ) : (
               <div aria-hidden="true" className="h-2.5 bg-[var(--line)]">
-                <div
-                  className="h-full bg-accent transition-[width] duration-200"
-                  style={{ width: `${((index + (checked ? 1 : 0)) / total) * 100}%` }}
-                />
+                <div className="mb-fill" style={{ transform: `scaleX(${(index + (checked ? 1 : 0)) / total})` }} />
               </div>
             )}
           </div>
@@ -425,8 +423,8 @@ export function QuizRunner({
                 {/* On a phone the tag sits above the text, so long answers keep their width. */}
                 <span className="flex flex-1 flex-col-reverse gap-1 sm:flex-row sm:items-center sm:gap-3">
                   <span className="flex-1">{opt.text}</span>
-                  {checked && isAnswer && <span className="mb-choice__tag">Rätt svar</span>}
-                  {checked && isChosen && !isAnswer && <span className="mb-choice__tag">Ditt svar</span>}
+                  {checked && isAnswer && <span className="mb-choice__tag mb-enter">Rätt svar</span>}
+                  {checked && isChosen && !isAnswer && <span className="mb-choice__tag mb-enter">Ditt svar</span>}
                 </span>
               </label>
             )
@@ -441,7 +439,7 @@ export function QuizRunner({
             className={
               ogPreview
                 ? 'space-y-2 border-t border-line-strong pt-2 outline-none'
-                : 'space-y-3 border-t border-line-strong pt-4 outline-none'
+                : 'mb-enter space-y-3 border-t border-line-strong pt-4 outline-none'
             }
           >
             <p className={`flex items-center gap-2 font-semibold ${ogPreview ? 'og-preview-feedback-title' : 'text-lg'}`}>
@@ -486,7 +484,7 @@ export function QuizRunner({
                   <span lang="en">&nbsp;(English)</span>
                 </button>
                 {showEn && (
-                  <p lang="en" className="text-ink-2">
+                  <p lang="en" className="mb-enter text-ink-2">
                     {q.explanationEn}
                   </p>
                 )}
@@ -500,7 +498,7 @@ export function QuizRunner({
         )}
 
         {hint && (
-          <p role="alert" className="text-[0.9375rem] text-[var(--error)]">
+          <p role="alert" className="mb-enter text-[0.9375rem] text-[var(--error)]">
             Välj ett svar först, eller hoppa över frågan.
           </p>
         )}

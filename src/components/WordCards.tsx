@@ -62,13 +62,13 @@ export function WordCards({ slug, terms }: { slug: string; terms: GlossaryTerm[]
           <ListenButton id={`${slug}:ord:${card.term}`} parts={[card.term]} label="Lyssna på ordet" />
           {round.shown ? (
             <>
-              <div aria-live="polite" className="space-y-1 border-t border-line-strong pt-4">
+              <div aria-live="polite" className="mb-enter space-y-1 border-t border-line-strong pt-4">
                 <p className="text-lg">{card.sv}</p>
                 <p lang="en" className="text-ink-2">
                   English: {card.en}
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="mb-enter grid grid-cols-2 gap-3">
                 <button type="button" onClick={() => answer(true)} className="mb-btn mb-btn--primary">
                   Jag kunde det
                 </button>
@@ -91,7 +91,7 @@ export function WordCards({ slug, terms }: { slug: string; terms: GlossaryTerm[]
           )}
         </div>
       ) : (
-        <div ref={cardRef} tabIndex={-1} className="surface-raised space-y-3 p-5 outline-none sm:p-6" role="status">
+        <div ref={cardRef} tabIndex={-1} className="mb-enter surface-raised space-y-3 p-5 outline-none sm:p-6" role="status">
           <p className="text-lg font-semibold">Bra! Du kan alla <GfNum value={terms.length} /> ord.</p>
           <button type="button" onClick={start} className="mb-btn mb-btn--secondary">
             Öva orden igen
