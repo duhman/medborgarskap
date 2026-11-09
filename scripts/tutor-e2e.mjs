@@ -36,6 +36,19 @@ async function startQuestion(page) {
 }
 
 async function assertAccessible(page, label) {
+  // Revealed content fades in (.mb-enter); axe would measure contrast on a half-faded frame.
+  // allSettled: a cancelled animation rejects; finite only and a 2 s cap, so a spinner can never hang the run.
+  await page.evaluate(() =>
+    Promise.race([
+      Promise.allSettled(
+        document
+          .getAnimations()
+          .filter((animation) => animation.effect?.getComputedTiming().iterations !== Infinity)
+          .map((animation) => animation.finished),
+      ),
+      new Promise((resolve) => setTimeout(resolve, 2000)),
+    ]),
+  )
   const result = await new AxeBuilder({ page }).include('main').analyze()
   assert.deepEqual(result.violations.map((violation) => ({ id: violation.id, targets: violation.nodes.map((node) => node.target) })), [], `${label}: accessibility violations`)
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${label}: horizontal overflow`)

@@ -378,7 +378,7 @@ export function TutorHelp({ chapterSlug, questionId, selectedOptionId, enabled =
       )}
 
       {state === 'result' && answer && (
-        <div className="space-y-3" aria-live="polite">
+        <div className="mb-enter space-y-3" aria-live="polite">
           <h3 ref={resultRef} tabIndex={-1} className="text-lg font-semibold outline-none">
             {answer.outcome === 'fallback' ? 'Den vanliga förklaringen' : 'AI-förklaring'}
           </h3>
