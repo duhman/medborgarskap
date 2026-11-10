@@ -1,7 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import type { PostHog } from 'posthog-js'
-import { hasAnalyticsConsent, subscribeAnalyticsConsent } from '../lib/analyticsConsent'
+import { analyticsConfigured, hasAnalyticsConsent, subscribeAnalyticsConsent } from '../lib/analyticsConsent'
+import { sanitizeAnalyticsCapture } from '../lib/analyticsPrivacy'
 
 type AnalyticsProviderProps = {
   children: ReactNode
@@ -21,7 +22,7 @@ async function initPostHog(): Promise<PostHog | null> {
   const key = import.meta.env.VITE_PUBLIC_POSTHOG_KEY
   const host = import.meta.env.VITE_PUBLIC_POSTHOG_HOST
 
-  if (!key || !host) {
+  if (!key || !host || !analyticsConfigured) {
     return null
   }
 
@@ -37,19 +38,28 @@ async function initPostHog(): Promise<PostHog | null> {
   }
   posthog.init(key, {
     api_host: host,
+    autocapture: false,
+    rageclick: false,
+    capture_dead_clicks: false,
     capture_pageview: false,
     capture_pageleave: true,
-    capture_performance: true,
+    capture_performance: { network_timing: false, web_vitals: true, web_vitals_attribution: false },
     // Uncaught errors and unhandled rejections, so a page that breaks for visitors shows up
     // somewhere (there is no other runtime log for a static site).
     capture_exceptions: true,
+    error_tracking: { captureExtensionExceptions: false, __capturePostHogExceptions: false },
+    person_profiles: 'never',
+    advanced_disable_feature_flags: true,
+    save_referrer: false,
+    disable_capture_url_hashes: true,
+    disableDeviceModel: true,
     disable_session_recording: true,
     disable_surveys: true,
     enable_heatmaps: false,
     // localStorage only: the privacy page promises no cookies.
     persistence: 'localStorage',
     // A last guard: drop anything captured after the visitor said no.
-    before_send: (event) => (hasAnalyticsConsent() ? event : null),
+    before_send: (event) => sanitizeAnalyticsCapture(event, hasAnalyticsConsent()),
   })
 
   return posthog
@@ -104,7 +114,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   useEffect(() => {
     if (!posthog) return
     posthog.capture('$pageview')
-  }, [posthog, location.pathname, location.search, location.hash])
+  }, [posthog, location.pathname])
 
   return children
 }

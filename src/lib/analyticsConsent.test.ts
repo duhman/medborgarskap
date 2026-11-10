@@ -4,6 +4,7 @@ import {
   purgeAnalyticsStorage,
   setAnalyticsConsent,
   subscribeAnalyticsConsent,
+  isAnalyticsRetentionConfigured,
 } from './analyticsConsent'
 
 beforeEach(() => {
@@ -11,6 +12,14 @@ beforeEach(() => {
 })
 
 describe('analytics consent', () => {
+  it('requires a bounded, explicit analytics retention period', () => {
+    expect(isAnalyticsRetentionConfigured(undefined)).toBe(false)
+    expect(isAnalyticsRetentionConfigured('0')).toBe(false)
+    expect(isAnalyticsRetentionConfigured('12')).toBe(true)
+    expect(isAnalyticsRetentionConfigured('85')).toBe(false)
+    expect(isAnalyticsRetentionConfigured('12 months')).toBe(false)
+  })
+
   it('is unset until the visitor chooses, and the choice is saved (localStorage)', () => {
     expect(getAnalyticsConsent()).toBeNull()
     setAnalyticsConsent('granted')

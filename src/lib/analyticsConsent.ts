@@ -74,9 +74,18 @@ export function subscribeAnalyticsConsent(listener: () => void): () => void {
   }
 }
 
-/** Whether this build sends statistics at all. Without a key there is nothing to ask about. */
+/** A deliberately declared, reviewable retention period is required before analytics can run. */
+export function isAnalyticsRetentionConfigured(value: string | undefined): boolean {
+  return value !== undefined && /^(?:[1-9]|[1-7][0-9]|8[0-4])$/.test(value)
+}
+
+export const analyticsRetentionMonths = Number(import.meta.env.VITE_PUBLIC_POSTHOG_RETENTION_MONTHS)
+
+/** Whether this build sends statistics at all. Missing retention configuration fails closed. */
 export const analyticsConfigured = Boolean(
-  import.meta.env.VITE_PUBLIC_POSTHOG_KEY && import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
+  import.meta.env.VITE_PUBLIC_POSTHOG_KEY &&
+    import.meta.env.VITE_PUBLIC_POSTHOG_HOST &&
+    isAnalyticsRetentionConfigured(import.meta.env.VITE_PUBLIC_POSTHOG_RETENTION_MONTHS),
 )
 
 /**
