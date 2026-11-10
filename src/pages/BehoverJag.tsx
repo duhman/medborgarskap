@@ -110,7 +110,8 @@ export function BehoverJag() {
           <p className="pb-1 text-[0.9375rem] text-ink-2">
             SFI gäller språkkravet, inte samhällskunskap. Godkänt betyg i den högsta kursen i SFI
             kan visa dina kunskaper i svenska, men ger inte undantag från provet i samhällskunskap.
-            Provet i svenska kan införas senare än planerat. Tills vidare visar du språket med till
+            Det finns för tillfället inget medborgarskapsprov i svenska. Enligt Migrationsverket
+            dröjer det några år innan ett sådant finns. Tills vidare visar du språket med till
             exempel betyg från komvux, högsta SFI-kursen eller Tisus.
           </p>
           <label className="mb-choice">

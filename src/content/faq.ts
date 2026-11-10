@@ -17,8 +17,6 @@ const UHR_RESULT =
   'https://www.uhr.se/om-uhr/nyheter/2026-nyheter/resultaten-fran-medborgarskapsprovet-i-samhallskunskap-klara/'
 const MV_VUXNA =
   'https://www.migrationsverket.se/du-vill-ansoka/svenskt-medborgarskap/medborgarskap-for-vuxna/medborgarskap-for-vuxna.html'
-const MV_SVENSKA_NYHET =
-  'https://www.migrationsverket.se/nyhetsarkiv/medborgarskapsprovetisvenskakanflyttasfram.5.15b2309e1a04e5ed2071cc5.html'
 
 const uhrOm: OfficialSource = { publisher: 'UHR', label: 'Om medborgarskapsprovet', url: UHR_OM, checkedAt: CHECKED }
 const uhrMaterial: OfficialSource = {
@@ -37,7 +35,7 @@ const mvVuxna: OfficialSource = {
   publisher: 'Migrationsverket',
   label: 'Medborgarskap för vuxna',
   url: MV_VUXNA,
-  checkedAt: '2026-10-30',
+  checkedAt: '2026-11-10',
 }
 
 /**
@@ -81,6 +79,7 @@ export const faqEntries: FaqEntry[] = [
     question: 'Kan jag visa kunskaper om samhället utan att skriva provet?',
     answer: [
       'Ja. Migrationsverket godtar ett godkänt betyg i samhällskunskap eller grundläggande samhällsorienterande ämnen från årskurs 9 i grundskolan, från gymnasieskolan eller folkhögskolestudier på gymnasial nivå, eller från kommunal vuxenutbildning (Komvux).',
+      'För Komvux räcker en kurs som minst motsvarar grundskolans årskurs 9. Migrationsverket räknar bland annat upp Grundläggande kurs i samhällsorienterande ämnen, Samhällskunskap - grundläggande nivå samt Samhällskunskap nivå 1a1, 1a2, 1b och 2b.',
       'SFI räknas för kravet på kunskaper i svenska, inte för kravet på kunskaper om samhället.',
     ],
     sources: [mvVuxna],
@@ -89,19 +88,12 @@ export const faqEntries: FaqEntry[] = [
     id: 'prov-i-svenska',
     question: 'Finns det ett prov i svenska också?',
     answer: [
-      'Kravet på kunskaper i svenska finns kvar, men provet i svenska kan införas senare än planerat. Tills vidare kan du visa kunskaperna på andra sätt, till exempel med godkänt betyg i den högsta kursen i SFI, godkänt betyg i svenska från Komvux eller godkänt resultat på Tisus.',
+      'Det finns för tillfället inget medborgarskapsprov i svenska. Migrationsverket skriver att det kommer att dröja några år innan ett sådant finns på plats. Kravet på kunskaper i svenska finns kvar.',
+      'Tills vidare kan du visa kunskaperna på andra sätt, till exempel med godkänt betyg i den högsta kursen i SFI, godkänt betyg i svenska från Komvux eller godkänt resultat på Tisus.',
       'Under övergångsperioden godtas också ett annat kunskapsprov som visar funktionell nivå, till exempel Swedex. Nivån som krävs är B1 för läs- och hörförståelse och A2 för muntlig och skriftlig färdighet.',
-      'Enligt Migrationsverket går det inte längre att göra ett Swedex-test från och med 31 december 2026. Migrationsverket ska informera om ett annat prov kan användas i stället under 2027.',
+      'Från och med 31 december 2026 kommer det inte längre vara möjligt att göra ett Swedex-test. Migrationsverkets aktuella sida anger ingen ersättare.',
     ],
-    sources: [
-      mvVuxna,
-      {
-        publisher: 'Migrationsverket',
-        label: 'Medborgarskapsprovet i svenska kan flyttas fram',
-        url: MV_SVENSKA_NYHET,
-        checkedAt: CHECKED,
-      },
-    ],
+    sources: [mvVuxna],
   },
   {
     id: 'andra-krav',
