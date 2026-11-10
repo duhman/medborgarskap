@@ -278,9 +278,17 @@ function reserveRateLimit(request: Request, now = Date.now()) {
   const source = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('origin') || 'anonymous'
   const bucket = rateBuckets.get(source)
   const fresh = !bucket || now - bucket.startedAt >= RATE_WINDOW_MS
-  const current = fresh ? { startedAt: now, count: 1 } : { startedAt: bucket.startedAt, count: bucket.count + 1 }
+  const current = fresh ? { startedAt: now, count: 0 } : bucket
+  current.count += 1
   if (fresh && rateBuckets.size >= MAX_RATE_SOURCES) rateBuckets.clear()
   rateBuckets.set(source, current)
+  // Expire identifying keys even if this source never makes another request.
+  if (fresh) {
+    const expiry = setTimeout(() => {
+      if (rateBuckets.get(source) === current) rateBuckets.delete(source)
+    }, RATE_WINDOW_MS)
+    expiry.unref()
+  }
   return current.count <= MAX_REQUESTS_PER_SOURCE
 }
 
@@ -300,7 +308,7 @@ function withSafetyHeaders(response: Response, corsOrigin?: string) {
 
 function createServer() {
   const server = new McpServer(
-    { name: 'provamedborgarskap', version: '1.0.1' },
+    { name: 'provamedborgarskap', version: '1.0.2' },
     {
       instructions:
         'Use only these public study chapters and FAQ entries. Cite the returned canonical page and source URLs. Distinguish official UHR or Migrationsverket sources from descriptions of the site features. The service is read-only and cannot access quiz answers, progress, accounts, or private data. It cannot decide personal eligibility for citizenship or the test.',

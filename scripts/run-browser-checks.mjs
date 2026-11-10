@@ -58,12 +58,15 @@ const env = {
 let failed = false
 const scripts = process.argv.includes('--tutor-only')
   ? ['scripts/tutor-e2e.mjs']
+  : process.argv.includes('--consent-only')
+    ? ['scripts/e2e-smoke.mjs']
   : ['scripts/check-search-visibility.mjs', 'scripts/a11y-axe.mjs', 'scripts/grundform-contrast.mjs', 'scripts/e2e-smoke.mjs', 'scripts/tutor-e2e.mjs']
 for (const script of scripts) {
   console.log(`\n> node ${script}`)
   // Async spawn: the static server above runs in this process and must keep answering.
   const code = await new Promise((resolve) => {
-    spawn(process.execPath, [script], { stdio: 'inherit', env }).on('exit', resolve)
+    const args = [script, ...(process.argv.includes('--consent-only') ? ['--consent-only'] : [])]
+    spawn(process.execPath, args, { stdio: 'inherit', env }).on('exit', resolve)
   })
   if (code !== 0) failed = true
 }

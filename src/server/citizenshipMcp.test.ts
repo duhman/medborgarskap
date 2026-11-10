@@ -1,6 +1,6 @@
 import { createServer } from 'node:http'
 import { Readable } from 'node:stream'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import mcpApi from '../../api/mcp.js'
 import {
   fetchInputSchema,
@@ -37,6 +37,23 @@ async function responseJson(response: Response) {
 }
 
 describe('Prova medborgarskap public MCP', () => {
+  it('actively expires identifying rate-limit records without waiting for another request', async () => {
+    const timers = vi.spyOn(globalThis, 'setTimeout')
+    const request = () => rpcRequest('ping', {}, { headers: { 'x-forwarded-for': '198.51.100.20' } })
+    try {
+      for (let i = 0; i < 60; i++) expect((await handleCitizenshipMcp(request())).status).toBe(200)
+      expect((await handleCitizenshipMcp(request())).status).toBe(429)
+      const expiry = timers.mock.calls.find(([, delay]) => delay === 60_000)?.[0]
+      expect(expiry).toBeTypeOf('function')
+      // Invoke the scheduled expiry without advancing Date.now: lazy window rollover would
+      // still deny this request, whereas deleting the identifying record releases it.
+      if (typeof expiry === 'function') expiry()
+      expect((await handleCitizenshipMcp(request())).status).toBe(200)
+    } finally {
+      timers.mockRestore()
+    }
+  })
+
   it('serves the Vercel adapter over a local HTTP request', async () => {
     const server = createServer(async (incoming, outgoing) => {
       const body = incoming.method === 'GET' || incoming.method === 'HEAD' ? undefined : Readable.toWeb(incoming)

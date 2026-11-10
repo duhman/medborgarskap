@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process'
 import { once } from 'node:events'
 import { chromium } from 'playwright'
+import { secureChromiumLaunchOptions } from './playwright-launch.mjs'
 
 const PORT = Number(process.env.A11Y_PORT ?? 4173)
 const BASE_URL = process.env.BASE_URL ?? `http://localhost:${PORT}`
@@ -73,7 +74,7 @@ async function run() {
   let browser
   try {
     await waitForServer(`${BASE_URL}/`)
-    browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {})
+    browser = await chromium.launch(secureChromiumLaunchOptions())
     const page = await browser.newPage()
     await page.goto(`${BASE_URL}/`, { waitUntil: 'load' })
     await page.waitForSelector(CTA_SELECTOR, { state: 'visible' })

@@ -10,6 +10,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import { extname, join, normalize } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
+import { secureChromiumLaunchOptions } from './playwright-launch.mjs'
 import sharp from 'sharp'
 import {
   compositeFrame,
@@ -96,7 +97,7 @@ async function main() {
   const server = await startServer()
   const base = `http://localhost:${PORT}`
 
-  const browser = await chromium.launch()
+  const browser = await chromium.launch(secureChromiumLaunchOptions())
   const context = await browser.newContext({
     viewport: { width: WIDTH, height: HEIGHT },
     deviceScaleFactor: 2,

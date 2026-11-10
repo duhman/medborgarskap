@@ -15,6 +15,7 @@
 import { mkdirSync } from 'node:fs'
 import { chromium, devices } from 'playwright'
 import { getA11yRoutes } from './a11y-routes.mjs'
+import { secureChromiumLaunchOptions } from './playwright-launch.mjs'
 
 const BASE_URL = process.env.BASE_URL ?? 'http://localhost:4173'
 const problems = []
@@ -441,13 +442,35 @@ const ANALYTICS_HOST = 'posthog.e2e.invalid'
  * VITE_PUBLIC_POSTHOG_HOST=https://posthog.e2e.invalid (npm run check:all does that).
  */
 async function checkConsent(browser, name) {
-  const context = await browser.newContext(viewports[name])
+  // PostHog deliberately suppresses automated-browser events. This test has a fake
+  // analytics endpoint and must exercise its consent path as a human browser without
+  // weakening that production bot filter.
+  const context = await browser.newContext({
+    ...viewports[name],
+    userAgent: name === 'mobile'
+      ? 'Mozilla/5.0 (Linux; Android 15; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Mobile Safari/537.36'
+      : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36',
+  })
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'webdriver', { configurable: true, get: () => undefined })
+  })
   let sent = 0
+  let configurationRequests = 0
+  let eventRequests = 0
+  const requests = []
+  const diagnostics = []
   await context.route(`https://${ANALYTICS_HOST}/**`, (route) => {
     sent += 1
+    const request = route.request()
+    requests.push(`${request.method()} ${new URL(request.url()).pathname}`)
+    if (/^\/(flags|decide)(\/|$)/.test(new URL(request.url()).pathname)) configurationRequests += 1
+    else if (request.method() === 'POST') eventRequests += 1
     return route.fulfill({ status: 200, contentType: 'application/json', body: '{}' })
   })
   const page = await context.newPage()
+  page.on('console', (message) => {
+    if (message.type() === 'warning' || message.type() === 'error') diagnostics.push(message.text())
+  })
   const quiet = () => page.waitForTimeout(4500) // past the idle-callback start (3 s timeout)
 
   await page.goto(BASE_URL + '/', { waitUntil: 'networkidle' })
@@ -469,11 +492,21 @@ async function checkConsent(browser, name) {
   if (sent !== 0) fail(`${name} consent: ${sent} analytics requests after no`)
 
   // Yes on the privacy page starts sending without a reload.
-  await page.goto(BASE_URL + '/integritet', { waitUntil: 'networkidle' })
+  await page.goto(BASE_URL + '/integritet?utm_source=PRIVATE_CAMPAIGN#PRIVATE_FRAGMENT', { waitUntil: 'networkidle' })
   await page.getByLabel('Ja, skicka statistik').check()
-  await page.waitForFunction(() => Object.keys(localStorage).some((k) => /^ph_.+_posthog$/.test(k)), null, { timeout: 10_000 }).catch(() => null)
-  await quiet()
-  if (sent === 0) fail(`${name} consent: no analytics requests after yes`)
+  const eventDeadline = Date.now() + 10_000
+  while (eventRequests === 0 && Date.now() < eventDeadline) await page.waitForTimeout(100)
+  if (eventRequests === 0) fail(`${name} consent: no analytics events after yes; requests=${JSON.stringify(requests)}; diagnostics=${JSON.stringify(diagnostics.slice(0, 5))}`)
+  if (configurationRequests !== 0) fail(`${name} consent: SDK configuration requests bypassed the event privacy filter`)
+  const sdkStorage = await page.evaluate(() => ({
+    local: Object.keys(localStorage).filter((key) => /^ph_.+_posthog$/.test(key) || key === '__ph_opt_in_out'),
+    session: Object.keys(sessionStorage).filter((key) => key.startsWith('ph_')),
+  }))
+  if (sdkStorage.local.length || sdkStorage.session.length) fail(`${name} consent: SDK identifier persisted after yes (${JSON.stringify(sdkStorage)})`)
+  const savedCampaign = await page.evaluate(() => Object.entries(localStorage)
+    .filter(([, value]) => value.includes('PRIVATE_CAMPAIGN'))
+    .map(([key]) => key))
+  if (savedCampaign.length) fail(`${name} consent: campaign parameters persisted in browser storage (${savedCampaign.join(', ')})`)
 
   // No again: the id is deleted and sending stops.
   await page.getByLabel('Nej, skicka ingen statistik').check()
@@ -487,11 +520,13 @@ async function checkConsent(browser, name) {
   await context.close()
 }
 
-const browser = await chromium.launch(
-  process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
-)
+const browser = await chromium.launch(secureChromiumLaunchOptions())
 try {
   for (const name of Object.keys(viewports)) {
+    if (process.argv.includes('--consent-only')) {
+      await checkConsent(browser, name)
+      continue
+    }
     await checkRoutes(browser, name)
     await checkChoiceHoverBorders(browser, name)
     await checkFlows(browser, name)
@@ -506,4 +541,6 @@ if (problems.length) {
   console.error(`E2E_FAILED (${problems.length}):\n- ${problems.join('\n- ')}`)
   process.exit(1)
 }
-console.log(`e2e ok (${getA11yRoutes().length} routes and main flows on mobile and desktop).`)
+console.log(process.argv.includes('--consent-only')
+  ? 'consent e2e ok (mobile and desktop; event delivery, opt-out, no config requests or campaign storage).'
+  : `e2e ok (${getA11yRoutes().length} routes and main flows on mobile and desktop).`)

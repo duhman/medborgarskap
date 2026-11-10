@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { mkdirSync, readFileSync } from 'node:fs'
 import { chromium, devices } from 'playwright'
 import AxeBuilder from '@axe-core/playwright'
+import { secureChromiumLaunchOptions } from './playwright-launch.mjs'
 
 const base = process.env.BASE_URL ?? 'http://localhost:4174'
 const screenshots = process.env.TUTOR_SCREENSHOTS ?? 'a11y-results/tutor'
@@ -150,7 +151,7 @@ async function checkRetry(browser, viewport) {
   }
 }
 
-const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {})
+const browser = await chromium.launch(secureChromiumLaunchOptions())
 try {
   const viewports = { mobile: { ...devices['Pixel 7'] }, desktop: { viewport: { width: 1366, height: 900 } } }
   for (const [name, viewport] of Object.entries(viewports)) {

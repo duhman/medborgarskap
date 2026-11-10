@@ -5,6 +5,7 @@ import { createRequire } from 'node:module'
 import { chromium } from 'playwright'
 import AxeBuilder from '@axe-core/playwright'
 import { getA11yRoutes } from './a11y-routes.mjs'
+import { secureChromiumLaunchOptions } from './playwright-launch.mjs'
 
 const require = createRequire(import.meta.url)
 const { devDependencies } = require('../package.json')
@@ -60,7 +61,7 @@ async function run() {
   try {
     await waitForServer(`${BASE_URL}/`)
 
-    const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {})
+    const browser = await chromium.launch(secureChromiumLaunchOptions())
     const summary = {
       label: LABEL,
       playwrightVersion: PINNED_PLAYWRIGHT_VERSION,

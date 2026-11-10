@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process'
 import { once } from 'node:events'
 import { mkdirSync } from 'node:fs'
 import { chromium } from 'playwright'
+import { secureChromiumLaunchOptions } from './playwright-launch.mjs'
 
 const ROUTES = [
   { path: '/', name: 'home' },
@@ -49,7 +50,7 @@ async function run() {
   const { close } = startPreview()
   try {
     await waitForServer(`${BASE_URL}/`)
-    const browser = await chromium.launch()
+    const browser = await chromium.launch(secureChromiumLaunchOptions())
 
     for (const route of ROUTES) {
       const context = await browser.newContext({ viewport: { width: 1280, height: 900 } })

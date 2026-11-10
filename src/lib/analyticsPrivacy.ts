@@ -61,13 +61,19 @@ function safeIdentifier(value: unknown): string | undefined {
  * The SDK adds browser, URL, referrer and exception fields by default. Build a new allowlisted
  * payload so study content and identifiers cannot enter analytics when a library default changes.
  */
-export function sanitizeAnalyticsCapture(capture: AnalyticsCapture | null, consent: boolean): AnalyticsCapture | null {
+export function sanitizeAnalyticsCapture(capture: AnalyticsCapture | null, consent: boolean, projectToken: string): AnalyticsCapture | null {
   if (!consent || !capture || !allowedEvents.has(capture.event)) return null
   const path = currentPath(capture.properties)
   if (!path) return null
 
-  const properties: AnalyticsProperties = { $current_url: `${canonicalOrigin}${path}` }
-  for (const key of ['$session_id', '$window_id']) {
+  const properties: AnalyticsProperties = {
+    token: projectToken,
+    $current_url: `${canonicalOrigin}${path}`,
+    $geoip_disable: true,
+    $ip: null,
+    $process_person_profile: false,
+  }
+  for (const key of ['distinct_id', '$session_id', '$window_id']) {
     const value = safeIdentifier(capture.properties[key])
     if (value) properties[key] = value
   }
@@ -79,5 +85,5 @@ export function sanitizeAnalyticsCapture(capture: AnalyticsCapture | null, conse
     }
   }
 
-  return { ...capture, properties }
+  return { event: capture.event, uuid: capture.uuid, timestamp: capture.timestamp, properties }
 }

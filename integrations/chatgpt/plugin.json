@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "prova-medborgarskap",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Search and read public, source-linked study material for the Swedish citizenship test.",
   "author": {
     "name": "Adrian Martén",
@@ -96,7 +96,7 @@
         "demo_recording_url": "https://provamedborgarskap.se/integrations/chatgpt/review-1.0.0.html"
       },
       "publication": {
-        "release_notes": "Adds public help for smart practice, study plans, listening and word cards, with explicit site-versus-official source attribution. No new tools or permissions."
+        "release_notes": "Privacy remediation: complete tool input/output, purpose, recipient, retention and control disclosures; automatic one-minute expiry of MCP rate-limit records; website analytics paused pending verified retention. Public read-only tools and permissions unchanged."
       }
     }
   }

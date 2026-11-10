@@ -15,6 +15,10 @@ The service exposes two read-only tools:
 
 `fetch` never accepts URLs. The service has no accounts, quiz answers, progress, private documents, or write tools. It cannot decide whether a person qualifies for citizenship or must take the test. Dates and requirements can change, so users must check the linked official UHR or Migrationsverket source before acting.
 
+## Privacy, version 1.0.2
+
+The published [privacy policy](https://provamedborgarskap.se/integritet#chatgpt) describes the actual tool inputs and outputs, processing purposes, recipients, retention and controls. Vercel processes requests; public results return to the calling assistant provider. Query and result content is not written to an application database or analytics. In-memory abuse-protection records expire after one minute. Vercel's Hobby runtime-log window is one hour; this does not promise deletion of all separate provider security/legal records. Disconnecting the app stops future calls; chat deletion is controlled separately by the assistant provider. Website study data stays browser-local. Website analytics collection is paused pending verification of its project's retention setting, and is never used for MCP calls.
+
 ## Local checks
 
 Run the structural package gate:

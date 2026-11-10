@@ -49,18 +49,27 @@ async function initPostHog(): Promise<PostHog | null> {
     capture_exceptions: true,
     error_tracking: { captureExtensionExceptions: false, __capturePostHogExceptions: false },
     person_profiles: 'never',
+    advanced_disable_flags: true,
     advanced_disable_feature_flags: true,
+    save_campaign_params: false,
     save_referrer: false,
     disable_capture_url_hashes: true,
     disableDeviceModel: true,
     disable_session_recording: true,
     disable_surveys: true,
     enable_heatmaps: false,
-    // localStorage only: the privacy page promises no cookies.
-    persistence: 'localStorage',
+    // Keep analytics identifiers and queued telemetry in this tab only. The site's
+    // separate consent preference is the only analytics value persisted locally.
+    persistence: 'memory',
+    disable_persistence: true,
     // A last guard: drop anything captured after the visitor said no.
-    before_send: (event) => sanitizeAnalyticsCapture(event, hasAnalyticsConsent()),
+    before_send: (event) => sanitizeAnalyticsCapture(event, hasAnalyticsConsent(), key),
   })
+
+  // posthog-js can start with its own consent state pending. Our explicit, separate
+  // site consent is already affirmative at this point, so resolve that state before
+  // the first pageview is captured. Suppress PostHog's default opt-in event.
+  posthog.opt_in_capturing({ captureEventName: false })
 
   return posthog
 }
@@ -94,7 +103,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       if (!hasAnalyticsConsent()) {
         posthog?.opt_out_capturing()
       } else if (posthog) {
-        if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing({ captureEventName: false })
+        posthog.opt_in_capturing({ captureEventName: false })
       } else {
         initPostHog()
           .then((client) => {
