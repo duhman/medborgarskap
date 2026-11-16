@@ -125,7 +125,7 @@ Samhällskunskap – grundläggande nivå
 Samhällskunskap nivå 1a1
 Samhällskunskap nivå 1a2
 Samhällskunskap nivå 1b
-Samhällskunskap nivå 2b
+Samhällskunskap nivå 2
 Medborgarskapsprov i svenska
 Det finns för tillfället inget medborgarskapsprov i svenska och det kommer att dröja några år innan ett sådant finns på plats. Vi publicerar information här om när det blir möjligt att göra provet i svenska.
 Kravet på kunskaper i svenska finns kvar och tills vidare kan du visa dina kunskaper på andra sätt, till exempel genom att ha godkänt
@@ -265,6 +265,9 @@ Medborgarskapsenheten
 Betala ansökningsavgiften
 När vi har tagit emot din ansökan kommer vi att kontakta dig via mejl eller brev med information om hur du ska göra betalningen och hur mycket du ska betala.
 Nyheter
+2026-11-16
+Ny e-tjänst för anmälan om medborgarskap för nordiska medborgare
+Den 1 december 2026 lanserar Migrationsverket en e-tjänst för anmälan om svenskt medborgarskap för dig som är nordisk medborgare och som bott i Sverige i minst fem år.
 2026-09-30
 Medborgarskapsprovet i svenska kan flyttas fram
 Det nya provet i svenska kan införas senare än planerat. Kravet på kunskaper i svenska finns kvar, men tills vidare kan du visa dina kunskaper på andra sätt.
