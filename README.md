@@ -13,7 +13,7 @@ Se [BUILD.md](./BUILD.md) för produktbrief och MVP-scope.
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm run verify   # typecheck, lint, unit tests, build and the build checks (see package.json)
+bun run verify   # typecheck, lint, unit tests, build and the build checks (see package.json; npm run verify works too)
 npm run check:all  # verify + quotes against the PDF + browser checks; run before every merge
 ```
 

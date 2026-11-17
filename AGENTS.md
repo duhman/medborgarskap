@@ -4,21 +4,21 @@ Public reference app for Grundform + SEO patterns. Vault SoT for pdfme checklist
 
 ## Verify before merge
 
-Canonical local gate. `verify` runs the whole chain in `package.json`: typecheck (app and api), the MCP and tutor runtime checks, lint with the agent-scope guard, route meta, the benchmark corpus check, unit tests, the ChatGPT package check, build, then the tutor-client, cascade and og-preview checks. npm is canonical (`package-lock.json` is the tracked lockfile, and what Dependabot and CI use).
+Canonical local gate. `verify` runs the whole chain in `package.json`: typecheck (app and api), the MCP and tutor runtime checks, lint with the agent-scope guard, route meta, the benchmark corpus check, unit tests, the ChatGPT package check, build, then the tutor-client, cascade and og-preview checks. `package-lock.json` is the only tracked lockfile today, and the one Dependabot and `ci.yml` read; `bun.lock` is not tracked.
 
 ```bash
-npm ci
-npm run verify
+bun install          # or npm ci in CI
+bun run verify
 ```
 
 | Step | Script |
 | ---- | ------ |
-| Typecheck | `npm run tsc`, `npm run tsc:api` |
-| Lint | `npm run lint:ci` |
-| Unit tests | `npm run test` |
-| Production build | `npm run build` |
+| Typecheck | `bun run tsc`, `bun run tsc:api` |
+| Lint | `bun run lint:ci` |
+| Unit tests | `bun run test` |
+| Production build | `bun run build` |
 
-**Local preview:** `npm run preview` serves `dist/` for a quick look, but it answers every route with the home HTML, so it is not Vercel-shaped; the browser checks start their own static server (`scripts/run-browser-checks.mjs`). `check:all` builds with the tutor flag and a placeholder analytics key, so rebuild before judging the production bundle.
+**Local preview:** `bun run preview` serves `dist/` for a quick look, but it answers every route with the home HTML, so it is not Vercel-shaped; the browser checks start their own static server (`scripts/run-browser-checks.mjs`). `check:all` builds with the tutor flag and a placeholder analytics key, so rebuild before judging the production bundle.
 
 **Accessibility:** Playwright axe on all routes, part of `npm run check:all`. The browser checks launch the installed Google Chrome, or the binary in `CHROMIUM_PATH` (`scripts/playwright-launch.mjs`); a Chromium downloaded by `playwright install` is not used.
 
