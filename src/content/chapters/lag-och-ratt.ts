@@ -196,7 +196,7 @@ export const lagOchRatt: ChapterContent = {
       explanationSv:
         'Enligt materialet är man straffmyndig och kan bli åtalad för brott från 15 års ålder. Sedan 10 september 2026 gäller en tillfällig regel om 14 år för vissa allvarliga brott (materialet nämner bara ett förslag om 13 år).',
       explanationEn:
-        'According to the material, you can be prosecuted for a crime from the age of 15. Since 10 September 2026 a temporary rule sets the age at 14 for certain serious crimes.',
+        'According to the material, you can be prosecuted for a crime from the age of 15. Since 10 September 2026 a temporary rule sets the age at 14 for certain serious crimes (the material only mentions a proposal of 13).',
       source: {
         chapter: 5,
         page: 19,
@@ -323,7 +323,7 @@ export const lagOchRatt: ChapterContent = {
       ],
       correctOptionId: 'D',
       explanationSv:
-        'Yttrandefrihetsgrundlagen ger alla som bor i Sverige rätt att vara med i och bilda föreningar och att demonstrera.',
+        'Alla som bor i Sverige har rätt att vara med i och bilda föreningar och att demonstrera.',
       explanationEn:
         'Everyone who lives in Sweden has the right to join and form associations and to demonstrate.',
       source: {

@@ -2946,8 +2946,8 @@
       }
     ],
     "correctOptionId": "D",
-    "explanationSv": "Riksdagens ledamöter beslutar om lagar och om hur statens pengar ska användas. Sjukvården sköts av regionerna och biblioteken av kommunerna.",
-    "explanationEn": "Members of parliament decide on laws and on how the state's money is spent. Health care is run by the regions and libraries by the municipalities.",
+    "explanationSv": "Riksdagens ledamöter beslutar om lagar och om hur statens pengar ska användas. Vem som döms för brott avgör domstolarna, och biblioteken sköts av kommunerna.",
+    "explanationEn": "Members of parliament decide on laws and on how the state's money is spent. Courts decide who is convicted of a crime, and libraries are run by the municipalities.",
     "source": {
       "chapter": 3,
       "page": 12,
@@ -2957,7 +2957,7 @@
       "reviewedAt": "2026-10-24",
       "supplementarySources": []
     },
-    "canonicalQuestionSha256": "6a3eaa35873702728b00a7ab71688ae6b12f1000ba8433a50360449cae13ab5e"
+    "canonicalQuestionSha256": "a846f8b7f1ac480525fd920f8bfce2b030f6dd5c78cbcb58823c8619d7f40eb1"
   },
   {
     "id": "k3-q4",
@@ -4213,7 +4213,7 @@
       }
     ],
     "correctOptionId": "D",
-    "explanationSv": "Yttrandefrihetsgrundlagen ger alla som bor i Sverige rätt att vara med i och bilda föreningar och att demonstrera.",
+    "explanationSv": "Alla som bor i Sverige har rätt att vara med i och bilda föreningar och att demonstrera.",
     "explanationEn": "Everyone who lives in Sweden has the right to join and form associations and to demonstrate.",
     "source": {
       "chapter": 5,
@@ -4224,7 +4224,7 @@
       "reviewedAt": "2026-10-24",
       "supplementarySources": []
     },
-    "canonicalQuestionSha256": "cd5720399e08931e94b00a87e54b76c44d55a317930c48d32a948fe7d5936f27"
+    "canonicalQuestionSha256": "2ea70717952676e7c6bd5e43fffb8a6303d78bf5013063dc6e991a46e7b6d564"
   },
   {
     "id": "k5-q12",
@@ -5324,7 +5324,7 @@
     ],
     "correctOptionId": "C",
     "explanationSv": "Enligt materialet är man straffmyndig och kan bli åtalad för brott från 15 års ålder. Sedan 10 september 2026 gäller en tillfällig regel om 14 år för vissa allvarliga brott (materialet nämner bara ett förslag om 13 år).",
-    "explanationEn": "According to the material, you can be prosecuted for a crime from the age of 15. Since 10 September 2026 a temporary rule sets the age at 14 for certain serious crimes.",
+    "explanationEn": "According to the material, you can be prosecuted for a crime from the age of 15. Since 10 September 2026 a temporary rule sets the age at 14 for certain serious crimes (the material only mentions a proposal of 13).",
     "source": {
       "chapter": 5,
       "page": 19,
@@ -5343,7 +5343,7 @@
         }
       ]
     },
-    "canonicalQuestionSha256": "1f808e9db5132c213dd2df04beb370184ed50f569fa26c368b9b0687fca5c605"
+    "canonicalQuestionSha256": "ed95e68b5f42712637f6510ec6ae17078e88d00f8c092e51920c1dd7e6e8315a"
   },
   {
     "id": "k5-q6",
@@ -5555,7 +5555,7 @@
     ],
     "correctOptionId": "B",
     "explanationSv": "Offentlighetsprincipen gör att journalister kan begära ut e-post och andra handlingar från myndigheter för att granska hur beslut har fattats, om handlingarna inte är hemliga.",
-    "explanationEn": "Thanks to the principle of public access, journalists can request emails and other documents from authorities to see how decisions were made.",
+    "explanationEn": "Thanks to the principle of public access, journalists can request emails and other documents from authorities to see how decisions were made, unless the documents are secret.",
     "source": {
       "chapter": 6,
       "page": 20,
@@ -5565,7 +5565,7 @@
       "reviewedAt": "2026-10-24",
       "supplementarySources": []
     },
-    "canonicalQuestionSha256": "355c2675c207f87133e04b8175f98f03775eb17aa7ac8580b44ab531eab7d7b7"
+    "canonicalQuestionSha256": "dc7b325e07b678eedad1df735138f0061ce36c3ac4440308408e7a18e257ee1a"
   },
   {
     "id": "k6-q11",
@@ -7478,7 +7478,7 @@
       }
     ],
     "correctOptionId": "A",
-    "explanationSv": "Det är olagligt att köpa sex i Sverige. Lagen riktar straffet mot köparen för att visa att det inte är acceptabelt att utnyttja någon sexuellt mot betalning.",
+    "explanationSv": "Det är olagligt att köpa sex i Sverige. Den som köper sex kan straffas, men inte den som säljer. Lagen riktar straffet mot köparen för att visa att det inte är acceptabelt att utnyttja någon sexuellt mot betalning.",
     "explanationEn": "Buying sex is illegal in Sweden. The buyer can be punished, not the seller, to show that sexual exploitation for payment is not acceptable.",
     "source": {
       "chapter": 7,
@@ -7489,7 +7489,7 @@
       "reviewedAt": "2026-10-24",
       "supplementarySources": []
     },
-    "canonicalQuestionSha256": "76dca50e91e0b7fccd94d9c7c187b1bb9512ad14224720eadaf980bbbf1df564"
+    "canonicalQuestionSha256": "9ece07b472619b28c583ce0859271d8d1cc0e4b5cca4434b702f26f088fbe095"
   },
   {
     "id": "k7-q5",
@@ -9798,7 +9798,7 @@
     "id": "k10-q16",
     "chapterSlug": "sveriges-moderna-historia",
     "chapterNumber": 10,
-    "prompt": "Vilken av dessa var en av de fyra största folkrörelserna i Sverige enligt kapitlet?",
+    "prompt": "Vilken av dessa nämns i kapitlet som en av de största folkrörelserna i Sverige?",
     "options": [
       {
         "id": "A",
@@ -9818,8 +9818,8 @@
       }
     ],
     "correctOptionId": "A",
-    "explanationSv": "De fyra största folkrörelserna var arbetarrörelsen, frikyrkorörelsen, kvinnorörelsen och nykterhetsrörelsen.",
-    "explanationEn": "The four largest popular movements were the labour movement, the free church movement, the women's movement and the temperance movement.",
+    "explanationSv": "Fyra av de största folkrörelserna var arbetarrörelsen, frikyrkorörelsen, kvinnorörelsen och nykterhetsrörelsen.",
+    "explanationEn": "Four of the largest popular movements were the labour movement, the free church movement, the women's movement and the temperance movement.",
     "source": {
       "chapter": 10,
       "page": 33,
@@ -9829,7 +9829,7 @@
       "reviewedAt": "2026-10-24",
       "supplementarySources": []
     },
-    "canonicalQuestionSha256": "8f4ec7893f31d7da1e7dc21437fe96c45c34c1f655df55380af9c672d1925605"
+    "canonicalQuestionSha256": "c02283974fd21eed0ad27371c06f8885223a86ad5df2017e46dae3d35453a282"
   },
   {
     "id": "k10-q17",

@@ -79,7 +79,7 @@ function Picker({ onChoose }: { onChoose: (weeks: number) => void }) {
         </button>
       )}
       <p className="text-sm text-ink-3">
-        UHR planerar nästa prov till april-maj 2027 men har inte satt något datum. Räkna med att
+        UHR planerar nästa prov till april-maj 2027 men har inte publicerat något datum. Räkna med att
         planen kan behöva ändras när datumet kommer.
       </p>
     </section>

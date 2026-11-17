@@ -161,7 +161,7 @@ export const manskligaRattigheter: ChapterContent = {
       ],
       correctOptionId: 'A',
       explanationSv:
-        'Det är olagligt att köpa sex i Sverige. Lagen riktar straffet mot köparen för att visa att det inte är acceptabelt att utnyttja någon sexuellt mot betalning.',
+        'Det är olagligt att köpa sex i Sverige. Den som köper sex kan straffas, men inte den som säljer. Lagen riktar straffet mot köparen för att visa att det inte är acceptabelt att utnyttja någon sexuellt mot betalning.',
       explanationEn:
         'Buying sex is illegal in Sweden. The buyer can be punished, not the seller, to show that sexual exploitation for payment is not acceptable.',
       source: {

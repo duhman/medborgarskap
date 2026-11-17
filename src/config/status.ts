@@ -8,10 +8,10 @@ export type UhrStatusConfig = {
 
 /**
  * Uppdatera här när UHR publicerar ny information. Hitta aldrig på provdatum.
- * Källor: UHR:s översikt (uppdaterad 2026-10-22) och resultatnyhet (2026-10-22), kontrollerade 2026-11-01.
+ * Källor: UHR:s översikt (uppdaterad 2026-10-22) och resultatnyhet (2026-10-22), kontrollerade 2026-11-17.
  */
 export const uhrStatus: UhrStatusConfig = {
-  checkedAt: '2026-11-01',
+  checkedAt: '2026-11-17',
   nextSitting: 'planeras april-maj 2027 enligt UHR, datum och plats kommer',
   registrationOpen: false,
   notes:
@@ -22,6 +22,7 @@ export const officialLinks = {
   pdf: 'https://www.uhr.se/globalassets/_uhr.se/medborgarskapsprovet/utbildningsmaterial/sverige-i-fokus_.pdf',
   utbildningsmaterial: 'https://www.uhr.se/medborgarskapsprovet/utbildningsmaterial/',
   medborgarskapsprov: 'https://www.uhr.se/medborgarskapsprovet/',
+  overview: 'https://www.uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/',
   trialResults:
     'https://www.uhr.se/om-uhr/nyheter/2026-nyheter/resultaten-fran-medborgarskapsprovet-i-samhallskunskap-klara/',
   faq: 'https://www.uhr.se/medborgarskapsprovet/fragor-och-svar/',

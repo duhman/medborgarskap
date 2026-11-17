@@ -8,7 +8,7 @@ export type FaqEntry = {
   sources: Array<OfficialSource | { publisher: 'Prova medborgarskap'; label: string; url: string; checkedAt: string }>
 }
 
-const CHECKED = '2026-10-24'
+const CHECKED = '2026-11-17'
 
 const UHR_OM = 'https://www.uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/'
 const UHR_MATERIAL = 'https://www.uhr.se/medborgarskapsprovet/utbildningsmaterial/'
@@ -29,13 +29,13 @@ const uhrResult: OfficialSource = {
   publisher: 'UHR',
   label: 'Resultaten från medborgarskapsprovet i samhällskunskap klara',
   url: UHR_RESULT,
-  checkedAt: '2026-11-01',
+  checkedAt: '2026-11-17',
 }
 const mvVuxna: OfficialSource = {
   publisher: 'Migrationsverket',
   label: 'Medborgarskap för vuxna',
   url: MV_VUXNA,
-  checkedAt: '2026-11-10',
+  checkedAt: '2026-11-17',
 }
 
 /**
@@ -71,6 +71,7 @@ export const faqEntries: FaqEntry[] = [
     answer: [
       'Kravet på kunskaper om det svenska samhället gäller dig som är mellan 16 och 66 år och ansöker om svenskt medborgarskap. Provet skrivs av den som inte kan visa kunskaperna på något annat sätt.',
       'Det är Migrationsverket som avgör vem som får skriva provet. Du kan bara anmäla dig om du har fått ett brev från Migrationsverket.',
+      'Statslösa personer som är födda i Sverige och är under 21 år, och nordiska medborgare som har gjort en anmälan om svenskt medborgarskap, är undantagna från kunskapskraven. Du kan också bli undantagen om du har en funktionsnedsättning eller andra skäl som gör att du inte kan uppfylla kraven.',
     ],
     sources: [mvVuxna, uhrOm],
   },
@@ -79,7 +80,7 @@ export const faqEntries: FaqEntry[] = [
     question: 'Kan jag visa kunskaper om samhället utan att skriva provet?',
     answer: [
       'Ja. Migrationsverket godtar ett godkänt betyg i samhällskunskap eller grundläggande samhällsorienterande ämnen från årskurs 9 i grundskolan, från gymnasieskolan eller folkhögskolestudier på gymnasial nivå, eller från kommunal vuxenutbildning (Komvux).',
-      'För Komvux räcker en kurs som minst motsvarar grundskolans årskurs 9. Migrationsverket räknar bland annat upp Grundläggande kurs i samhällsorienterande ämnen, Samhällskunskap - grundläggande nivå samt Samhällskunskap nivå 1a1, 1a2, 1b och 2b.',
+      'För Komvux räcker en kurs som minst motsvarar grundskolans årskurs 9. Migrationsverket räknar bland annat upp Grundläggande kurs i samhällsorienterande ämnen, Samhällskunskap - grundläggande nivå samt Samhällskunskap nivå 1a1, 1a2, 1b och 2.',
       'SFI räknas för kravet på kunskaper i svenska, inte för kravet på kunskaper om samhället.',
     ],
     sources: [mvVuxna],
@@ -100,7 +101,7 @@ export const faqEntries: FaqEntry[] = [
     question: 'Vilka andra krav finns för att bli svensk medborgare?',
     answer: [
       'Kunskapskraven är bara en del. Sedan 6 juni 2026 ska du som huvudregel ha bott i Sverige sammanhängande i minst åtta år. Du ska kunna styrka din identitet, kunna försörja dig (minst tre inkomstbasbelopp om året, 250 200 kronor före skatt för 2026) och ha levt ett skötsamt och hederligt liv.',
-      'Du behöver också permanent uppehållstillstånd, uppehållsstatus, uppehållsrätt eller medborgarskap i ett annat nordiskt land, men det finns undantag. Kortare hemvisttid gäller i vissa fall, till exempel för nordiska medborgare. Läs vad som gäller just dig hos Migrationsverket innan du lägger tid på att plugga.',
+      'Du behöver också permanent uppehållstillstånd, uppehållsstatus, uppehållsrätt, uppehållskort eller medborgarskap i ett annat nordiskt land, men det finns undantag. Kortare hemvisttid gäller i vissa fall, till exempel för nordiska medborgare. Läs vad som gäller just dig hos Migrationsverket innan du lägger tid på att plugga.',
     ],
     sources: [mvVuxna],
   },

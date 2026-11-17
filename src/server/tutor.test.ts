@@ -38,6 +38,10 @@ describe('grounded tutor contract', () => {
     expect(parseTutorRequest({ ...request, history: [] })).toBeUndefined()
     expect(parseTutorRequest({ ...request, consent: false })).toBeUndefined()
     expect(parseTutorRequest({ ...request, selectedOptionId: 'X' })).toBeUndefined()
+    // String(['A']) is 'A': arrays must not pass as an option and mint new cache keys.
+    expect(parseTutorRequest({ ...request, selectedOptionId: ['A'] })).toBeUndefined()
+    expect(parseTutorRequest({ ...request, selectedOptionId: [['B']] })).toBeUndefined()
+    expect(parseTutorRequest({ ...request, selectedOptionId: null })).toEqual({ ...request, selectedOptionId: null })
   })
 
   it('builds a Responses schema request with no tools, credentials, or client free text', () => {

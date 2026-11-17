@@ -30,11 +30,14 @@ export function hasAnalyticsConsent(): boolean {
   return getAnalyticsConsent() === 'granted'
 }
 
-/** Deletes what PostHog stored on this device: its localStorage entry and any old cookie. */
+/**
+ * Deletes what PostHog stored on this device: its localStorage entry, its own consent flag
+ * (`__ph_opt_in_out_<token>`) and any old cookie.
+ */
 export function purgeAnalyticsStorage(): void {
   try {
     for (const key of Object.keys(localStorage)) {
-      if (/^ph_.+_posthog$/.test(key) || key === '__ph_opt_in_out') localStorage.removeItem(key)
+      if (/^ph_.+_posthog$/.test(key) || key.startsWith('__ph_opt_in_out')) localStorage.removeItem(key)
     }
   } catch {
     // Blocked storage: nothing was saved.

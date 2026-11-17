@@ -86,9 +86,12 @@ const publicDocuments: PublicDocument[] = [
     url: `${CANONICAL_ORIGIN}/vanliga-fragor#nasta-prov`,
     text: [uhrStatus.nextSitting, uhrStatus.notes].join('\n\n'),
     metadata: {
-      sourceURLs: [officialLinks.medborgarskapsprov],
+      sourceURLs: [officialLinks.overview, officialLinks.trialResults],
       checkedAt: uhrStatus.checkedAt,
-      sourceDates: [{ url: officialLinks.medborgarskapsprov, publisher: 'UHR', checkedAt: uhrStatus.checkedAt }],
+      sourceDates: [
+        { url: officialLinks.overview, publisher: 'UHR', checkedAt: uhrStatus.checkedAt },
+        { url: officialLinks.trialResults, publisher: 'UHR', checkedAt: uhrStatus.checkedAt },
+      ],
       questionReviewedAt: null,
       limitations: [
         'UHR kan ändra tidplanen. Datum, plats, provtid, antal frågor, avgift och anmälan är bara bekräftade när UHR har publicerat dem.',
@@ -272,8 +275,6 @@ const rateBuckets = new Map<string, RateBucket>()
 
 function reserveRateLimit(request: Request, now = Date.now()) {
   if (now - globalRateBucket.startedAt >= RATE_WINDOW_MS) globalRateBucket = { startedAt: now, count: 0 }
-  globalRateBucket.count += 1
-  if (globalRateBucket.count > MAX_REQUESTS_PER_ISOLATE) return false
 
   const source = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('origin') || 'anonymous'
   const bucket = rateBuckets.get(source)
@@ -289,7 +290,12 @@ function reserveRateLimit(request: Request, now = Date.now()) {
     }, RATE_WINDOW_MS)
     expiry.unref()
   }
-  return current.count <= MAX_REQUESTS_PER_SOURCE
+  if (current.count > MAX_REQUESTS_PER_SOURCE) return false
+  // Only admitted requests spend the shared budget, so one source that keeps sending after its
+  // own limit cannot make every other caller on this instance get 429.
+  if (globalRateBucket.count >= MAX_REQUESTS_PER_ISOLATE) return false
+  globalRateBucket.count += 1
+  return true
 }
 
 function withSafetyHeaders(response: Response, corsOrigin?: string) {

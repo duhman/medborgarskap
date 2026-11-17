@@ -20,10 +20,12 @@ export function ConsentBanner() {
   if (!analyticsConfigured) return null
 
   if (answered) {
+    // The choice can change on /integritet while this confirmation is still on screen.
+    const current = consent === 'granted' || consent === 'denied' ? consent : answered
     return (
       <section aria-label="Besöksstatistik" className="border-b border-line-strong bg-paper-muted text-sm">
         <p ref={statusRef} tabIndex={-1} className="mb-enter mx-auto max-w-3xl px-4 py-3 text-ink-2 outline-none">
-          {answered === 'granted' ? 'Tack. Statistik skickas från den här webbläsaren.' : 'Ingen statistik skickas från den här webbläsaren.'}{' '}
+          {current === 'granted' ? 'Tack. Statistik skickas från den här webbläsaren.' : 'Ingen statistik skickas från den här webbläsaren.'}{' '}
           Du kan ändra valet på sidan{' '}
           <Link to="/integritet#statistik" className="mb-link-quiet underline underline-offset-2">
             Integritet

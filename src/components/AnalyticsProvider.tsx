@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import type { PostHog } from 'posthog-js'
-import { analyticsConfigured, hasAnalyticsConsent, subscribeAnalyticsConsent } from '../lib/analyticsConsent'
+import { analyticsConfigured, hasAnalyticsConsent, purgeAnalyticsStorage, subscribeAnalyticsConsent } from '../lib/analyticsConsent'
 import { sanitizeAnalyticsCapture } from '../lib/analyticsPrivacy'
 
 type AnalyticsProviderProps = {
@@ -58,9 +58,12 @@ async function initPostHog(): Promise<PostHog | null> {
     disable_session_recording: true,
     disable_surveys: true,
     enable_heatmaps: false,
-    // Keep analytics identifiers and queued telemetry in this tab only. The site's
-    // separate consent preference is the only analytics value persisted locally.
+    // Keep analytics identifiers and queued telemetry in this tab only. Besides the site's own
+    // consent preference, posthog-js keeps its consent flag (`__ph_opt_in_out_<token>`, 0 or 1,
+    // no identifier) in localStorage while the answer is yes; a no removes it again.
     persistence: 'memory',
+    // Without its stored flag posthog-js must stay stopped, so removing the flag after a no is safe.
+    opt_out_capturing_by_default: true,
     disable_persistence: true,
     // A last guard: drop anything captured after the visitor said no.
     before_send: (event) => sanitizeAnalyticsCapture(event, hasAnalyticsConsent(), key),
@@ -102,6 +105,8 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     const apply = () => {
       if (!hasAnalyticsConsent()) {
         posthog?.opt_out_capturing()
+        // opt_out_capturing writes posthog-js's own consent flag; a no leaves nothing of it behind.
+        purgeAnalyticsStorage()
       } else if (posthog) {
         posthog.opt_in_capturing({ captureEventName: false })
       } else {
