@@ -6,7 +6,7 @@
   "canonicalQuestionCount": 389,
   "heldoutCaseCount": 650,
   "corpusSha256": "7946ffc2d457225264f93e2de296343ba3a4aa219ba82a3a97d5ff4fc63e3254",
-  "sourcesSha256": "7bea75465706dca1ec2763e8562db71ac5869b95ef7bb9c11556c1ae6dd70046",
+  "sourcesSha256": "b043de3cfa317fc94246cd14c3d3fad4233f047d8ec4615ba282ebd41972fd46",
   "policyFixtureCount": 12,
   "policySha256": "952b3f6684ec80af1c5b2a58652e5d7c3b9f2cc2b6c7f847d3a1ad48a1449fba",
   "artifact": "medborgarskap-v1.jsonl",

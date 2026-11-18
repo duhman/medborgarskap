@@ -483,13 +483,24 @@ async function checkConsent(browser, name) {
   await quiet()
   if (sent !== 0) fail(`${name} consent: ${sent} analytics requests before any answer`)
 
+  // On the privacy page itself the banner's link still scrolls to the section.
+  await page.goto(BASE_URL + '/integritet', { waitUntil: 'networkidle' })
+  await banner.getByRole('link', { name: 'Läs mer' }).click()
+  await page.waitForURL(BASE_URL + '/integritet#statistik')
+  await page.waitForFunction(() => {
+    const top = document.getElementById('statistik')?.getBoundingClientRect().top
+    return top !== undefined && window.scrollY > 0 && top > -1 && top < window.innerHeight / 2
+  }, null, { timeout: 5_000 }).catch(() => fail(`${name} consent: "Läs mer" on /integritet did not scroll to #statistik`))
+  await page.goto(BASE_URL + '/', { waitUntil: 'networkidle' })
+
   // The banner's link lands on the statistics section, not at the top of the privacy page.
   await banner.getByRole('link', { name: 'Läs mer' }).click()
   await page.waitForURL(BASE_URL + '/integritet#statistik')
-  const section = await page.evaluate(() => ({ top: document.getElementById('statistik')?.getBoundingClientRect().top, scrolled: window.scrollY, height: window.innerHeight }))
-  if (section.top === undefined || section.scrolled === 0 || section.top < -1 || section.top > section.height / 2) {
-    fail(`${name} consent: "Läs mer" did not scroll to #statistik (${JSON.stringify(section)})`)
-  }
+  // The URL changes before React has rendered the page, so wait for the scroll.
+  await page.waitForFunction(() => {
+    const top = document.getElementById('statistik')?.getBoundingClientRect().top
+    return top !== undefined && window.scrollY > 0 && top > -1 && top < window.innerHeight / 2
+  }, null, { timeout: 5_000 }).catch(() => fail(`${name} consent: "Läs mer" did not scroll to #statistik`))
 
   // No: the banner goes, the choice survives a reload, still nothing is sent.
   await page.getByRole('button', { name: 'Nej tack' }).click()

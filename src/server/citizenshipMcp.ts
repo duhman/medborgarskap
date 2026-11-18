@@ -275,6 +275,8 @@ const rateBuckets = new Map<string, RateBucket>()
 
 function reserveRateLimit(request: Request, now = Date.now()) {
   if (now - globalRateBucket.startedAt >= RATE_WINDOW_MS) globalRateBucket = { startedAt: now, count: 0 }
+  // With the shared budget spent nobody is admitted, so no source record or expiry timer is made.
+  if (globalRateBucket.count >= MAX_REQUESTS_PER_ISOLATE) return false
 
   const source = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('origin') || 'anonymous'
   const bucket = rateBuckets.get(source)
@@ -293,7 +295,6 @@ function reserveRateLimit(request: Request, now = Date.now()) {
   if (current.count > MAX_REQUESTS_PER_SOURCE) return false
   // Only admitted requests spend the shared budget, so one source that keeps sending after its
   // own limit cannot make every other caller on this instance get 429.
-  if (globalRateBucket.count >= MAX_REQUESTS_PER_ISOLATE) return false
   globalRateBucket.count += 1
   return true
 }

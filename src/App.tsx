@@ -42,15 +42,19 @@ function FocusMainOnNavigate() {
       return
     }
 
-    if (previousPathnameRef.current === pathname) {
+    const samePage = previousPathnameRef.current === pathname
+    previousPathnameRef.current = pathname
+    const target = hash ? document.getElementById(decodeHash(hash)) : null
+
+    if (samePage) {
+      // React Router handles the click on an in-app link, so the browser does not scroll to the
+      // section itself. Focus stays where it is: the page has not changed.
+      target?.scrollIntoView({ block: 'start' })
       return
     }
 
-    previousPathnameRef.current = pathname
-
     // A new page starts at the top, or at the section a link such as /integritet#statistik names.
     // 'instant' skips the smooth scroll set on <html>.
-    const target = hash ? document.getElementById(decodeHash(hash)) : null
     if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' })
     else window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
 
@@ -64,7 +68,6 @@ function FocusMainOnNavigate() {
     return () => {
       window.cancelAnimationFrame(frame)
     }
-    // A hash change on the same page returns early above; the browser handles that scroll.
   }, [pathname, hash])
 
   return null

@@ -5554,8 +5554,8 @@
       }
     ],
     "correctOptionId": "B",
-    "explanationSv": "Offentlighetsprincipen gör att journalister kan begära ut e-post och andra handlingar från myndigheter för att granska hur beslut har fattats, om handlingarna inte är hemliga.",
-    "explanationEn": "Thanks to the principle of public access, journalists can request emails and other documents from authorities to see how decisions were made, unless the documents are secret.",
+    "explanationSv": "Offentlighetsprincipen gör att journalister kan begära ut e-post och andra handlingar från myndigheter för att granska hur beslut har fattats. Myndigheten prövar sedan om handlingarna är hemliga och inte får lämnas ut.",
+    "explanationEn": "Thanks to the principle of public access, journalists can request emails and other documents from authorities to see how decisions were made. The authority then decides whether the documents must be withheld because they are secret.",
     "source": {
       "chapter": 6,
       "page": 20,
@@ -5565,7 +5565,7 @@
       "reviewedAt": "2026-10-24",
       "supplementarySources": []
     },
-    "canonicalQuestionSha256": "dc7b325e07b678eedad1df735138f0061ce36c3ac4440308408e7a18e257ee1a"
+    "canonicalQuestionSha256": "78eb5b3efcbde465fac02ac522bc415d25595a5f543b7699617fbacccc2acfee"
   },
   {
     "id": "k6-q11",
