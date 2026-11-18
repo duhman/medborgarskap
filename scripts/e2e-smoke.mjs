@@ -483,6 +483,25 @@ async function checkConsent(browser, name) {
   await quiet()
   if (sent !== 0) fail(`${name} consent: ${sent} analytics requests before any answer`)
 
+  // On the privacy page itself the banner's link still scrolls to the section.
+  await page.goto(BASE_URL + '/integritet', { waitUntil: 'networkidle' })
+  await banner.getByRole('link', { name: 'Läs mer' }).click()
+  await page.waitForURL(BASE_URL + '/integritet#statistik')
+  await page.waitForFunction(() => {
+    const top = document.getElementById('statistik')?.getBoundingClientRect().top
+    return top !== undefined && window.scrollY > 0 && top > -1 && top < window.innerHeight / 2
+  }, null, { timeout: 5_000 }).catch(() => fail(`${name} consent: "Läs mer" on /integritet did not scroll to #statistik`))
+  await page.goto(BASE_URL + '/', { waitUntil: 'networkidle' })
+
+  // The banner's link lands on the statistics section, not at the top of the privacy page.
+  await banner.getByRole('link', { name: 'Läs mer' }).click()
+  await page.waitForURL(BASE_URL + '/integritet#statistik')
+  // The URL changes before React has rendered the page, so wait for the scroll.
+  await page.waitForFunction(() => {
+    const top = document.getElementById('statistik')?.getBoundingClientRect().top
+    return top !== undefined && window.scrollY > 0 && top > -1 && top < window.innerHeight / 2
+  }, null, { timeout: 5_000 }).catch(() => fail(`${name} consent: "Läs mer" did not scroll to #statistik`))
+
   // No: the banner goes, the choice survives a reload, still nothing is sent.
   await page.getByRole('button', { name: 'Nej tack' }).click()
   if (!(await page.getByText('Ingen statistik skickas från den här webbläsaren.').count())) fail(`${name} consent: no confirmation after no`)
@@ -499,7 +518,8 @@ async function checkConsent(browser, name) {
   if (eventRequests === 0) fail(`${name} consent: no analytics events after yes; requests=${JSON.stringify(requests)}; diagnostics=${JSON.stringify(diagnostics.slice(0, 5))}`)
   if (configurationRequests !== 0) fail(`${name} consent: SDK configuration requests bypassed the event privacy filter`)
   const sdkStorage = await page.evaluate(() => ({
-    local: Object.keys(localStorage).filter((key) => /^ph_.+_posthog$/.test(key) || key === '__ph_opt_in_out'),
+    // posthog-js keeps its own yes flag (__ph_opt_in_out_<token>, no identifier) while the answer is yes.
+    local: Object.keys(localStorage).filter((key) => /^ph_.+_posthog$/.test(key)),
     session: Object.keys(sessionStorage).filter((key) => key.startsWith('ph_')),
   }))
   if (sdkStorage.local.length || sdkStorage.session.length) fail(`${name} consent: SDK identifier persisted after yes (${JSON.stringify(sdkStorage)})`)
@@ -510,8 +530,10 @@ async function checkConsent(browser, name) {
 
   // No again: the id is deleted and sending stops.
   await page.getByLabel('Nej, skicka ingen statistik').check()
-  const hasId = await page.evaluate(() => Object.keys(localStorage).some((k) => /^ph_.+_posthog$/.test(k)))
-  if (hasId) fail(`${name} consent: PostHog id left in localStorage after no`)
+  const left = await page.evaluate(() => Object.keys(localStorage).filter((k) => /^ph_.+_posthog$/.test(k) || k.startsWith('__ph_opt_in_out')))
+  if (left.length) fail(`${name} consent: PostHog storage left in localStorage after no (${left.join(', ')})`)
+  // The confirmation under the menu follows the new choice.
+  if (await page.getByText('Tack. Statistik skickas från den här webbläsaren.').count()) fail(`${name} consent: banner still says statistics are sent after no`)
   const before = sent
   await page.goto(BASE_URL + '/kapitel', { waitUntil: 'networkidle' })
   await quiet()

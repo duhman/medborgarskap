@@ -54,6 +54,14 @@ describe('Prova medborgarskap public MCP', () => {
     }
   })
 
+  it('does not let one source over its limit use up the shared budget for other callers', async () => {
+    const from = (ip: string) => rpcRequest('ping', {}, { headers: { 'x-forwarded-for': ip } })
+    // Far more than the shared per-instance budget, all from one address.
+    for (let i = 0; i < 700; i++) await handleCitizenshipMcp(from('198.51.100.30'))
+    expect((await handleCitizenshipMcp(from('198.51.100.30'))).status).toBe(429)
+    expect((await handleCitizenshipMcp(from('198.51.100.31'))).status).toBe(200)
+  })
+
   it('serves the Vercel adapter over a local HTTP request', async () => {
     const server = createServer(async (incoming, outgoing) => {
       const body = incoming.method === 'GET' || incoming.method === 'HEAD' ? undefined : Readable.toWeb(incoming)
@@ -152,6 +160,20 @@ describe('Prova medborgarskap public MCP', () => {
     expect((await responseJson(status)).result?.structuredContent).toMatchObject({
       id: 'status:uhr',
       metadata: { checkedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) },
+    })
+  })
+
+  it('cites the UHR pages that carry the status claims, not the landing page', async () => {
+    const status = await handleCitizenshipMcp(
+      rpcRequest('tools/call', { name: 'fetch', arguments: { id: 'status:uhr' } }),
+    )
+    expect((await responseJson(status)).result?.structuredContent).toMatchObject({
+      metadata: {
+        sourceURLs: [
+          'https://www.uhr.se/medborgarskapsprovet/om-medborgarskapsprovet/',
+          'https://www.uhr.se/om-uhr/nyheter/2026-nyheter/resultaten-fran-medborgarskapsprovet-i-samhallskunskap-klara/',
+        ],
+      },
     })
   })
 

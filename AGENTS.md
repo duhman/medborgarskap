@@ -4,23 +4,23 @@ Public reference app for Grundform + SEO patterns. Vault SoT for pdfme checklist
 
 ## Verify before merge
 
-Canonical local gate (matches Adrian’s CoS stack: **tsc → lint:ci → vitest → build**):
+Canonical local gate. `verify` runs the whole chain in `package.json`: typecheck (app and api), the MCP and tutor runtime checks, lint with the agent-scope guard, route meta, the benchmark corpus check, unit tests, the ChatGPT package check, build, then the tutor-client, cascade and og-preview checks. `package-lock.json` is the only tracked lockfile today, and the one Dependabot and `ci.yml` read; `bun.lock` is not tracked.
 
 ```bash
 bun install          # or npm ci in CI
 bun run verify
 ```
 
-| Step | Script | CI job `lint-build-a11y` today |
-| ---- | ------ | ------------------------------ |
-| Typecheck | `bun run tsc` | folded into `npm run build` |
-| Lint | `bun run lint:ci` | `npm run lint` |
-| Unit tests | `bun run test` | yes |
-| Production build | `bun run build` | `npm run build` |
+| Step | Script |
+| ---- | ------ |
+| Typecheck | `bun run tsc`, `bun run tsc:api` |
+| Lint | `bun run lint:ci` |
+| Unit tests | `bun run test` |
+| Production build | `bun run build` |
 
-**Prod-like static server (Vercel shape):** after `bun run build`, smoke with `bun run preview` (default port 4173). This is the stack’s production bundle served locally; no Wrangler.
+**Local preview:** `bun run preview` serves `dist/` for a quick look, but it answers every route with the home HTML, so it is not Vercel-shaped; the browser checks start their own static server (`scripts/run-browser-checks.mjs`). `check:all` builds with the tutor flag and a placeholder analytics key, so rebuild before judging the production bundle.
 
-**Accessibility:** Playwright axe on all routes, part of `npm run check:all`. Install the browser once with `npm run test:a11y:install-browser -- --with-deps`.
+**Accessibility:** Playwright axe on all routes, part of `npm run check:all`. The browser checks launch the installed Google Chrome, or the binary in `CHROMIUM_PATH` (`scripts/playwright-launch.mjs`); a Chromium downloaded by `playwright install` is not used.
 
 **GitHub Actions:** CI (`ci.yml`) only runs when started by hand. The official-source check (`source-check.yml`) runs every Monday and opens or updates one issue when UHR, Migrationsverket or the PDF changes; read and close that issue. Before every merge run `npm run check:all` locally: verify, quotes against the PDF, then `scripts/run-browser-checks.mjs` (axe light/dark, Grundform contrast, e2e) against a Vercel-like static server.
 
@@ -28,7 +28,7 @@ bun run verify
 
 **Hydration and chapter loading:** `src/main.tsx` hydrates the prerendered HTML, so a page's first client render must match the prerender. Read localStorage only through `useSyncExternalStore` with an empty server snapshot (`useProgressState()` in src/lib/progress.ts). Chapter questions load per chapter from `src/content/chapters/load.ts` (`useChapter`, `useAllQuestions`); `chapterMetaList` holds what lists and SEO need and must not import chapter files (content.test.ts checks intro and question counts stay in sync). `public/sw.js` keeps visited pages readable offline.
 
-**Grundform cascade:** `src/index.css` declares `@layer theme, base, grundform, site, components, utilities;` first, imports the vendored core with `layer(grundform)` and site CSS with `layer(site)`, so utilities beat base anchor color. Solid clay CTAs (`a.bg-accent`, `button.bg-accent`) use `--site-accent-on` from `@layer site` (see [PR #7](https://github.com/duhman/medborgarskap/pull/7)); do not add unlayered rules. Enforced by `npm run check:cascade` (scripts/check-layer-order.mjs, last step of `verify`): base < grundform < utilities in the built CSS, and no unlayered rules unless `grundform-unlayered-baseline.json` lists them with a reason and an expiry date (empty today). Before merge on theme or chrome changes: `bun run test:grundform-contrast` (fail string `GRUNDFORM_CTA_CONTRAST`). Vault SoT: [Grundform 0.2.0 seeded design system](https://github.com/duhman/obsidian-memory/blob/ed46ed28adca8fd6c30cd31f0fc2c4187a5edeb2/06-Atomic/insights/2026-09-25-grundform-0-2-0-seeded-design-system-sot.md).
+**Grundform cascade:** `src/index.css` declares `@layer theme, base, grundform, site, components, utilities;` first, imports the vendored core with `layer(grundform)` and site CSS with `layer(site)`, so utilities beat base anchor color. Solid clay CTAs (`a.bg-accent`, `button.bg-accent`) use `--site-accent-on` from `@layer site` (see [PR #7](https://github.com/duhman/medborgarskap/pull/7)); do not add unlayered rules. Enforced by `npm run check:cascade` (scripts/check-layer-order.mjs, part of `verify`): base < grundform < utilities in the built CSS, and no unlayered rules unless `grundform-unlayered-baseline.json` lists them with a reason and an expiry date (empty today). Before merge on theme or chrome changes: `bun run test:grundform-contrast` (fail string `GRUNDFORM_CTA_CONTRAST`). Vault SoT: [Grundform 0.2.0 seeded design system](https://github.com/duhman/obsidian-memory/blob/ed46ed28adca8fd6c30cd31f0fc2c4187a5edeb2/06-Atomic/insights/2026-09-25-grundform-0-2-0-seeded-design-system-sot.md).
 
 ## Dual writers (Lovable vs Cursor)
 

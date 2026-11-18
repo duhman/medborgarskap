@@ -148,9 +148,9 @@ export const saHarStyrsSverige: ChapterContent = {
       ],
       correctOptionId: 'D',
       explanationSv:
-        'Riksdagens ledamöter beslutar om lagar och om hur statens pengar ska användas. Sjukvården sköts av regionerna och biblioteken av kommunerna.',
+        'Riksdagens ledamöter beslutar om lagar och om hur statens pengar ska användas. Vem som döms för brott avgör domstolarna, och biblioteken sköts av kommunerna.',
       explanationEn:
-        'Members of parliament decide on laws and on how the state\'s money is spent. Health care is run by the regions and libraries by the municipalities.',
+        'Members of parliament decide on laws and on how the state\'s money is spent. Courts decide who is convicted of a crime, and libraries are run by the municipalities.',
       source: {
         chapter: 3,
         page: 12,

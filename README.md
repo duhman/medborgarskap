@@ -2,7 +2,7 @@
 
 Fristående övning till medborgarskapsprovet, baserad på UHR:s *Sverige i fokus*.
 
-**Planerad adress:** https://provamedborgarskap.se
+**Adress:** https://provamedborgarskap.se
 
 Medborgarskap är en personlig studiehjälp. Den är **inte** knuten till UHR, Skolverket eller Migrationsverket. Övningsfrågor är egna (utom tydligt märkta UHR-exempel på sidan Provfrågor).
 
@@ -13,13 +13,13 @@ Se [BUILD.md](./BUILD.md) för produktbrief och MVP-scope.
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-bun run verify   # tsc, lint:ci, vitest, build (CoS gate; npm run verify works too)
-npm run preview  # prod-like preview of dist/ (port 4173)
+bun run verify   # typecheck, lint, unit tests, build and the build checks (see package.json; npm run verify works too)
+npm run check:all  # verify + quotes against the PDF + browser checks; run before every merge
 ```
 
-CI also runs Playwright axe (`npm run test:a11y`) after build; see [AGENTS.md](./AGENTS.md).
+GitHub Actions CI is started by hand only; the gate before a merge is `npm run check:all` on your machine. The browser checks use the installed Google Chrome (or `CHROMIUM_PATH`). See [AGENTS.md](./AGENTS.md).
 
-Deploy: statisk build på Vercel. `vercel.json` innehåller SPA-rewrite.
+Deploy: statisk, förrenderad build på Vercel. Varje sida har sin egen HTML och okända adresser får en riktig 404 (ingen SPA-rewrite).
 
 ## Källor (officiellt material)
 
@@ -40,6 +40,7 @@ Redigera `src/config/status.ts`:
 
 ```ts
 export const uhrStatus = {
+  checkedAt: '2026-11-17', // datum då uppgifterna jämfördes med uhr.se
   nextSitting: 'Information kommer på uhr.se',
   registrationOpen: false,
   notes: '...',
@@ -59,7 +60,7 @@ Lägg till nya övningsfrågor som original MC med `source: { chapter, page? }`,
 
 ## Framsteg
 
-Quizresultat, fel, repetitionshistorik, studieplan och pathway-svar sparas i `localStorage` (`medborgarskap-progress-v1`). Inga konton i v1. Besöksstatistik via PostHog (EU) kan väljas bort på /integritet.
+Quizresultat, fel, repetitionshistorik, studieplan och pathway-svar sparas i `localStorage` (`medborgarskap-progress-v1`). Inga konton i v1. Besöksstatistik via PostHog (EU) skickas bara efter ett aktivt ja, och valet kan ändras på /integritet.
 
 ## Stack
 

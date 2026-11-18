@@ -34,6 +34,13 @@ const loaders: Record<string, () => Promise<ChapterContent>> = {
 
 const loaded = new Map<string, ChapterContent>()
 const pending = new Map<string, Promise<ChapterContent>>()
+/**
+ * A failed load is kept for a moment. React renders again as soon as the promise rejects, and it
+ * must get the same rejected promise back to show the error page. A new promise would suspend it
+ * again and request the file on every pass, without end. A later visit starts a new attempt.
+ */
+const RETRY_AFTER_MS = 5_000
+const failed = new Map<string, { promise: Promise<ChapterContent>; at: number }>()
 
 export function isChapterSlug(slug: string): boolean {
   return Object.hasOwn(loaders, slug)
@@ -43,16 +50,20 @@ export function isChapterSlug(slug: string): boolean {
 export function loadChapter(slug: string): Promise<ChapterContent> {
   const existing = pending.get(slug)
   if (existing) return existing
+  const failure = failed.get(slug)
+  if (failure && Date.now() - failure.at < RETRY_AFTER_MS) return failure.promise
   const load = loaders[slug]
   if (!load) return Promise.reject(new Error(`Unknown chapter ${slug}`))
   const promise = load().then(
     (chapter) => {
       loaded.set(slug, chapter)
+      failed.delete(slug)
       return chapter
     },
     (error: unknown) => {
-      // Let a later render retry, for example after a flaky connection.
+      // Let a later visit retry, for example after a flaky connection.
       pending.delete(slug)
+      failed.set(slug, { promise, at: Date.now() })
       throw error
     },
   )
@@ -61,10 +72,16 @@ export function loadChapter(slug: string): Promise<ChapterContent> {
 }
 
 let allPromise: Promise<ChapterContent[]> | undefined
+let allFailedAt: number | undefined
 
 export function loadAllChapters(): Promise<ChapterContent[]> {
-  allPromise ??= Promise.all(chapterMetaList.map((c) => loadChapter(c.slug))).catch((error: unknown) => {
+  // Same rule as loadChapter: a failure is handed back as it is until a later visit.
+  if (allFailedAt !== undefined && Date.now() - allFailedAt >= RETRY_AFTER_MS) {
     allPromise = undefined
+    allFailedAt = undefined
+  }
+  allPromise ??= Promise.all(chapterMetaList.map((c) => loadChapter(c.slug))).catch((error: unknown) => {
+    allFailedAt = Date.now()
     throw error
   })
   return allPromise

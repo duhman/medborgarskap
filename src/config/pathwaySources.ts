@@ -11,8 +11,8 @@ const MV_VUXNA =
   'https://www.migrationsverket.se/du-vill-ansoka/svenskt-medborgarskap/medborgarskap-for-vuxna/medborgarskap-for-vuxna.html'
 const UHR_FAQ = 'https://www.uhr.se/medborgarskapsprovet/fragor-och-svar/'
 
-const MV_CHECKED = '2026-11-10'
-const UHR_CHECKED = '2026-10-24'
+const MV_CHECKED = '2026-11-17'
+const UHR_CHECKED = '2026-11-17'
 
 /**
  * Officiella källor per fråga i "Behöver jag provet?".

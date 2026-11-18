@@ -24,8 +24,16 @@ import { Studieplan } from './pages/Studieplan'
 import { NotFound } from './pages/NotFound'
 import { OgPreviewStage } from './pages/OgPreviewStage'
 
+function decodeHash(hash: string): string {
+  try {
+    return decodeURIComponent(hash.slice(1))
+  } catch {
+    return hash.slice(1)
+  }
+}
+
 function FocusMainOnNavigate() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const previousPathnameRef = useRef<string | null>(null)
 
   useEffect(() => {
@@ -34,14 +42,21 @@ function FocusMainOnNavigate() {
       return
     }
 
-    if (previousPathnameRef.current === pathname) {
+    const samePage = previousPathnameRef.current === pathname
+    previousPathnameRef.current = pathname
+    const target = hash ? document.getElementById(decodeHash(hash)) : null
+
+    if (samePage) {
+      // React Router handles the click on an in-app link, so the browser does not scroll to the
+      // section itself. Focus stays where it is: the page has not changed.
+      target?.scrollIntoView({ block: 'start' })
       return
     }
 
-    previousPathnameRef.current = pathname
-
-    // A new page starts at the top. 'instant' skips the smooth scroll set on <html>.
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    // A new page starts at the top, or at the section a link such as /integritet#statistik names.
+    // 'instant' skips the smooth scroll set on <html>.
+    if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' })
+    else window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
 
     const frame = window.requestAnimationFrame(() => {
       const main = document.getElementById('main-content')
@@ -53,7 +68,7 @@ function FocusMainOnNavigate() {
     return () => {
       window.cancelAnimationFrame(frame)
     }
-  }, [pathname])
+  }, [pathname, hash])
 
   return null
 }

@@ -408,7 +408,7 @@ export const sverigesModernaHistoria: ChapterContent = {
     },
     {
       id: 'k10-q16',
-      prompt: 'Vilken av dessa var en av de fyra största folkrörelserna i Sverige enligt kapitlet?',
+      prompt: 'Vilken av dessa nämns i kapitlet som en av de största folkrörelserna i Sverige?',
       options: [
         { id: 'A', text: 'Nykterhetsrörelsen' },
         { id: 'B', text: 'Miljörörelsen' },
@@ -417,9 +417,9 @@ export const sverigesModernaHistoria: ChapterContent = {
       ],
       correctOptionId: 'A',
       explanationSv:
-        'De fyra största folkrörelserna var arbetarrörelsen, frikyrkorörelsen, kvinnorörelsen och nykterhetsrörelsen.',
+        'Fyra av de största folkrörelserna var arbetarrörelsen, frikyrkorörelsen, kvinnorörelsen och nykterhetsrörelsen.',
       explanationEn:
-        'The four largest popular movements were the labour movement, the free church movement, the women\'s movement and the temperance movement.',
+        'Four of the largest popular movements were the labour movement, the free church movement, the women\'s movement and the temperance movement.',
       source: {
         chapter: 10,
         page: 33,

@@ -190,7 +190,7 @@ export function parseTutorRequest(value: unknown): TutorRequest | undefined {
   const request = value as Record<string, unknown>
   if (!hasExactKeys(request, ['questionId', 'selectedOptionId', 'language', 'intent', 'consent', 'privacyVersion'])) return undefined
   if (typeof request.questionId !== 'string' || request.questionId.length === 0 || request.questionId.length > 128) return undefined
-  if (request.selectedOptionId !== null && !['A', 'B', 'C', 'D'].includes(String(request.selectedOptionId))) return undefined
+  if (request.selectedOptionId !== null && (typeof request.selectedOptionId !== 'string' || !['A', 'B', 'C', 'D'].includes(request.selectedOptionId))) return undefined
   if (request.language !== 'sv' && request.language !== 'en') return undefined
   if (request.intent !== 'simplify' && request.intent !== 'misconception') return undefined
   if (request.consent !== true) return undefined

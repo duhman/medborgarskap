@@ -66,6 +66,12 @@ describe('analytics consent', () => {
     expect(localStorage.getItem('medborgarskap-progress-v1')).toBe('{}')
   })
 
+  it('a no also deletes the consent flag PostHog keeps under its project token', () => {
+    localStorage.setItem('__ph_opt_in_out_phc_abc', '1')
+    setAnalyticsConsent('denied')
+    expect(localStorage.getItem('__ph_opt_in_out_phc_abc')).toBeNull()
+  })
+
   it('purging expires a PostHog cookie left by the old setup', () => {
     document.cookie = 'ph_phc_abc_posthog=1; path=/'
     document.cookie = 'other=1; path=/'

@@ -89,7 +89,7 @@ export function BehoverJag() {
 
         <fieldset className="surface-raised space-y-2 p-4 sm:p-5">
           <legend className="text-[1.0625rem] font-semibold leading-snug">
-            Har du godkänt betyg i samhällskunskap från komvux eller folkhögskola på gymnasial nivå?
+            Har du godkänt betyg i samhällskunskap från komvux, eller från folkhögskola på gymnasial nivå?
           </legend>
           {(['yes', 'no', 'unsure'] as const).map((v) => (
             <label key={v} className="mb-choice">

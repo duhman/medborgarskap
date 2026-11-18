@@ -281,9 +281,9 @@ export const mediernasRoll: ChapterContent = {
       ],
       correctOptionId: 'B',
       explanationSv:
-        'Offentlighetsprincipen gör att journalister kan begära ut e-post och andra handlingar från myndigheter för att granska hur beslut har fattats, om handlingarna inte är hemliga.',
+        'Offentlighetsprincipen gör att journalister kan begära ut e-post och andra handlingar från myndigheter för att granska hur beslut har fattats. Myndigheten prövar sedan om handlingarna är hemliga och inte får lämnas ut.',
       explanationEn:
-        'Thanks to the principle of public access, journalists can request emails and other documents from authorities to see how decisions were made.',
+        'Thanks to the principle of public access, journalists can request emails and other documents from authorities to see how decisions were made. The authority then decides whether the documents must be withheld because they are secret.',
       source: {
         chapter: 6,
         page: 20,
