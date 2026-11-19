@@ -199,6 +199,7 @@ export function parseExamSession(raw: string | null): ExamSession | undefined {
       typeof p.answers !== 'object' ||
       p.answers === null ||
       !Number.isInteger(p.index) ||
+      p.index < 0 ||
       typeof p.startedAt !== 'string' ||
       (p.deadline !== null && typeof p.deadline !== 'string')
     ) {
@@ -223,7 +224,10 @@ export function clearExamSession(): void {
 export function getExamHistory(): ExamResult[] {
   try {
     const parsed: unknown = JSON.parse(getExamHistoryRaw() ?? '[]')
-    return Array.isArray(parsed) ? (parsed as ExamResult[]) : []
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(
+      (r): r is ExamResult => typeof r === 'object' && r !== null && typeof r.finishedAt === 'string',
+    )
   } catch {
     return []
   }

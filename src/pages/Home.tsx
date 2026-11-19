@@ -138,7 +138,7 @@ export function Home() {
               </span>
               <span
                 aria-hidden="true"
-                className="text-xl transition-transform duration-150 group-hover:translate-x-1"
+                className="text-xl transition-transform group-hover:translate-x-1"
               >
                 →
               </span>
@@ -169,7 +169,7 @@ export function Home() {
                 </span>
                 <span
                   aria-hidden="true"
-                  className="pt-0.5 text-xl transition-transform duration-150 group-hover:translate-x-1"
+                  className="pt-0.5 text-xl transition-transform group-hover:translate-x-1"
                 >
                   →
                 </span>
@@ -196,7 +196,7 @@ export function Home() {
                 </span>
                 <span
                   aria-hidden="true"
-                  className="pt-0.5 text-xl transition-transform duration-150 group-hover:translate-x-1"
+                  className="pt-0.5 text-xl transition-transform group-hover:translate-x-1"
                 >
                   →
                 </span>

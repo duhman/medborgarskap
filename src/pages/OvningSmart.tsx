@@ -81,7 +81,7 @@ export function OvningSmart() {
                   key={n}
                   type="button"
                   onClick={() => start(n)}
-                  className="mb-btn mb-btn--secondary flex-col gap-0 py-3"
+                  className="mb-btn mb-btn--secondary flex-col gap-0 px-2 py-3"
                 >
                   <GfNum value={n} className="text-2xl leading-tight" />
                   <span className="text-sm text-ink-2">frågor</span>
@@ -127,9 +127,18 @@ export function OvningSmart() {
   )
 }
 
+const poolIdCache = new WeakMap<QuizQuestion[], Set<string>>()
+function poolIds(pool: QuizQuestion[]): Set<string> {
+  let ids = poolIdCache.get(pool)
+  if (!ids) poolIdCache.set(pool, (ids = new Set(pool.map((q) => q.id))))
+  return ids
+}
+
 /** How ready the visitor is over the whole book. Empty in the prerendered page. */
 function Overview({ pool }: { pool: QuizQuestion[] }) {
-  const { history } = useProgressState()
+  const { history: saved } = useProgressState()
+  // History can hold ids a content update removed; counting them would report more than the pool.
+  const history = Object.fromEntries(Object.entries(saved).filter(([id]) => poolIds(pool).has(id)))
   const all = readiness(history, null, pool.length)
   const answered = all.total - all.new
   const ids = Object.keys(history).filter((id) => chapterNumberOfId(id) !== null)

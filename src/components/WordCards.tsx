@@ -18,7 +18,7 @@ export function WordCards({ slug, terms }: { slug: string; terms: GlossaryTerm[]
   useEffect(() => {
     if (focusCard.current) {
       focusCard.current = false
-      cardRef.current?.focus()
+      cardRef.current?.focus({ preventScroll: true })
     }
   })
 
@@ -56,7 +56,7 @@ export function WordCards({ slug, terms }: { slug: string; terms: GlossaryTerm[]
           <p className="text-sm text-ink-3">
             <GfNum value={round.known} /> av <GfNum value={terms.length} /> kan du
           </p>
-          <p className="text-2xl font-semibold" aria-live="polite">
+          <p className="hyphens-auto text-2xl font-semibold" aria-live="polite">
             {card.term}
           </p>
           <ListenButton id={`${slug}:ord:${card.term}`} parts={[card.term]} label="Lyssna på ordet" />
@@ -68,7 +68,7 @@ export function WordCards({ slug, terms }: { slug: string; terms: GlossaryTerm[]
                   English: {card.en}
                 </p>
               </div>
-              <div className="mb-enter grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <button type="button" onClick={() => answer(true)} className="mb-btn mb-btn--primary">
                   Jag kunde det
                 </button>

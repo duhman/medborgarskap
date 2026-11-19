@@ -207,3 +207,21 @@ describe('bookmarks', () => {
     expect(getProgressState().bookmarks).toEqual([])
   })
 })
+
+describe('corrupt saved progress', () => {
+  beforeEach(() => resetProgressForTests())
+
+  it('replaces fields of the wrong shape with empty values instead of crashing', () => {
+    localStorage.setItem(
+      'medborgarskap-progress-v1',
+      JSON.stringify({ quizResults: {}, mistakes: 'k1-q1', visitedChapters: 3, bookmarks: null, history: [] }),
+    )
+    const state = getProgressState()
+    expect(state.quizResults).toEqual([])
+    expect(state.mistakes).toEqual([])
+    expect(state.visitedChapters).toEqual([])
+    expect(state.bookmarks).toEqual([])
+    expect(state.history).toEqual({})
+    expect(getMistakeIds()).toEqual([])
+  })
+})

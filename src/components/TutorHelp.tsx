@@ -8,6 +8,7 @@ import type {
   TutorOptionId,
   TutorResponse,
 } from '../lib/tutor'
+import { GfNum } from './GfNum'
 
 /** The tutor is opt-in at build time, so public builds do not expose its controls. */
 export const tutorPilotEnabled = import.meta.env.VITE_PUBLIC_TUTOR_ENABLED === 'true'
@@ -397,11 +398,16 @@ export function TutorHelp({ chapterSlug, questionId, selectedOptionId, enabled =
               <ul className="space-y-2 text-sm text-ink-2">
                 {answer.citations.map((citation) => (
                   <li key={`${citation.sourceId}:${citation.quoteOffset}:${citation.quote}`}>
-                    <a href={citation.url} className="mb-link-quiet underline underline-offset-2" target="_blank" rel="noopener noreferrer">
+                    <a href={citation.url} className="mb-link-quiet" target="_blank" rel="noopener noreferrer">
                       {citation.authority}
+                      <span aria-hidden="true"> ↗</span>
                       <span className="sr-only">, öppnas i ny flik</span>
                     </a>
-                    {citation.checkedAt ? `, kontrollerad ${citation.checkedAt}` : ''}
+                    {citation.checkedAt && (
+                      <>
+                        , kontrollerad <GfNum value={citation.checkedAt} />
+                      </>
+                    )}
                     {citation.quote ? `: ${citation.quote}` : ''}
                   </li>
                 ))}

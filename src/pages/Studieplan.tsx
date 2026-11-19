@@ -67,7 +67,7 @@ function Picker({ onChoose }: { onChoose: (weeks: number) => void }) {
       </h2>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {PLAN_WEEK_CHOICES.map((n) => (
-          <button key={n} type="button" onClick={() => onChoose(n)} className="mb-btn mb-btn--secondary flex-col gap-0 py-3">
+          <button key={n} type="button" onClick={() => onChoose(n)} className="mb-btn mb-btn--secondary flex-col gap-0 px-2 py-3">
             <GfNum value={n} className="text-2xl leading-tight" />
             <span className="text-sm text-ink-2">veckor</span>
           </button>
