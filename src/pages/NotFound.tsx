@@ -27,7 +27,7 @@ export function NotFound() {
                 <span className="block font-semibold">{d.title}</span>
                 <span className="mt-1 block text-ink-2">{d.text}</span>
               </span>
-              <span aria-hidden="true" className="pt-0.5 text-xl transition-transform duration-150 group-hover:translate-x-1">
+              <span aria-hidden="true" className="pt-0.5 text-xl transition-transform group-hover:translate-x-1">
                 →
               </span>
             </Link>

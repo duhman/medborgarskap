@@ -68,7 +68,7 @@ export function OvningBlandat() {
                 key={n}
                 type="button"
                 onClick={() => start(n)}
-                className="mb-btn mb-btn--secondary flex-col gap-0 py-3"
+                className="mb-btn mb-btn--secondary flex-col gap-0 px-2 py-3"
               >
                 <GfNum value={n} className="text-2xl leading-tight" />
                 <span className="text-sm text-ink-2">frågor</span>

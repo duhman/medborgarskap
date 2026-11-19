@@ -70,15 +70,21 @@ function readState(): ProgressState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return defaultState()
-    const parsed = JSON.parse(raw) as ProgressState
+    const parsed = JSON.parse(raw) as Partial<ProgressState>
+    // Saved data can be edited by hand or left by an older version, so a field of the wrong
+    // shape becomes empty instead of crashing every page that reads it.
+    const list = <T,>(v: T[] | undefined): T[] => (Array.isArray(v) ? v : [])
+    const record = <T extends object>(v: T | undefined): T | undefined =>
+      typeof v === 'object' && v !== null && !Array.isArray(v) ? v : undefined
+    const plan = record(parsed.plan)
     return {
-      visitedChapters: parsed.visitedChapters ?? [],
-      quizResults: parsed.quizResults ?? [],
-      pathway: parsed.pathway ?? {},
-      mistakes: parsed.mistakes ?? [],
-      history: parsed.history ?? {},
-      bookmarks: parsed.bookmarks ?? [],
-      ...(parsed.plan ? { plan: parsed.plan } : {}),
+      visitedChapters: list(parsed.visitedChapters),
+      quizResults: list(parsed.quizResults),
+      pathway: record(parsed.pathway) ?? {},
+      mistakes: list(parsed.mistakes),
+      history: record(parsed.history) ?? {},
+      bookmarks: list(parsed.bookmarks),
+      ...(plan ? { plan } : {}),
     }
   } catch {
     return defaultState()

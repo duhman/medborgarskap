@@ -49,6 +49,7 @@ export function SourceCitation({ source, className = 'text-ink-3', compact = fal
               , sida <GfNum value={source.page} />
             </>
           )}
+          <span aria-hidden="true"> ↗</span>
           <span className="sr-only">, öppnas i ny flik</span>
         </a>
         {source.supplementarySources && source.supplementarySources.length > 0 && (

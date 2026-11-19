@@ -136,7 +136,7 @@ function Picker({ onStart, brokenSession }: { onStart: (count: number, timed: bo
         </label>
         <div className="grid grid-cols-3 gap-3">
           {EXAM_SIZES.map((n) => (
-            <button key={n} type="button" onClick={() => onStart(n, timed)} className="mb-btn mb-btn--secondary flex-col gap-0 py-3">
+            <button key={n} type="button" onClick={() => onStart(n, timed)} className="mb-btn mb-btn--secondary flex-col gap-0 px-2 py-3">
               <GfNum value={n} className="text-2xl leading-tight" />
               <span className="text-sm text-ink-2">{timed ? `frågor, ${examMinutes(n)} min` : 'frågor'}</span>
             </button>
@@ -253,14 +253,14 @@ function Running({ session, questions, onSubmit, onExpire, onAbort }: RunningPro
                 onChange={() => choose(opt.id)}
               />
               <span className="w-4 shrink-0 font-mono text-sm font-medium text-ink-3">{LETTERS[position]}</span>
-              <span className="flex-1">{opt.text}</span>
+              <span className="min-w-0 flex-1 hyphens-auto">{opt.text}</span>
             </label>
           )
         })}
       </fieldset>
 
       <div className="flex flex-wrap items-center gap-3 max-sm:sticky max-sm:bottom-0 max-sm:z-10 max-sm:-mx-4 max-sm:border-t max-sm:border-line-strong max-sm:bg-paper max-sm:px-4 max-sm:py-3">
-        <button type="button" onClick={() => go(index - 1)} disabled={index === 0} className="mb-btn mb-btn--secondary disabled:opacity-50">
+        <button type="button" onClick={() => go(index - 1)} disabled={index === 0} className="mb-btn mb-btn--secondary">
           Föregående
         </button>
         {index + 1 < total ? (
@@ -289,8 +289,8 @@ function Running({ session, questions, onSubmit, onExpire, onAbort }: RunningPro
                     onClick={() => go(i)}
                     aria-current={i === index ? 'true' : undefined}
                     aria-label={`Fråga ${i + 1}${done ? ', besvarad' : ', obesvarad'}`}
-                    className={`gf-num flex min-h-11 w-full items-center justify-center border text-sm ${
-                      i === index ? 'border-ink' : 'border-line-strong'
+                    className={`gf-num flex min-h-11 w-full items-center justify-center border text-sm transition-transform active:translate-y-px active:scale-[0.98] ${
+                      i === index ? 'border-ink shadow-[inset_0_0_0_1px_var(--ink)]' : 'border-line-strong'
                     } ${done ? 'bg-accent text-accent-on' : 'bg-raised'}`}
                   >
                     {i + 1}
@@ -307,7 +307,7 @@ function Running({ session, questions, onSubmit, onExpire, onAbort }: RunningPro
           <p id="confirm-heading" className="font-semibold">
             {answered < total ? (
               <>
-                Du har <GfNum value={total - answered} /> obesvarade frågor. Lämna in ändå?
+                Du har <GfNum value={total - answered} /> {total - answered === 1 ? 'obesvarad fråga' : 'obesvarade frågor'}. Lämna in ändå?
               </>
             ) : (
               'Lämna in provet?'
@@ -481,11 +481,11 @@ function Result({ questions, answers, byClock, onAgain }: ResultProps) {
                   <dl className="space-y-1 text-[0.9375rem]">
                     <div className="flex gap-2">
                       <dt className="shrink-0 text-ink-3">Ditt svar:</dt>
-                      <dd>{chosen ? chosen.text : 'Inget svar'}</dd>
+                      <dd className="min-w-0 hyphens-auto">{chosen ? chosen.text : 'Inget svar'}</dd>
                     </div>
                     <div className="flex gap-2">
                       <dt className="shrink-0 text-ink-3">Rätt svar:</dt>
-                      <dd className="font-medium">{correct?.text}</dd>
+                      <dd className="min-w-0 hyphens-auto font-medium">{correct?.text}</dd>
                     </div>
                   </dl>
                   <p className="text-[0.9375rem] text-ink-2">{x.explanationSv}</p>

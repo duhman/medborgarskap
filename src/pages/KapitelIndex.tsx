@@ -93,7 +93,7 @@ export function KapitelIndex() {
                 </span>
                 <span
                   aria-hidden="true"
-                  className="text-lg text-ink-3 transition-transform duration-150 group-hover:translate-x-1 group-hover:text-ink"
+                  className="text-lg text-ink-3 transition-colors group-hover:text-ink"
                 >
                   →
                 </span>

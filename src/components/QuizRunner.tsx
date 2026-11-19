@@ -234,7 +234,7 @@ export function QuizRunner({
 
     return (
       <div ref={rootRef} className="scroll-mt-4 space-y-8">
-        <section aria-labelledby="quiz-result" className="space-y-4 border border-ink bg-raised p-5 sm:p-6">
+        <section aria-labelledby="quiz-result" className="mb-enter space-y-4 border border-ink bg-raised p-5 sm:p-6">
           <p className="font-mono text-xs font-medium uppercase tracking-[0.08em] text-ink-3">
             Resultat, {chapterTitle}
           </p>
@@ -276,11 +276,11 @@ export function QuizRunner({
                     <dl className="space-y-1 text-[0.9375rem]">
                       <div className="flex gap-2">
                         <dt className="shrink-0 text-ink-3">Ditt svar:</dt>
-                        <dd>{chosenOpt ? chosenOpt.text : 'Inget svar'}</dd>
+                        <dd className="min-w-0 hyphens-auto">{chosenOpt ? chosenOpt.text : 'Inget svar'}</dd>
                       </div>
                       <div className="flex gap-2">
                         <dt className="shrink-0 text-ink-3">Rätt svar:</dt>
-                        <dd className="font-medium">{correctOpt?.text}</dd>
+                        <dd className="min-w-0 hyphens-auto font-medium">{correctOpt?.text}</dd>
                       </div>
                     </dl>
                     <p className="text-[0.9375rem] text-ink-2">{x.explanationSv}</p>
@@ -360,7 +360,7 @@ export function QuizRunner({
               </p>
             </div>
             {total <= MAX_METER_BLOCKS ? (
-              <ProgressMeter value={index + (checked ? 1 : 0)} max={total} />
+              <ProgressMeter value={index + (checked ? 1 : 0)} max={total} animated />
             ) : (
               <div aria-hidden="true" className="h-2.5 bg-[var(--line)]">
                 <div className="mb-fill" style={{ transform: `scaleX(${(index + (checked ? 1 : 0)) / total})` }} />
@@ -395,7 +395,7 @@ export function QuizRunner({
             className={
               ogPreview
                 ? 'og-preview-quiz-legend font-semibold leading-snug'
-                : 'text-lg font-semibold leading-snug sm:text-xl'
+                : 'text-lg font-semibold leading-snug text-balance sm:text-xl'
             }
           >
             {q.prompt}
@@ -429,10 +429,10 @@ export function QuizRunner({
                   {LETTERS[position]}
                 </span>
                 {/* On a phone the tag sits above the text, so long answers keep their width. */}
-                <span className="flex flex-1 flex-col-reverse gap-1 sm:flex-row sm:items-center sm:gap-3">
-                  <span className="flex-1">{opt.text}</span>
-                  {checked && isAnswer && <span className={`mb-choice__tag ${ogPreview ? '' : 'mb-enter'}`}>Rätt svar</span>}
-                  {checked && isChosen && !isAnswer && <span className={`mb-choice__tag ${ogPreview ? '' : 'mb-enter'}`}>Ditt svar</span>}
+                <span className="flex min-w-0 flex-1 flex-col-reverse gap-1 sm:flex-row sm:items-center sm:gap-3">
+                  <span className="min-w-0 flex-1 hyphens-auto">{opt.text}</span>
+                  {checked && isAnswer && <span className="mb-choice__tag">Rätt svar</span>}
+                  {checked && isChosen && !isAnswer && <span className="mb-choice__tag">Ditt svar</span>}
                 </span>
               </label>
             )
@@ -537,12 +537,13 @@ export function QuizRunner({
         {checked && !ogPreview && (
           <p className="text-sm text-ink-3">
             Hittat ett fel i frågan? Meddela via{' '}
-            <a href={report.email} className="mb-link-quiet underline underline-offset-2">
+            <a href={report.email} className="mb-link-quiet">
               e-post
             </a>{' '}
             eller{' '}
-            <a href={report.github} className="mb-link-quiet underline underline-offset-2" target="_blank" rel="noopener noreferrer">
+            <a href={report.github} className="mb-link-quiet" target="_blank" rel="noopener noreferrer">
               GitHub
+              <span aria-hidden="true"> ↗</span>
               <span className="sr-only">, öppnas i ny flik</span>
             </a>
             .

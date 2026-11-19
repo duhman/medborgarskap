@@ -38,7 +38,7 @@ export function OvningQuiz() {
             <svg
               aria-hidden="true"
               viewBox="0 0 12 12"
-              className="size-3 shrink-0 text-ink-3 transition-transform duration-150 group-open:rotate-180"
+              className="size-3 shrink-0 text-ink-3 transition-transform group-open:rotate-180"
             >
               <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </svg>

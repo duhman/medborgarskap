@@ -163,3 +163,18 @@ describe('exam session and history', () => {
     expect(getExamHistory()).toEqual([])
   })
 })
+
+describe('corrupt exam storage', () => {
+  it('rejects a session with a negative index', () => {
+    const raw = JSON.stringify({ ids: ['k1-q1'], answers: {}, index: -1, startedAt: '2026-11-18', deadline: null })
+    expect(parseExamSession(raw)).toBeUndefined()
+  })
+
+  it('drops history entries that are not results', () => {
+    localStorage.setItem(
+      'medborgarskap-exam-history-v1',
+      JSON.stringify([null, 'x', { finishedAt: '2026-11-18', score: 10, total: 20, timed: false }]),
+    )
+    expect(getExamHistory()).toHaveLength(1)
+  })
+})
